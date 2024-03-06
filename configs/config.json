@@ -1,0 +1,20 @@
+{
+    "Logging": {
+        "Enable": true,
+        "Level": "DEBUG"
+    },
+    "GracefulTermTimeMillis": 500,
+    "AuthServerConfig": {
+        "Host": "http://localhost",
+        "Port": 4000,
+        "OAuthCallbackEndpoint": "/auth/callback"
+    },
+    "LobbyServerConfig": {
+        "Host": "http://localhost",
+        "Port": 4001
+    },
+    "ChatServerConfig": {
+        "Host": "http://localhost",
+        "Port": 4002
+    }
+}

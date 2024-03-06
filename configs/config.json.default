@@ -1,0 +1,13 @@
+{
+    "Logging": {
+        "Enable": true,
+        "Level": "DEBUG"
+    },
+    "GracefulTermTimeMillis": 500,
+    "ChatConfig": {
+        "Host": "localhost",
+        "AuthServerPort": 5000,
+        "ChatServerPort": 5001,
+        "LobbyServerPort": 5002
+    }
+}
