@@ -10,6 +10,7 @@ import (
 	"runtime/debug"
 
 	"encoding/json"
+	utils "mars-go-service/internal/utils"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/googollee/go-socket.io/engineio"
@@ -17,9 +18,10 @@ import (
 )
 
 type connectionsState struct {
-	chatUsersMap map[ /*room*/ string]map[ /*socketId*/ string] /*userId*/ string
-	socketsMap   map[string] /*socketId*/ socketio.Conn
-	chatRoomsMap map[string] /*socketId*/ []string /*room*/
+	soIdToUserIdMap map[string] /*socketId*/ string /*userId*/
+	roomToSoIdsMap  map[string] /*room*/ []string   /*socketId*/
+	soIdToConnMap   map[string] /*socketId*/ socketio.Conn
+	soIdToRoomsMap  map[string] /*socketId*/ []string /*room*/
 }
 
 var (
@@ -40,9 +42,6 @@ func init() {
 }
 
 func saveAndShareEvent(evtType db.EventType, chatRoom string, userId string, text string) {
-	// save event to db
-	// share event to all users in the chat room
-	// TODO: add suitable error handling
 	id, created_at, err := db.InsertNewEventAndGetInsertedIdBack(userId, text, fmt.Sprint(evtType), chatRoom)
 	if err != nil {
 		log.E("saveAndShareEvent db.InsertNewEventAndGetInsertedIdBack error: %v", err)
@@ -67,11 +66,12 @@ func saveAndShareEvent(evtType db.EventType, chatRoom string, userId string, tex
 	//BroadcastToRoom sends one by one and waits for the response
 	//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
 	//because BroadcastToRoom waits for the response from each connection, it may take a long time
-	for soId := range connsState.chatUsersMap[chatRoom] {
-		so := connsState.socketsMap[soId]
+	for _, soId := range connsState.roomToSoIdsMap[chatRoom] {
+		so := connsState.soIdToConnMap[soId]
 		go emitEvent(so, string(eventsJson))
 	}
 }
+
 func emitEvent(so socketio.Conn, eventsJson string) {
 	defer func() {
 		if panicInfo := recover(); panicInfo != nil {
@@ -80,22 +80,6 @@ func emitEvent(so socketio.Conn, eventsJson string) {
 	}()
 	so.Emit("events", eventsJson)
 }
-
-/*
-	func getRoomUserList(chatRoom string) []byte {
-		room := connsState.chatUsersMap[chatRoom]
-		users := make([]*discord.DiscordUser, len(room))
-		for _, user := range room {
-
-			users = append(users, user)
-		}
-		usersJson, err := json.Marshal(users)
-		if err != nil {
-			log.E("getRoomUserList json.Marshal error: %v", err)
-		}
-		return usersJson
-	}
-*/
 
 func sendActualDataToUser(so socketio.Conn, chatRoom string) {
 
@@ -116,64 +100,49 @@ func sendActualDataToUser(so socketio.Conn, chatRoom string) {
 
 func joinHandler(so socketio.Conn, chatRoom string) {
 	log.D("%v join %v", so.ID(), chatRoom)
-	roomUsers := connsState.chatUsersMap[chatRoom]
+	roomUsers := connsState.roomToSoIdsMap[chatRoom]
 	if roomUsers == nil {
-		connsState.chatUsersMap[chatRoom] = make(map[string]string)
+		connsState.roomToSoIdsMap[chatRoom] = make([]string, 0)
 	}
-	connsState.chatRoomsMap[so.ID()] = append(connsState.chatRoomsMap[so.ID()], chatRoom)
+	connsState.soIdToRoomsMap[so.ID()] = append(connsState.soIdToRoomsMap[so.ID()], chatRoom)
+	connsState.roomToSoIdsMap[chatRoom] = append(connsState.roomToSoIdsMap[chatRoom], so.ID())
 	so.Join(chatRoom)
 	sendActualDataToUser(so, chatRoom)
-	saveAndShareEvent(JOIN, chatRoom, connsState.chatUsersMap[chatRoom][so.ID()], "")
+	saveAndShareEvent(JOIN, chatRoom, connsState.soIdToUserIdMap[so.ID()], "")
 }
 
 func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 	log.D("%v leave %v", so.ID(), chatRoom)
-	connsState.chatRoomsMap[so.ID()] = removeSliceElement(connsState.chatRoomsMap[so.ID()], chatRoom)
-	userId := connsState.chatUsersMap[chatRoom][so.ID()]
+
+	userId := connsState.soIdToUserIdMap[so.ID()]
 	if !isDisconnect {
 		so.Leave(chatRoom)
+	} else {
+		delete(connsState.soIdToUserIdMap, so.ID())
+		delete(connsState.soIdToConnMap, so.ID())
 	}
-	delete(connsState.chatUsersMap[chatRoom], so.ID())
+	connsState.soIdToRoomsMap[so.ID()] = utils.DeleteSliceStringElement(connsState.soIdToRoomsMap[so.ID()], chatRoom)
+	connsState.roomToSoIdsMap[chatRoom] = utils.DeleteSliceStringElement(connsState.roomToSoIdsMap[chatRoom], so.ID())
 	saveAndShareEvent(LEAVE, chatRoom, userId, "")
 }
 
-func removeSliceElement(s []string, elem string) []string {
-	index := -1
-	for k, v := range s {
-		if elem == v {
-			index = k
-			break
-		}
-	}
-	if index == -1 {
-		return s
-	} else {
-		return append(s[:index], s[index+1:]...)
-	}
-}
-
-// InitServer initializes the server
 func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
 	connsState = &connectionsState{
-		chatUsersMap: make(map[string] /*room*/ map[string] /*socketId*/ string /*userId*/),
-		socketsMap:   make(map[string] /*socketId*/ socketio.Conn),
-		chatRoomsMap: make(map[string] /*socketId*/ []string /*room*/),
+		soIdToUserIdMap: make(map[string] /*socketId*/ string /*userId*/),
+		roomToSoIdsMap:  make(map[string] /*room*/ []string /*socketId*/),
+		soIdToConnMap:   make(map[string] /*socketId*/ socketio.Conn),
+		soIdToRoomsMap:  make(map[string] /*socketId*/ []string /*room*/),
 	}
 
 	socketServer = socketio.NewServer(&engineio.Options{
 		ConnInitor: func(r *http.Request, so engineio.Conn) {
 			log.D("Chat ConnInitor")
-			generalRoomUsers := connsState.chatUsersMap[GENERAL_ROOM]
-			if generalRoomUsers == nil {
-				connsState.chatUsersMap[GENERAL_ROOM] = make(map[string]string)
-			}
-
 			jwtFromRequest := r.URL.Query().Get("jwt")
 			userId, err := jwt.GetUserId(jwtFromRequest, []byte(jwtSecret))
 			if err != nil {
 				log.E("jwt.GetUserId error: %v", err)
 			}
-			connsState.chatUsersMap[GENERAL_ROOM][so.ID()] = userId
+			connsState.soIdToUserIdMap[so.ID()] = userId
 		},
 		RequestChecker: func(r *http.Request) (http.Header, error) {
 			jwtFromRequest := r.URL.Query().Get("jwt")
@@ -187,12 +156,11 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 
 	socketServer.OnConnect("/", func(so socketio.Conn) error {
 		log.D("connected... %v", so.ID())
-		connsState.socketsMap[so.ID()] = so
+		connsState.soIdToConnMap[so.ID()] = so
 		return nil
 	})
 
 	socketServer.OnError("/", func(so socketio.Conn, e error) {
-
 		log.E("meet error:", e)
 	})
 
@@ -209,7 +177,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			log.E("event.Text is empty")
 			return
 		}
-		userId := connsState.chatUsersMap[event.ChatRoom][so.ID()]
+		userId := connsState.soIdToUserIdMap[so.ID()]
 		log.D("%v, %v chat '%v'", so.ID(), userId, event.ChatRoom, event.Text)
 		saveAndShareEvent(MESSAGE, event.ChatRoom, userId, event.Text)
 	})
@@ -219,7 +187,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	})
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
-		for _, room := range connsState.chatRoomsMap[so.ID()] {
+		for _, room := range connsState.soIdToRoomsMap[so.ID()] {
 			leaveHandler(so, room, true)
 		}
 		log.D("disconnected... %v, by %v", so.ID(), reason)

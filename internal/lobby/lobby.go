@@ -45,23 +45,31 @@ func createHandler(so socketio.Conn, newGameConfig string) {
 	log.D("%v creates new game %v", so.ID(), newGameConfig)
 	userId := connsState.lobbyUsersMap[so.ID()]
 	//create new game
-	lobbyGame, err := db.InsertNewGameSettingsAndGetLobbyGameBack(userId, newGameConfig)
+	lobbyGame, err := db.InsertNewGameSettings(userId, newGameConfig)
 	if err != nil {
 		log.E("createHandler db.InsertNewGameAndGetInsertedIdBack error: %v", err)
 		return
 	}
+	broadcastGame(lobbyGame)
+}
 
+func broadcastGame(game *db.LobbyGame) {
 	games := make([]*db.LobbyGame, 1)
-	games[0] = lobbyGame
+	games[0] = game
+	broadcastGames(games)
+}
+
+func broadcastGames(games []*db.LobbyGame) {
 	gamesJson, err := json.Marshal(games)
 	if err != nil {
-		log.E("createHandler json.Marshal error: %v", err)
+		log.E("broadcastGames json.Marshal error: %v", err)
 		return
 	}
 	//BroadcastToRoom sends one by one and waits for the response
 	//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
 	//because BroadcastToRoom waits for the response from each connection, it may take a long time
 	for soId := range connsState.lobbyUsersMap {
+		//filter games list by user access
 		so := connsState.socketsMap[soId]
 		go emitGames(so, string(gamesJson))
 	}
@@ -80,29 +88,78 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 		log.D("%v, %v save_changed_options '%v'", so.ID(), userId, lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.UserIdCreatedBy)
 		userId := connsState.lobbyUsersMap[so.ID()]
 		//update new game settings
-		lobbyGame, err := db.UpdateNewGameSettingsAndGetLobbyGameBack(userId, *lobbyGameToUpdate)
+		lobbyGame, err := db.UpdateNewGameSettings(userId, *lobbyGameToUpdate)
 		if err != nil {
-			log.E("updateHandler db.UpdateNewGameSettingsAndGetLobbyGameBack error: %v", err)
+			log.E("updateHandler db.UpdateNewGameSettings error: %v", err)
 			return
 		}
-
-		games := make([]*db.LobbyGame, 1)
-		games[0] = lobbyGame
-		gamesJson, err := json.Marshal(games)
-		if err != nil {
-			log.E("updateHandler json.Marshal error: %v", err)
-			return
-		}
-		//BroadcastToRoom sends one by one and waits for the response
-		//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
-		//because BroadcastToRoom waits for the response from each connection, it may take a long time
-		for soId := range connsState.lobbyUsersMap {
-			so := connsState.socketsMap[soId]
-			go emitGames(so, string(gamesJson))
-		}
+		broadcastGame(lobbyGame)
 	} else {
 		log.E("updateHandler userId %v != lobbyGameToUpdate.UserIdCreatedBy %v", userId, lobbyGameToUpdate.UserIdCreatedBy)
 	}
+}
+
+func deleteHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v delete %v", so.ID(), lobbyGameId)
+	userId := connsState.lobbyUsersMap[so.ID()]
+	//delete game
+	err := db.DeleteGame(userId, lobbyGameId)
+	if err != nil {
+		log.E("deleteHandler db.DeleteGameSettings error: %v", err)
+		return
+	}
+	for soId := range connsState.lobbyUsersMap {
+		so := connsState.socketsMap[soId]
+		go so.Emit("deleted_game", lobbyGameId)
+	}
+}
+
+func shareGameHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v share %v", so.ID(), lobbyGameId)
+	userId := connsState.lobbyUsersMap[so.ID()]
+	//share game
+	lobbyGame, err := db.ShareGame(userId, lobbyGameId)
+	if err != nil {
+		log.E("shareGameHandler db.ShareGame error: %v", err)
+		return
+	}
+	broadcastGame(lobbyGame)
+}
+
+func startGameHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v start game %v", so.ID(), lobbyGameId)
+	userId := connsState.lobbyUsersMap[so.ID()]
+	//start game
+	lobbyGame, err := db.StartGame(userId, lobbyGameId)
+	if err != nil {
+		log.E("startGameHandler db.StartGame error: %v", err)
+		return
+	}
+	broadcastGame(lobbyGame)
+}
+
+func joinGameHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v join game %v", so.ID(), lobbyGameId)
+	userId := connsState.lobbyUsersMap[so.ID()]
+	//join game
+	lobbyGame, err := db.JoinGame(userId, lobbyGameId)
+	if err != nil {
+		log.E("joinGameHandler db.JoinGame error: %v", err)
+		return
+	}
+	broadcastGame(lobbyGame)
+}
+
+func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v leave game %v", so.ID(), lobbyGameId)
+	userId := connsState.lobbyUsersMap[so.ID()]
+	//leave game
+	lobbyGame, err := db.LeaveGame(userId, lobbyGameId)
+	if err != nil {
+		log.E("leaveGameHandler db.LeaveGame error: %v", err)
+		return
+	}
+	broadcastGame(lobbyGame)
 }
 
 func loadAndSendGamesToUser(so socketio.Conn) {
@@ -163,6 +220,16 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	socketServer.OnEvent("/", "create_new_game", createHandler)
 
 	socketServer.OnEvent("/", "save_changed_options", updateHandler)
+
+	socketServer.OnEvent("/", "delete_game", deleteHandler)
+
+	socketServer.OnEvent("/", "share_game", shareGameHandler)
+
+	socketServer.OnEvent("/", "start_game", startGameHandler)
+
+	socketServer.OnEvent("/", "join_game", joinGameHandler)
+
+	socketServer.OnEvent("/", "leave_game", leaveGameHandler)
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 
