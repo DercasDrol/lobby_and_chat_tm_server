@@ -15,13 +15,13 @@ type Event struct {
 }
 
 type NewPlayerModel struct {
-	Index         int    `json:"index"`
-	LobbyPlayerId int    `json:"lobbyPlayerId"`
-	Name          string `json:"name"`
-	Color         string `json:"color"`
-	Beginner      bool   `json:"beginner"`
-	Handicap      int    `json:"handicap"`
-	First         bool   `json:"first"`
+	Index    int    `json:"index"`
+	UserId   string `json:"userId"`
+	Name     string `json:"name"`
+	Color    string `json:"color"`
+	Beginner bool   `json:"beginner"`
+	Handicap int    `json:"handicap"`
+	First    bool   `json:"first"`
 }
 
 type NewGameConfig struct {

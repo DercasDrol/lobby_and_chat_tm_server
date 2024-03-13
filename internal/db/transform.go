@@ -57,39 +57,43 @@ func shufflePlayers(players []NewPlayerModel) []NewPlayerModel {
 	return players
 }
 
-func updateLobbyGamePlayers(newPlayersMap map[int] /*playerId*/ string /*playerNickname*/, lobbyGameToUpdate *LobbyGame) {
+func updateLobbyGamePlayers(newPlayersMap map[string] /*userId*/ string /*playerNickname*/, lobbyGameToUpdate *LobbyGame, userIdToChangeColor *string, newColor *string) {
 	existedColors := make([]string, 0)
 	updatedPlayersList := make([]NewPlayerModel, 0)
 
 	for _, player := range lobbyGameToUpdate.NewGameConfig.Players {
 		existedColors = append(existedColors, player.Color)
-		_, playerExists := newPlayersMap[player.LobbyPlayerId]
+		_, playerExists := newPlayersMap[player.UserId]
 		if playerExists {
 			player.Index = len(updatedPlayersList) + 1
-			player.Name = newPlayersMap[player.LobbyPlayerId] //to avoid nickname change on client side
+			player.Name = newPlayersMap[player.UserId] //to avoid nickname change on client side
 			updatedPlayersList = append(updatedPlayersList, player)
-			delete(newPlayersMap, player.LobbyPlayerId)
+			delete(newPlayersMap, player.UserId)
 		}
 	}
 
-	for playerId, nickname := range newPlayersMap {
+	for userId, nickname := range newPlayersMap {
 		var playerColor string
-		for _, color := range playerColors {
-			if !utils.ContainsString(existedColors, color) {
-				playerColor = color
-				existedColors = append(existedColors, color)
-				break
+		if userIdToChangeColor != nil && *userIdToChangeColor == userId && newColor != nil && !utils.ContainsString(existedColors, *newColor) {
+			playerColor = *newColor
+			existedColors = append(existedColors, *newColor)
+		} else {
+			for _, color := range playerColors {
+				if !utils.ContainsString(existedColors, color) {
+					playerColor = color
+					existedColors = append(existedColors, color)
+					break
+				}
 			}
 		}
-
 		updatedPlayersList = append(updatedPlayersList, NewPlayerModel{
-			Index:         len(updatedPlayersList) + 1,
-			LobbyPlayerId: playerId,
-			Name:          nickname,
-			Color:         playerColor,
-			Beginner:      false,
-			Handicap:      0,
-			First:         false,
+			Index:    len(updatedPlayersList) + 1,
+			UserId:   userId,
+			Name:     nickname,
+			Color:    playerColor,
+			Beginner: false,
+			Handicap: 0,
+			First:    false,
 		})
 	}
 

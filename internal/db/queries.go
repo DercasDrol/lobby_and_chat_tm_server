@@ -3,6 +3,7 @@ package db
 //TODO: cleanup chat_events rows after some rows count in each room
 import (
 	"context"
+	"fmt"
 	"mars-go-service/internal/logger"
 	"strconv"
 	"time"
@@ -126,24 +127,24 @@ func UpdateNewGameSettings(userId string, lobbyGameToUpdate LobbyGame) (*LobbyGa
 	return updateNewGameSettings(userId, lobbyGameToUpdate, dbpool)
 }
 
-func getPlayersMap(gameId int, dbpool *pgxpool.Pool) (map[int] /*playerId*/ string /*playerNickname*/, error) {
-	query0 := `SELECT players.id, users.name FROM players JOIN users ON players.user_id = users.id WHERE game_id = $1;`
+func getPlayersMap(gameId int, dbpool *pgxpool.Pool) (map[string] /*userId*/ string /*playerNickname*/, error) {
+	query0 := `SELECT players.user_id, users.name FROM players JOIN users ON players.user_id = users.id WHERE game_id = $1;`
 	rows, err := dbpool.Query(context.Background(), query0, gameId)
 	if err != nil {
 		log.E("SELECT FROM players failed: %v\n", err)
 		return nil, err
 	}
 
-	playersMap := make(map[int] /*playerId*/ string /*playerNickname*/)
+	playersMap := make(map[string] /*userId*/ string /*playerNickname*/)
 	for rows.Next() {
-		var playerId int
+		var userId string
 		var playerNickname string
-		err = rows.Scan(&playerId, &playerNickname)
+		err = rows.Scan(&userId, &playerNickname)
 		if err != nil {
 			log.E("rows.Scan failed: %v\n", err)
 			return nil, err
 		}
-		playersMap[playerId] = playerNickname
+		playersMap[userId] = playerNickname
 	}
 	return playersMap, nil
 }
@@ -317,7 +318,7 @@ func joinGame(userId string, lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGa
 		log.E("getPlayersMap failed: %v\n", err)
 		return nil, err
 	}
-	updateLobbyGamePlayers(newPlayersMap, lobbyGame)
+	updateLobbyGamePlayers(newPlayersMap, lobbyGame, nil, nil)
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
@@ -348,7 +349,7 @@ func LeaveGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		log.E("getPlayersMap failed: %v\n", err)
 		return nil, err
 	}
-	updateLobbyGamePlayers(newPlayersMap, lobbyGame)
+	updateLobbyGamePlayers(newPlayersMap, lobbyGame, nil, nil)
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
@@ -360,4 +361,39 @@ func getLobbyGame(lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGame, error) 
 	`
 
 	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId))
+}
+
+// temporary solution, lobbyGame too big to be passed as a parameter from client
+func ChangePlayerColor(lobbyGame *LobbyGame, userId string) (*LobbyGame, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	lobbyGameFromDB, err := getLobbyGame(fmt.Sprint(lobbyGame.LobbyGameid), dbpool)
+	if err != nil {
+		log.E("getLobbyGame failed: %v\n", err)
+		return nil, err
+	}
+	newPlayersMap, err := getPlayersMap(lobbyGame.LobbyGameid, dbpool)
+	if err != nil {
+		log.E("getPlayersMap failed: %v\n", err)
+		return nil, err
+	}
+	_, playerExists := newPlayersMap[userId]
+	if !playerExists {
+		log.E("playerExists failed: %v\n", err)
+		return nil, err
+	}
+	var newColor *string
+	for player := range lobbyGame.NewGameConfig.Players {
+		if lobbyGame.NewGameConfig.Players[player].UserId == userId {
+			newColor = &lobbyGame.NewGameConfig.Players[player].Color
+			break
+		}
+	}
+
+	updateLobbyGamePlayers(newPlayersMap, lobbyGameFromDB, &userId, newColor)
+	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }

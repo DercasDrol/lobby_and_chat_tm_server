@@ -8,6 +8,7 @@ import (
 	"mars-go-service/internal/logger"
 	"net/http"
 	"runtime/debug"
+	"sync"
 
 	"encoding/json"
 
@@ -17,9 +18,8 @@ import (
 )
 
 type connectionsState struct {
-	lobbyUsersMap map[ /*socketId*/ string] /*userId*/ string
-	socketsMap    map[string] /*socketId*/ socketio.Conn
-	lobbyRoomsMap map[string] /*socketId*/ []string /*room*/
+	lobbyUsersMap *sync.Map //map[ /*socketId*/ string] /*userId*/ string
+	socketsMap    *sync.Map //map[string] /*socketId*/ *socketio.Conn
 }
 
 var (
@@ -43,9 +43,13 @@ func emitGames(so socketio.Conn, gamesJson string) {
 
 func createHandler(so socketio.Conn, newGameConfig string) {
 	log.D("%v creates new game %v", so.ID(), newGameConfig)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("createHandler userId not found")
+		return
+	}
 	//create new game
-	lobbyGame, err := db.InsertNewGameSettings(userId, newGameConfig)
+	lobbyGame, err := db.InsertNewGameSettings(userId.(string), newGameConfig)
 	if err != nil {
 		log.E("createHandler db.InsertNewGameAndGetInsertedIdBack error: %v", err)
 		return
@@ -68,11 +72,14 @@ func broadcastGames(games []*db.LobbyGame) {
 	//BroadcastToRoom sends one by one and waits for the response
 	//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
 	//because BroadcastToRoom waits for the response from each connection, it may take a long time
-	for soId := range connsState.lobbyUsersMap {
-		//filter games list by user access
-		so := connsState.socketsMap[soId]
-		go emitGames(so, string(gamesJson))
-	}
+	connsState.lobbyUsersMap.Range(func(soId, _ interface{}) bool {
+		so0, ok := connsState.socketsMap.Load(soId.(string))
+		if ok {
+			so1 := *so0.(*socketio.Conn)
+			go emitGames(so1, string(gamesJson))
+		}
+		return true
+	})
 }
 
 func updateHandler(so socketio.Conn, lobbyGameJson string) {
@@ -83,42 +90,59 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 		log.E("json.Unmarshal(NewGameConfig) error: %v", err)
 		return
 	}
-	userId := connsState.lobbyUsersMap[so.ID()]
-	if lobbyGameToUpdate.UserIdCreatedBy == userId {
-		log.D("%v, %v save_changed_options '%v'", so.ID(), userId, lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.UserIdCreatedBy)
-		userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("updateHandler userId not found")
+		return
+	}
+
+	if lobbyGameToUpdate.UserIdCreatedBy == userId.(string) {
+		log.D("%v, %v save_changed_options '%v'", so.ID(), userId.(string), lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.UserIdCreatedBy)
 		//update new game settings
-		lobbyGame, err := db.UpdateNewGameSettings(userId, *lobbyGameToUpdate)
+		lobbyGame, err := db.UpdateNewGameSettings(userId.(string), *lobbyGameToUpdate)
 		if err != nil {
 			log.E("updateHandler db.UpdateNewGameSettings error: %v", err)
 			return
 		}
 		broadcastGame(lobbyGame)
 	} else {
-		log.E("updateHandler userId %v != lobbyGameToUpdate.UserIdCreatedBy %v", userId, lobbyGameToUpdate.UserIdCreatedBy)
+		log.E("updateHandler userId %v != lobbyGameToUpdate.UserIdCreatedBy %v", userId.(string), lobbyGameToUpdate.UserIdCreatedBy)
 	}
 }
 
 func deleteHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v delete %v", so.ID(), lobbyGameId)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("deleteHandler userId not found")
+		return
+	}
 	//delete game
-	err := db.DeleteGame(userId, lobbyGameId)
+	err := db.DeleteGame(userId.(string), lobbyGameId)
 	if err != nil {
 		log.E("deleteHandler db.DeleteGameSettings error: %v", err)
 		return
 	}
-	for soId := range connsState.lobbyUsersMap {
-		so := connsState.socketsMap[soId]
-		go so.Emit("deleted_game", lobbyGameId)
-	}
+	connsState.lobbyUsersMap.Range(func(soId, _ interface{}) bool {
+		so0, ok := connsState.socketsMap.Load(soId.(string))
+		if ok {
+			so1 := *so0.(*socketio.Conn)
+			go so1.Emit("deleted_game", lobbyGameId)
+		}
+		return true
+	})
 }
 
 func shareGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v share %v", so.ID(), lobbyGameId)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("shareGameHandler userId not found")
+		return
+	}
+
 	//share game
-	lobbyGame, err := db.ShareGame(userId, lobbyGameId)
+	lobbyGame, err := db.ShareGame(userId.(string), lobbyGameId)
 	if err != nil {
 		log.E("shareGameHandler db.ShareGame error: %v", err)
 		return
@@ -128,9 +152,13 @@ func shareGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func startGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v start game %v", so.ID(), lobbyGameId)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("startGameHandler userId not found")
+		return
+	}
 	//start game
-	lobbyGame, err := db.StartGame(userId, lobbyGameId)
+	lobbyGame, err := db.StartGame(userId.(string), lobbyGameId)
 	if err != nil {
 		log.E("startGameHandler db.StartGame error: %v", err)
 		return
@@ -140,9 +168,14 @@ func startGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func joinGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v join game %v", so.ID(), lobbyGameId)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("joinGameHandler userId not found")
+		return
+	}
+
 	//join game
-	lobbyGame, err := db.JoinGame(userId, lobbyGameId)
+	lobbyGame, err := db.JoinGame(userId.(string), lobbyGameId)
 	if err != nil {
 		log.E("joinGameHandler db.JoinGame error: %v", err)
 		return
@@ -152,9 +185,13 @@ func joinGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v leave game %v", so.ID(), lobbyGameId)
-	userId := connsState.lobbyUsersMap[so.ID()]
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("leaveGameHandler userId not found")
+		return
+	}
 	//leave game
-	lobbyGame, err := db.LeaveGame(userId, lobbyGameId)
+	lobbyGame, err := db.LeaveGame(userId.(string), lobbyGameId)
 	if err != nil {
 		log.E("leaveGameHandler db.LeaveGame error: %v", err)
 		return
@@ -162,9 +199,13 @@ func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
 	broadcastGame(lobbyGame)
 }
 
-func loadAndSendGamesToUser(so socketio.Conn) {
-	userId := connsState.lobbyUsersMap[so.ID()]
-	lobbyGames, err := db.GetLobbyGames(userId)
+func loadGamesHandler(so socketio.Conn) {
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("loadGamesHandler userId not found")
+		return
+	}
+	lobbyGames, err := db.GetLobbyGames(userId.(string))
 	if err != nil {
 		log.E("loadAndSendGamesToUser db.GetLobbyGames error: %v", err)
 		return
@@ -178,12 +219,33 @@ func loadAndSendGamesToUser(so socketio.Conn) {
 	go emitGames(so, string(gamesJson))
 }
 
+func changePlayerColorHandler(so socketio.Conn, lobbyGame string) {
+	log.D("%v changePlayerColor %v", so.ID(), lobbyGame)
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("changePlayerColorHandler userId not found")
+		return
+	}
+	lobbyGameToUpdate := &db.LobbyGame{}
+	err := json.Unmarshal([]byte(lobbyGame), lobbyGameToUpdate)
+	if err != nil {
+		log.E("json.Unmarshal(LobbyGame) error: %v", err)
+		return
+	}
+	//change player color
+	lobbyGameUpdated, err := db.ChangePlayerColor(lobbyGameToUpdate, userId.(string))
+	if err != nil {
+		log.E("changePlayerColorHandler db.ChangePlayerColor error: %v", err)
+		return
+	}
+	broadcastGame(lobbyGameUpdated)
+}
+
 // InitServer initializes the server
 func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
 	connsState = &connectionsState{
-		lobbyUsersMap: make(map[string] /*socketId*/ string /*userId*/),
-		socketsMap:    make(map[string] /*socketId*/ socketio.Conn),
-		lobbyRoomsMap: make(map[string] /*socketId*/ []string /*room*/),
+		lobbyUsersMap: &sync.Map{},
+		socketsMap:    &sync.Map{},
 	}
 
 	socketServer = socketio.NewServer(&engineio.Options{
@@ -194,7 +256,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			if err != nil {
 				log.E("jwt.GetUserId error: %v", err)
 			}
-			connsState.lobbyUsersMap[so.ID()] = userId
+			connsState.lobbyUsersMap.Store(so.ID(), userId)
 		},
 		RequestChecker: func(r *http.Request) (http.Header, error) {
 			jwtFromRequest := r.URL.Query().Get("jwt")
@@ -208,8 +270,8 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 
 	socketServer.OnConnect("/", func(so socketio.Conn) error {
 		log.D("connected... %v", so.ID())
-		connsState.socketsMap[so.ID()] = so
-		loadAndSendGamesToUser(so)
+		connsState.socketsMap.Store(so.ID(), &so)
+
 		return nil
 	})
 
@@ -231,9 +293,15 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 
 	socketServer.OnEvent("/", "leave_game", leaveGameHandler)
 
+	socketServer.OnEvent("/", "load_games", loadGamesHandler)
+
+	socketServer.OnEvent("/", "change_player_color", changePlayerColorHandler)
+
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 
 		log.D("disconnected... %v, by %v", so.ID(), reason)
+		connsState.lobbyUsersMap.Delete(so.ID())
+		connsState.socketsMap.Delete(so.ID())
 	})
 
 	go func() {

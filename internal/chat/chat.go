@@ -8,9 +8,9 @@ import (
 	"mars-go-service/internal/logger"
 	"net/http"
 	"runtime/debug"
+	"sync"
 
 	"encoding/json"
-	utils "mars-go-service/internal/utils"
 
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/googollee/go-socket.io/engineio"
@@ -18,10 +18,10 @@ import (
 )
 
 type connectionsState struct {
-	soIdToUserIdMap map[string] /*socketId*/ string /*userId*/
-	roomToSoIdsMap  map[string] /*room*/ []string   /*socketId*/
-	soIdToConnMap   map[string] /*socketId*/ socketio.Conn
-	soIdToRoomsMap  map[string] /*socketId*/ []string /*room*/
+	soIdToUserIdMap *sync.Map //map[string] /*socketId*/ string          /*userId*/
+	roomToSoIdsMap  *sync.Map //map[string] /*room*/ map[string]struct{} /*socketId*/
+	soIdToConnMap   *sync.Map //map[string] /*socketId*/ *socketio.Conn
+	soIdToRoomsMap  *sync.Map //map[string] /*socketId*/ map[string]struct{} /*room*/
 }
 
 var (
@@ -66,10 +66,24 @@ func saveAndShareEvent(evtType db.EventType, chatRoom string, userId string, tex
 	//BroadcastToRoom sends one by one and waits for the response
 	//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
 	//because BroadcastToRoom waits for the response from each connection, it may take a long time
-	for _, soId := range connsState.roomToSoIdsMap[chatRoom] {
-		so := connsState.soIdToConnMap[soId]
-		go emitEvent(so, string(eventsJson))
+	soIdMap, ok := connsState.roomToSoIdsMap.Load(chatRoom)
+	if !ok {
+		log.E("saveAndShareEvent connsState.roomToSoIdsMap.Load error: %v", chatRoom)
+		return
 	}
+	soIdMap0 := soIdMap.(*sync.Map)
+	soIdMap0.Range(func(key, value interface{}) bool {
+		soId := key.(string)
+		so, ok := connsState.soIdToConnMap.Load(soId)
+		if !ok {
+			log.E("saveAndShareEvent connsState.soIdToConnMap.Load error: %v", soId)
+			return true
+		}
+		if so != nil {
+			go emitEvent(*so.(*socketio.Conn), string(eventsJson))
+		}
+		return true
+	})
 }
 
 func emitEvent(so socketio.Conn, eventsJson string) {
@@ -100,38 +114,56 @@ func sendActualDataToUser(so socketio.Conn, chatRoom string) {
 
 func joinHandler(so socketio.Conn, chatRoom string) {
 	log.D("%v join %v", so.ID(), chatRoom)
-	roomUsers := connsState.roomToSoIdsMap[chatRoom]
-	if roomUsers == nil {
-		connsState.roomToSoIdsMap[chatRoom] = make([]string, 0)
-	}
-	connsState.soIdToRoomsMap[so.ID()] = append(connsState.soIdToRoomsMap[so.ID()], chatRoom)
-	connsState.roomToSoIdsMap[chatRoom] = append(connsState.roomToSoIdsMap[chatRoom], so.ID())
+	soIdsMap, _ := connsState.roomToSoIdsMap.LoadOrStore(chatRoom, &sync.Map{})
+	soIdsMap0 := soIdsMap.(*sync.Map)
+	soIdsMap0.Store(so.ID(), struct{}{})
+
+	roomsMap, _ := connsState.soIdToRoomsMap.LoadOrStore(so.ID(), &sync.Map{})
+	roomsMap0 := roomsMap.(*sync.Map)
+	roomsMap0.Store(chatRoom, struct{}{})
+
 	so.Join(chatRoom)
 	sendActualDataToUser(so, chatRoom)
-	saveAndShareEvent(JOIN, chatRoom, connsState.soIdToUserIdMap[so.ID()], "")
+	userId, ok := connsState.soIdToUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("joinHandler userId not found")
+		return
+	}
+	saveAndShareEvent(JOIN, chatRoom, userId.(string), "")
+
 }
 
 func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 	log.D("%v leave %v", so.ID(), chatRoom)
 
-	userId := connsState.soIdToUserIdMap[so.ID()]
+	userId, ok := connsState.soIdToUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("leaveHandler userId not found")
+		return
+	}
 	if !isDisconnect {
 		so.Leave(chatRoom)
 	} else {
-		delete(connsState.soIdToUserIdMap, so.ID())
-		delete(connsState.soIdToConnMap, so.ID())
+		connsState.soIdToUserIdMap.Delete(so.ID())
+		connsState.soIdToConnMap.Delete(so.ID())
 	}
-	connsState.soIdToRoomsMap[so.ID()] = utils.DeleteSliceStringElement(connsState.soIdToRoomsMap[so.ID()], chatRoom)
-	connsState.roomToSoIdsMap[chatRoom] = utils.DeleteSliceStringElement(connsState.roomToSoIdsMap[chatRoom], so.ID())
-	saveAndShareEvent(LEAVE, chatRoom, userId, "")
+	roomsMap, _ := connsState.soIdToRoomsMap.Load(so.ID())
+	roomsMap0 := roomsMap.(*sync.Map)
+	roomsMap0.Delete(chatRoom)
+
+	soIdsMap, _ := connsState.roomToSoIdsMap.Load(chatRoom)
+	soIdsMap0 := soIdsMap.(*sync.Map)
+	soIdsMap0.Delete(so.ID())
+
+	saveAndShareEvent(LEAVE, chatRoom, userId.(string), "")
 }
 
 func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
 	connsState = &connectionsState{
-		soIdToUserIdMap: make(map[string] /*socketId*/ string /*userId*/),
-		roomToSoIdsMap:  make(map[string] /*room*/ []string /*socketId*/),
-		soIdToConnMap:   make(map[string] /*socketId*/ socketio.Conn),
-		soIdToRoomsMap:  make(map[string] /*socketId*/ []string /*room*/),
+		soIdToUserIdMap: &sync.Map{},
+		roomToSoIdsMap:  &sync.Map{},
+		soIdToConnMap:   &sync.Map{},
+		soIdToRoomsMap:  &sync.Map{},
 	}
 
 	socketServer = socketio.NewServer(&engineio.Options{
@@ -142,7 +174,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			if err != nil {
 				log.E("jwt.GetUserId error: %v", err)
 			}
-			connsState.soIdToUserIdMap[so.ID()] = userId
+			connsState.soIdToUserIdMap.Store(so.ID(), userId)
 		},
 		RequestChecker: func(r *http.Request) (http.Header, error) {
 			jwtFromRequest := r.URL.Query().Get("jwt")
@@ -156,7 +188,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 
 	socketServer.OnConnect("/", func(so socketio.Conn) error {
 		log.D("connected... %v", so.ID())
-		connsState.soIdToConnMap[so.ID()] = so
+		connsState.soIdToConnMap.Store(so.ID(), &so)
 		return nil
 	})
 
@@ -177,9 +209,13 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			log.E("event.Text is empty")
 			return
 		}
-		userId := connsState.soIdToUserIdMap[so.ID()]
+		userId, ok := connsState.soIdToUserIdMap.Load(so.ID())
+		if !ok {
+			log.E("chat userId not found")
+			return
+		}
 		log.D("%v, %v chat '%v'", so.ID(), userId, event.ChatRoom, event.Text)
-		saveAndShareEvent(MESSAGE, event.ChatRoom, userId, event.Text)
+		saveAndShareEvent(MESSAGE, event.ChatRoom, userId.(string), event.Text)
 	})
 
 	socketServer.OnEvent("/", "leave", func(so socketio.Conn, chatRoom string) {
@@ -187,9 +223,17 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	})
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
-		for _, room := range connsState.soIdToRoomsMap[so.ID()] {
-			leaveHandler(so, room, true)
+		roomsMap, ok := connsState.soIdToRoomsMap.Load(so.ID())
+		if !ok {
+			log.E("soIdToRoomsMap not found")
+			return
 		}
+		roomsMap0 := roomsMap.(*sync.Map)
+		roomsMap0.Range(func(key, value interface{}) bool {
+			room := key.(string)
+			leaveHandler(so, room, true)
+			return true
+		})
 		log.D("disconnected... %v, by %v", so.ID(), reason)
 	})
 
