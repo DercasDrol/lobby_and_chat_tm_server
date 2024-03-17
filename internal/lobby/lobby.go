@@ -28,6 +28,10 @@ var (
 	socketServer *socketio.Server
 )
 
+const (
+	START_GAME_HANDLER = "game"
+)
+
 func init() {
 	log = logger.NewLogger("lobby_server")
 }
@@ -54,12 +58,28 @@ func createHandler(so socketio.Conn, newGameConfig string) {
 		log.E("createHandler db.InsertNewGameAndGetInsertedIdBack error: %v", err)
 		return
 	}
-	broadcastGame(lobbyGame)
+	if lobbyGame.SharedAt == nil {
+		sendGamesToOneUser(so, lobbyGame)
+	} else {
+		broadcastGame(lobbyGame)
+	}
+}
+
+func sendGamesToOneUser(so socketio.Conn, lobbyGame *db.LobbyGame) {
+	games := make([]*db.LobbyGame, 1)
+	games[0] = lobbyGame
+	gamesJson, err := json.Marshal(games)
+	if err != nil {
+		log.E("broadcastGames json.Marshal error: %v", err)
+		return
+	}
+	go emitGames(so, string(gamesJson))
 }
 
 func broadcastGame(game *db.LobbyGame) {
 	games := make([]*db.LobbyGame, 1)
 	games[0] = game
+
 	broadcastGames(games)
 }
 
@@ -104,7 +124,11 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 			log.E("updateHandler db.UpdateNewGameSettings error: %v", err)
 			return
 		}
-		broadcastGame(lobbyGame)
+		if lobbyGame.SharedAt == nil {
+			sendGamesToOneUser(so, lobbyGame)
+		} else {
+			broadcastGame(lobbyGame)
+		}
 	} else {
 		log.E("updateHandler userId %v != lobbyGameToUpdate.UserIdCreatedBy %v", userId.(string), lobbyGameToUpdate.UserIdCreatedBy)
 	}
@@ -157,6 +181,7 @@ func startGameHandler(so socketio.Conn, lobbyGameId string) {
 		log.E("startGameHandler userId not found")
 		return
 	}
+
 	//start game
 	lobbyGame, err := db.StartGame(userId.(string), lobbyGameId)
 	if err != nil {

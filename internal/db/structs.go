@@ -2,6 +2,12 @@ package db
 
 import "time"
 
+type User struct {
+	Id       string `json:"id"`
+	Username string `json:"username"`
+	Avatar   string `json:"avatar"`
+}
+
 type EventType string
 
 // Event is to define the event
@@ -89,4 +95,59 @@ type LobbyGame struct {
 	FinishedAt      *time.Time    `json:"finishedAt,omitempty"`
 	FinalStatistic  *string       `json:"finalState,omitempty"`
 	UserIdCreatedBy string        `json:"userIdCreatedBy"`
+}
+
+type SimpleGameModel struct {
+	ActivePlayer       string           `json:"activePlayer"`
+	Id                 string           `json:"id"`
+	Phase              string           `json:"phase"`
+	Players            []SimplePlayer   `json:"players"`
+	SpectatorId        *string          `json:"spectatorId,omitempty"`
+	GameOptions        GameOptionsModel `json:"gameOptions"`
+	LastSoloGeneration int              `json:"lastSoloGeneration"`
+	ExpectedPurgeTime  int              `json:"expectedPurgeTimeMs"`
+}
+
+type SimplePlayer struct {
+	Color string `json:"color"`
+	Id    string `json:"id"`
+	Name  string `json:"name"`
+}
+
+type GameOptionsModel struct {
+	AresExtension                    bool     `json:"aresExtension"`
+	AltVenusBoard                    bool     `json:"altVenusBoard"`
+	Board                            string   `json:"board"`
+	BannedCards                      []string `json:"bannedCards"`
+	CeoExtension                     bool     `json:"ceoExtension"`
+	Colonies                         bool     `json:"colonies"`
+	CommunityCardsOption             bool     `json:"communityCardsOption"`
+	CorporateEra                     bool     `json:"corporateEra"`
+	DraftVariant                     bool     `json:"draftVariant"`
+	EscapeVelocityMode               bool     `json:"escapeVelocityMode"`
+	EscapeVelocityThreshold          *int     `json:"escapeVelocityThreshold,omitempty"`
+	EscapeVelocityPeriod             *int     `json:"escapeVelocityPeriod,omitempty"`
+	EscapeVelocityPenalty            *int     `json:"escapeVelocityPenalty,omitempty"`
+	FastModeOption                   bool     `json:"fastModeOption"`
+	IncludeFanMA                     bool     `json:"includeFanMA"`
+	IncludeVenusMA                   bool     `json:"includeVenusMA"`
+	InitialDraft                     bool     `json:"initialDraft"`
+	MoonExpansion                    bool     `json:"moonExpansion"`
+	PathfindersExpansion             bool     `json:"pathfindersExpansion"`
+	Prelude                          bool     `json:"prelude"`
+	PromoCardsOption                 bool     `json:"promoCardsOption"`
+	PoliticalAgendasExtension        string   `json:"politicalAgendasExtension"`
+	RemoveNegativeGlobalEventsOption bool     `json:"removeNegativeGlobalEventsOption"`
+	ShowOtherPlayersVP               bool     `json:"showOtherPlayersVP"`
+	ShowTimers                       bool     `json:"showTimers"`
+	ShuffleMapOption                 bool     `json:"shuffleMapOption"`
+	SolarPhaseOption                 bool     `json:"solarPhaseOption"`
+	SoloTR                           bool     `json:"soloTR"`
+	RandomMA                         string   `json:"randomMA"`
+	RequiresMoonTrackCompletion      bool     `json:"requiresMoonTrackCompletion"`
+	RequiresVenusTrackCompletion     bool     `json:"requiresVenusTrackCompletion"`
+	Turmoil                          bool     `json:"turmoil"`
+	TwoCorpsVariant                  bool     `json:"twoCorpsVariant"`
+	VenusNext                        bool     `json:"venusNext"`
+	UndoOption                       bool     `json:"undoOption"`
 }

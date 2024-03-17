@@ -1,9 +1,13 @@
 package db
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 	"mars-go-service/internal/utils"
 	"math/rand"
+	"net/http"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -117,4 +121,45 @@ func getChangedGameFromRow(row pgx.Row) (*LobbyGame, error) {
 	}
 	lobbyGame.NewGameConfig = *newGameConfigStruct
 	return lobbyGame, nil
+}
+
+func getSimpleGameModel(serverUrl string, lobbyGame *LobbyGame) (*SimpleGameModel, error) {
+
+	requestURL := fmt.Sprintf("%vgame", serverUrl)
+
+	newGameCongigJson, err := json.Marshal(lobbyGame.NewGameConfig)
+	if err != nil {
+		log.E("startGameHandler json.Marshal error: %v", err)
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, requestURL, bytes.NewReader(newGameCongigJson))
+	if err != nil {
+		fmt.Printf("startGameHandler: could not create request: %s\n", err)
+		return nil, err
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Printf("startGameHandler: error making http request: %s\n", err)
+		return nil, err
+	}
+
+	fmt.Printf("startGameHandler: got response!\n")
+	fmt.Printf("startGameHandler: status code: %d\n", res.StatusCode)
+
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Printf("startGameHandler: could not read response body: %s\n", err)
+		return nil, err
+	}
+	fmt.Printf("startGameHandler: response body: %s\n", resBody)
+
+	simpleGameModel := &SimpleGameModel{}
+	err = json.Unmarshal(resBody, simpleGameModel)
+	if err != nil {
+		log.E("startGameHandler json.Unmarshal(simpleGameModel) error: %v", err)
+		return nil, err
+	}
+	return simpleGameModel, nil
 }

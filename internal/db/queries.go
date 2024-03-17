@@ -55,6 +55,34 @@ func InsertOrUpdateUser(id string, name string, avatar string) error {
 	return nil
 }
 
+func GetUserInfos(ids []string) ([]*User, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `SELECT id, name, avatar FROM users WHERE id = ANY($1);`
+	rows, err := dbpool.Query(context.Background(), query, ids)
+	if err != nil {
+		log.E("SELECT FROM users failed: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	users := make([]*User, 0)
+	for rows.Next() {
+		user := &User{}
+		err = rows.Scan(&user.Id, &user.Username, &user.Avatar)
+		if err != nil {
+			log.E("rows.Scan failed: %v\n", err)
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
+
 func InsertNewEventAndGetInsertedIdBack(userId string, message string, eventType string, room_key string) (*int, *time.Time, error) {
 	var id int
 	var created_at time.Time
@@ -161,7 +189,7 @@ func GetEventsByRoom(room_key string) ([]*Event, error) {
 		FROM chat_events
 		WHERE room_key = $1
 		ORDER BY id DESC
-		LIMIT 100;
+		LIMIT 50;
 	`
 	rows, err := dbpool.Query(context.Background(), query, room_key)
 	if err != nil {
@@ -272,15 +300,28 @@ func StartGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		return nil, err
 	}
 	preparePlayersToStart(&lobbyGame.NewGameConfig)
-
+	if lobbyGame.UserIdCreatedBy != userId {
+		log.E("startGameHandler userId %v != lobbyGame.UserIdCreatedBy %v", userId, lobbyGame.UserIdCreatedBy)
+		return nil, fmt.Errorf("startGameHandler userId %v != lobbyGame.UserIdCreatedBy %v", userId, lobbyGame.UserIdCreatedBy)
+	}
+	serverUrl, err := getServerUrl(lobbyGameId, dbpool)
+	if err != nil {
+		log.E("startGameHandler db.getServerUrl error: %v", err)
+		return nil, err
+	}
+	simpleGameModel, err := getSimpleGameModel(serverUrl, lobbyGame)
+	if err != nil {
+		log.E("startGameHandler getSimpleGameModel error: %v", err)
+		return nil, err
+	}
 	query := `
 		UPDATE games
-		SET started_at = now(), settings = $3
+		SET started_at = now(), settings = $3, server_game_id = $4, death_day = $5, server_spectator_id = $6
 		WHERE id = $1 AND user_id = $2
 		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at;
 	`
 
-	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId, lobbyGame.NewGameConfig))
+	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId, lobbyGame.NewGameConfig, simpleGameModel.Id, time.Unix(0, int64(simpleGameModel.ExpectedPurgeTime)*int64(time.Millisecond)), simpleGameModel.SpectatorId))
 }
 
 func JoinGame(userId string, lobbyGameId string) (*LobbyGame, error) {
@@ -353,6 +394,16 @@ func LeaveGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
+func GetLobbyGame(lobbyGameId string) (*LobbyGame, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	return getLobbyGame(lobbyGameId, dbpool)
+}
+
 func getLobbyGame(lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGame, error) {
 	query := `
 		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at
@@ -396,4 +447,21 @@ func ChangePlayerColor(lobbyGame *LobbyGame, userId string) (*LobbyGame, error) 
 
 	updateLobbyGamePlayers(newPlayersMap, lobbyGameFromDB, &userId, newColor)
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
+}
+
+func getServerUrl(lobbyGameId string, dbpool *pgxpool.Pool) (string, error) {
+
+	query := `
+		SELECT game_servers.url
+		FROM games
+		JOIN game_servers ON games.server_id = game_servers.id
+		WHERE games.id = $1;
+	`
+	var serverUrl string
+	err := dbpool.QueryRow(context.Background(), query, lobbyGameId).Scan(&serverUrl)
+	if err != nil {
+		log.E("getServerUrl failed: %v\n", err)
+		return "", err
+	}
+	return serverUrl, nil
 }

@@ -80,10 +80,55 @@ func saveAndShareEvent(evtType db.EventType, chatRoom string, userId string, tex
 			return true
 		}
 		if so != nil {
+			if evtType == JOIN || evtType == LEAVE {
+				chatUserList := getChatUserList(chatRoom)
+				go emitUserIds(*so.(*socketio.Conn), chatUserList)
+			}
+
 			go emitEvent(*so.(*socketio.Conn), string(eventsJson))
 		}
 		return true
 	})
+}
+
+func getChatUserList(chatRoom string) *ChatUserList {
+	soIdsMap, ok := connsState.roomToSoIdsMap.Load(chatRoom)
+	if !ok {
+		log.E("getChatUserList connsState.roomToSoIdsMap.Load error: %v", chatRoom)
+		return nil
+	}
+	soIdsMap0 := soIdsMap.(*sync.Map)
+	usersIds := make([]string, 0)
+	soIdsMap0.Range(func(key, value interface{}) bool {
+		soId := key.(string)
+		userId, ok := connsState.soIdToUserIdMap.Load(soId)
+		if !ok {
+			log.E("getChatUserList connsState.soIdToUserIdMap.Load error: %v", soId)
+			return true
+		}
+		usersIds = append(usersIds, userId.(string))
+		return true
+	})
+	return &ChatUserList{chatRoom, usersIds}
+}
+
+type ChatUserList struct {
+	ChatRoom string   `json:"chatRoom"`
+	UsersIds []string `json:"usersIds"`
+}
+
+func emitUserIds(so socketio.Conn, chatUserList *ChatUserList) {
+	chatUserListJson, err := json.Marshal(chatUserList)
+	if err != nil {
+		log.E("emitUserIds json.Marshal error: %v", err)
+		return
+	}
+	defer func() {
+		if panicInfo := recover(); panicInfo != nil {
+			fmt.Printf("%v, %s", panicInfo, string(debug.Stack()))
+		}
+	}()
+	so.Emit("online_users_list_changes", string(chatUserListJson))
 }
 
 func emitEvent(so socketio.Conn, eventsJson string) {
@@ -137,15 +182,9 @@ func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 	log.D("%v leave %v", so.ID(), chatRoom)
 
 	userId, ok := connsState.soIdToUserIdMap.Load(so.ID())
-	if !ok {
-		log.E("leaveHandler userId not found")
-		return
-	}
+
 	if !isDisconnect {
 		so.Leave(chatRoom)
-	} else {
-		connsState.soIdToUserIdMap.Delete(so.ID())
-		connsState.soIdToConnMap.Delete(so.ID())
 	}
 	roomsMap, _ := connsState.soIdToRoomsMap.Load(so.ID())
 	roomsMap0 := roomsMap.(*sync.Map)
@@ -155,6 +194,10 @@ func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 	soIdsMap0 := soIdsMap.(*sync.Map)
 	soIdsMap0.Delete(so.ID())
 
+	if !ok {
+		log.E("leaveHandler userId not found")
+		return
+	}
 	saveAndShareEvent(LEAVE, chatRoom, userId.(string), "")
 }
 
@@ -222,6 +265,28 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 		leaveHandler(so, chatRoom, false)
 	})
 
+	socketServer.OnEvent("/", "get_users_infos", func(so socketio.Conn, userIds string) {
+		log.D("get_users_infos handler : %v", userIds)
+		userIdsArr := []string{}
+		err := json.Unmarshal([]byte(userIds), &userIdsArr)
+		if err != nil {
+			log.E("json.Unmarshal(userIds) error: %v", err)
+			return
+		}
+		users, err := db.GetUserInfos(userIdsArr)
+		if err != nil {
+			log.E("db.GetUserInfos error: %v", err)
+			return
+		}
+		usersJson, err := json.Marshal(users)
+		if err != nil {
+			log.E("json.Marshal(users) error: %v", err)
+			return
+		}
+		so.Emit("users_infos", string(usersJson))
+		log.D("users_infos emitted : %v", string(usersJson))
+	})
+
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 		roomsMap, ok := connsState.soIdToRoomsMap.Load(so.ID())
 		if !ok {
@@ -234,6 +299,8 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			leaveHandler(so, room, true)
 			return true
 		})
+		connsState.soIdToUserIdMap.Delete(so.ID())
+		connsState.soIdToConnMap.Delete(so.ID())
 		log.D("disconnected... %v, by %v", so.ID(), reason)
 	})
 
