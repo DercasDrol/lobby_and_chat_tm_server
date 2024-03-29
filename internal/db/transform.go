@@ -108,7 +108,7 @@ func updateLobbyGamePlayers(newPlayersMap map[string] /*userId*/ string /*player
 func getChangedGameFromRow(row pgx.Row) (*LobbyGame, error) {
 	lobbyGame := &LobbyGame{}
 	var newGameConfig string
-	err := row.Scan(&lobbyGame.LobbyGameid, &newGameConfig, &lobbyGame.DeathDay, &lobbyGame.FinishedAt, &lobbyGame.FinalStatistic, &lobbyGame.StartedAt, &lobbyGame.CreatedAt, &lobbyGame.UserIdCreatedBy, &lobbyGame.SharedAt)
+	err := row.Scan(&lobbyGame.LobbyGameid, &newGameConfig, &lobbyGame.DeathDay, &lobbyGame.FinishedAt, &lobbyGame.FinalStatistic, &lobbyGame.StartedAt, &lobbyGame.CreatedAt, &lobbyGame.UserIdCreatedBy, &lobbyGame.SharedAt, &lobbyGame.SpectatorId)
 	if err != nil {
 		log.E("rows.Scan failed: %v\n", err)
 		return nil, err

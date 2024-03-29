@@ -95,6 +95,7 @@ type LobbyGame struct {
 	FinishedAt      *time.Time    `json:"finishedAt,omitempty"`
 	FinalStatistic  *string       `json:"finalState,omitempty"`
 	UserIdCreatedBy string        `json:"userIdCreatedBy"`
+	SpectatorId     *string       `json:"spectatorId,omitempty"`
 }
 
 type SimpleGameModel struct {
@@ -112,6 +113,12 @@ type SimplePlayer struct {
 	Color string `json:"color"`
 	Id    string `json:"id"`
 	Name  string `json:"name"`
+}
+
+type Player struct {
+	UserId         string `json:"userId"`
+	ServerPlayerId string `json:"serverPlayerId"`
+	LobbyGameId    int    `json:"lobbyGameId"`
 }
 
 type GameOptionsModel struct {

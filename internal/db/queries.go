@@ -139,7 +139,7 @@ func updateNewGameSettings(userId string, lobbyGameToUpdate LobbyGame, dbpool *p
 		UPDATE games
 		SET settings = $1
 		WHERE id = $2 AND user_id = $3 
-		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at;
+		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
 	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.LobbyGameid, userId))
 }
@@ -219,7 +219,7 @@ func GetLobbyGames(userId string) ([]*LobbyGame, error) {
 	defer dbpool.Close()
 
 	query := `
-		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at
+		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id
 		FROM games
 		where user_id = $1 OR (shared_at is not null AND finished_at is null);
 	`
@@ -282,7 +282,7 @@ func ShareGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		UPDATE games
 		SET shared_at = now()
 		WHERE id = $1 AND user_id = $2
-		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at;
+		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
 
 	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId))
@@ -314,14 +314,32 @@ func StartGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		log.E("startGameHandler getSimpleGameModel error: %v", err)
 		return nil, err
 	}
+	addServerPlayerIds(lobbyGameId, &lobbyGame.NewGameConfig.Players, &simpleGameModel.Players, dbpool)
 	query := `
 		UPDATE games
 		SET started_at = now(), settings = $3, server_game_id = $4, death_day = $5, server_spectator_id = $6
 		WHERE id = $1 AND user_id = $2
-		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at;
+		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
 
 	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId, lobbyGame.NewGameConfig, simpleGameModel.Id, time.Unix(0, int64(simpleGameModel.ExpectedPurgeTime)*int64(time.Millisecond)), simpleGameModel.SpectatorId))
+}
+
+func addServerPlayerIds(lobbyGameId string, players *[]NewPlayerModel, gameServerPlayers *[]SimplePlayer, dbpool *pgxpool.Pool) error {
+	query := `UPDATE players SET server_player_id = $1 WHERE user_id = $2 AND game_id = $3;`
+	for _, player := range *players {
+		for _, gameServerPlayer := range *gameServerPlayers {
+			if player.Color == gameServerPlayer.Color {
+				_, err := dbpool.Exec(context.Background(), query, gameServerPlayer.Id, player.UserId, lobbyGameId)
+				if err != nil {
+					log.E("UPDATE players SET server_player_id failed: %v\n", err)
+					return err
+				}
+				break
+			}
+		}
+	}
+	return nil
 }
 
 func JoinGame(userId string, lobbyGameId string) (*LobbyGame, error) {
@@ -394,19 +412,9 @@ func LeaveGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
-func GetLobbyGame(lobbyGameId string) (*LobbyGame, error) {
-	dbpool, err := newConn()
-	if err != nil {
-		return nil, err
-	}
-	defer dbpool.Close()
-
-	return getLobbyGame(lobbyGameId, dbpool)
-}
-
 func getLobbyGame(lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGame, error) {
 	query := `
-		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at
+		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id
 		FROM games
 		WHERE id = $1;
 	`
@@ -464,4 +472,25 @@ func getServerUrl(lobbyGameId string, dbpool *pgxpool.Pool) (string, error) {
 		return "", err
 	}
 	return serverUrl, nil
+}
+
+func GetPlayer(lobbyGameId string, userId string) (*Player, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `
+		SELECT user_id, server_player_id, game_id
+		FROM players
+		WHERE user_id = $1 AND game_id = $2;
+	`
+	var player Player
+	err = dbpool.QueryRow(context.Background(), query, userId, lobbyGameId).Scan(&player.UserId, &player.ServerPlayerId, &player.LobbyGameId)
+	if err != nil {
+		log.E("SELECT FROM players failed: %v\n", err)
+		return nil, err
+	}
+	return &player, nil
 }

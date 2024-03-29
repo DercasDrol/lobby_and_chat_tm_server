@@ -266,6 +266,26 @@ func changePlayerColorHandler(so socketio.Conn, lobbyGame string) {
 	broadcastGame(lobbyGameUpdated)
 }
 
+func loadPlayerHandler(so socketio.Conn, lobbyGameId string) {
+	log.D("%v loadPlayerHandler %v", so.ID(), lobbyGameId)
+	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	if !ok {
+		log.E("loadPlayerIdHandler userId not found")
+		return
+	}
+	player, err := db.GetPlayer(lobbyGameId, userId.(string))
+	if err != nil {
+		log.E("loadPlayerIdHandler db.GetLobbyGame error: %v", err)
+		return
+	}
+	playerJson, err := json.Marshal(player)
+	if err != nil {
+		log.E("loadPlayerIdHandler json.Marshal error: %v", err)
+		return
+	}
+	so.Emit("player", string(playerJson))
+}
+
 // InitServer initializes the server
 func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
 	connsState = &connectionsState{
@@ -321,6 +341,8 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	socketServer.OnEvent("/", "load_games", loadGamesHandler)
 
 	socketServer.OnEvent("/", "change_player_color", changePlayerColorHandler)
+
+	socketServer.OnEvent("/", "load_player", loadPlayerHandler)
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 
