@@ -1,3 +1,7 @@
+/server/.vscode
+/server/configs/private.json
+/server/tmp
+
 # Miscellaneous
 *.class
 *.lock
@@ -23,41 +27,41 @@
 .vscode/
 
 # Flutter repo-specific
-/bin/cache/
-/bin/internal/bootstrap.bat
-/bin/internal/bootstrap.sh
-/bin/mingit/
-/dev/benchmarks/mega_gallery/
-/dev/bots/.recipe_deps
-/dev/bots/android_tools/
-/dev/devicelab/ABresults*.json
-/dev/docs/doc/
-/dev/docs/flutter.docs.zip
-/dev/docs/lib/
-/dev/docs/pubspec.yaml
-/dev/integration_tests/**/xcuserdata
-/dev/integration_tests/**/Pods
-/packages/flutter/coverage/
-version
-analysis_benchmark.json
+/client/bin/cache/
+/client/bin/internal/bootstrap.bat
+/client/bin/internal/bootstrap.sh
+/client/bin/mingit/
+/client/dev/benchmarks/mega_gallery/
+/client/dev/bots/.recipe_deps
+/client/dev/bots/android_tools/
+/client/dev/devicelab/ABresults*.json
+/client/dev/docs/doc/
+/client/dev/docs/flutter.docs.zip
+/client/dev/docs/lib/
+/client/dev/docs/pubspec.yaml
+/client/dev/integration_tests/**/xcuserdata
+/client/dev/integration_tests/**/Pods
+/client/packages/flutter/coverage/
+/client/version
+/client/analysis_benchmark.json
 
 # packages file containing multi-root paths
 .packages.generated
 
 # Flutter/Dart/Pub related
-**/doc/api/
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
+/client/**/doc/api/
+/client/.dart_tool/
+/client/.flutter-plugins
+/client/.flutter-plugins-dependencies
 **/generated_plugin_registrant.dart
-.packages
-.pub-cache/
-.pub/
-build/
-flutter_*.png
-linked_*.ds
-unlinked.ds
-unlinked_spec.ds
+/client/.packages
+/client/.pub-cache/
+/client/.pub/
+/client/build/
+/client/flutter_*.png
+/client/linked_*.ds
+/client/unlinked.ds
+/client/unlinked_spec.ds
 
 # Android related
 **/android/**/gradle-wrapper.jar
