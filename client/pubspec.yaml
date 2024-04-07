@@ -1,0 +1,94 @@
+name: mars_flutter
+description: Mars flutter client app
+
+publish_to: 'none'
+
+version: 1.0.0+5
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  dropdown_button2: ^3.0.0-beta.10
+  socket_io_client: 1.0.2
+  jwt_decoder: ^2.0.1
+  go_router: ^13.1.0
+  logger: ^2.0.2+1
+  url_launcher:
+  flutter_secure_storage: ^9.0.0
+  webview_flutter_web: ^0.2.2+4
+  just_the_tooltip:
+  hexagon:
+  http: ^1.0.0
+  tab_container: ^2.0.0
+  equatable:
+  flutter_bloc:
+  flutter:
+    sdk: flutter
+
+  bloc: any
+dev_dependencies:
+  statsfl:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.3.3
+  flutter_gen_runner: ^5.3.0
+
+flutter_gen:
+  output: lib/data/asset_paths_gen/
+  assets:
+    # Optional
+    enabled: true
+    # Optional
+    outputs:
+      # Optional
+      # Set to true if you want this package to be a package dependency
+      # See: https://flutter.dev/docs/development/ui/assets-and-images#from-packages
+      package_parameter_enabled: false
+      # Optional
+      # Available values:
+      # - camel-case
+      # - snake-case
+      # - dot-delimiter
+      style: dot-delimiter
+      class_name: Assets
+    exclude: []
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/board/
+    - assets/buttons-homepage/
+    - assets/ceos/
+    - assets/colonies-planets/
+    - assets/expansion_icons/
+    - assets/global-parameters/
+    - assets/help/
+    - assets/jsons/locales/
+    - assets/jsons/
+    - assets/ma/
+    - assets/ma/fanmade/
+    - assets/misc/
+    - assets/moon/
+    - assets/parties/
+    - assets/pathfinders/
+    - assets/prelude2/
+    - assets/promo/
+    - assets/requisites/
+    - assets/resources/
+    - assets/sidebar/
+    - assets/tags/
+    - assets/tiles/
+    - assets/tiles/special_tile_icons/
+    - assets/card_module_icons/
+    - assets/underworld/
+  fonts:
+  - family: Futureforces
+    fonts:
+      - asset: assets/fonts/futureforces.ttf
+  - family: Prototype
+    fonts:
+      - asset: assets/fonts/Prototype.ttf
+  - family: Ubuntu
+    fonts:
+      - asset: assets/fonts/Ubuntu-Medium.ttf
