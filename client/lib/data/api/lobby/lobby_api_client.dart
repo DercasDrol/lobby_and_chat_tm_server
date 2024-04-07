@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/data/api/common/socket.dart';
+import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/data/jwt.dart';
 import 'package:mars_flutter/domain/model/game/NewGameConfig.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/lobby_game.dart';
@@ -10,7 +11,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/ch
 import 'package:socket_io_client/socket_io_client.dart';
 
 class LobbyAPIClient {
-  final _socket = getNewSocketInstance('4001');
+  final _socket = getNewSocketInstance(LOBBY_PORT);
   String? _userId = null;
   String? get userId => _userId;
   final ValueNotifier<String?> jwt;

@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart';
 
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/data/api/common/socket.dart';
+import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/data/storage.dart';
 
 class AuthAPIClient {
   final ValueNotifier<String?> jwt = ValueNotifier(null);
   final ValueNotifier<String?> authUrl = ValueNotifier(null);
-  final _socket = getNewSocketInstance('4000');
+  final _socket = getNewSocketInstance(AUTH_PORT);
 
   AuthAPIClient() {
     logger.d('AuthApiClient init');

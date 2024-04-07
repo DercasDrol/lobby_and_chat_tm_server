@@ -36,22 +36,22 @@ func main() {
 	pConf := config.GetPrivateConfigInstance()
 
 	authConf := &oauth2.Config{
-		RedirectURL:  fmt.Sprintf("%v:%v%v", conf.AuthServerConfig.Host, conf.AuthServerConfig.Port, conf.AuthServerConfig.OAuthCallbackEndpoint),
-		ClientID:     pConf.Auth.ClientID,
-		ClientSecret: pConf.Auth.ClientSecret,
+		RedirectURL:  fmt.Sprintf("%v:%v%v", pConf.DB.Host, conf.AuthServerConfig.Port, conf.AuthServerConfig.OAuthCallbackEndpoint),
+		ClientID:     *pConf.Auth.ClientID,
+		ClientSecret: *pConf.Auth.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify},
 		Endpoint:     discord.Endpoint,
 	}
 
 	go func() {
-		err = StartChatService(conf, pConf.Auth.JwtSecret, authConf)
+		err = StartChatService(conf, *pConf.Auth.JwtSecret, authConf)
 		if err != nil {
 			log.E("Failed to start chat service: %v", err)
 			os.Exit(1)
 		}
 	}()
 	go func() {
-		err = StartLobbyService(conf, pConf.Auth.JwtSecret, authConf)
+		err = StartLobbyService(conf, *pConf.Auth.JwtSecret, authConf)
 		if err != nil {
 			log.E("Failed to start lobby service: %v", err)
 			os.Exit(1)
@@ -63,7 +63,7 @@ func main() {
 		http.ListenAndServe(":80", nil)
 	}()
 
-	err = StartAuthService(conf, pConf.Auth.JwtSecret, authConf)
+	err = StartAuthService(conf, *pConf.Auth.JwtSecret, authConf)
 	if err != nil {
 		log.E("Failed to start auth service: %v", err)
 		os.Exit(1)

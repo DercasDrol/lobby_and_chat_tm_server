@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/data/api/common/socket.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/data/jwt.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/chat_event.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/user_info.dart';
@@ -23,7 +24,7 @@ class ChatUserList {
 }
 
 class ChatAPIClient {
-  final _socket = getNewSocketInstance('4002');
+  final _socket = getNewSocketInstance(CHAT_PORT);
   final ValueNotifier<String?> jwt;
   final ValueNotifier<bool> isChatConnectionOk = ValueNotifier(false);
   final Map<String /*chatRoomKey*/,

@@ -370,7 +370,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 		socketServer.ServeHTTP(w, r)
 	})
 
-	log.I("Serving at %v:%v", conf.LobbyServerConfig.Host, conf.LobbyServerConfig.Port)
+	log.I("Serving at %v", conf.LobbyServerConfig.Port)
 	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", conf.LobbyServerConfig.Port), httpServeMux))
 
 	return nil

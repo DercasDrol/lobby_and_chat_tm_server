@@ -175,7 +175,7 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 	httpServeMux.HandleFunc("/socket.io/", httpSocketIoHandler)
 	httpServeMux.HandleFunc(conf.AuthServerConfig.OAuthCallbackEndpoint, httpOAuthEndpointHandler)
 
-	log.I("Serving at %v:%v", conf.AuthServerConfig.Host, conf.AuthServerConfig.Port)
+	log.I("Serving at %v", conf.AuthServerConfig.Port)
 	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", conf.AuthServerConfig.Port), session.SessionManager.LoadAndSave(httpServeMux)))
 
 	return nil

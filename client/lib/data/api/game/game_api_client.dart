@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mars_flutter/common/log.dart';
+import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/app/RequestPaths.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
@@ -13,7 +14,8 @@ import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 class GameAPIClient {
   GameId _gameId = GameId.fromString("g6491874bdbcc"); //use for debug only
   // static const String _lobbyServerPath = "http://localhost:3000/";
-  static const String _serverPath = "https://terraforming-mars.herokuapp.com/";
+  static const String _serverPath =
+      "${GAME_SERVER_PROTOCOL}://${GAME_SERVER_HOST}/";
   String getPath(RequestPath requestPath) =>
       _serverPath + requestPath.toString() + "?id=";
   String get _playerPath => getPath(RequestPath.API_PLAYER);
