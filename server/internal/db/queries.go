@@ -16,9 +16,20 @@ var (
 	databaseUrl string
 )
 
-func InitDB(dbUrl string) {
+func InitDB(dbUrl string) error {
 	log = logger.NewLogger("db")
 	databaseUrl = dbUrl //"postgres://postgres:mypassword@localhost:5432/postgres"
+	dbpool, err := newConn()
+	if err != nil {
+		return err
+	}
+	defer dbpool.Close()
+	err = PrepareDBtoWork(dbpool)
+	if err != nil {
+		log.E("PrepareDBtoWork failed: %v\n", err)
+		return err
+	}
+	return nil
 }
 
 func newConn() (*pgxpool.Pool, error) {

@@ -18,7 +18,7 @@ class TimerView extends StatefulWidget {
 class TimerViewState extends State<TimerView> {
   Timer? timer;
   bool countDown = false;
-  late Duration duration;
+  Duration? duration;
 
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
@@ -34,7 +34,7 @@ class TimerViewState extends State<TimerView> {
   void addTime() {
     final addSeconds = countDown ? -1 : 1;
     setState(() {
-      final seconds = duration.inSeconds + addSeconds;
+      final seconds = (duration?.inSeconds ?? 0) + addSeconds;
       if (seconds < 0) {
         timer?.cancel();
       } else {
@@ -56,9 +56,9 @@ class TimerViewState extends State<TimerView> {
   @override
   Widget build(BuildContext context) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    final hours = twoDigits(duration?.inHours ?? 0);
+    final minutes = twoDigits((duration?.inMinutes ?? 0).remainder(60));
+    final seconds = twoDigits((duration?.inSeconds ?? 0).remainder(60));
     return Container(
       padding: EdgeInsets.symmetric(vertical: 1.0),
       decoration: BoxDecoration(

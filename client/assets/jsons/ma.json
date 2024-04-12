@@ -13,7 +13,7 @@
   },
   {
     "name": "Builder",
-    "description": "Have 8 building tags"
+    "description": "Have 8 building tags in play"
   },
   {
     "name": "Planner",
@@ -29,23 +29,23 @@
   },
   {
     "name": "Ecologist",
-    "description": "Have 4 bio tags (plant, microbe and animal tags count as bio tags)"
+    "description": "Have 4 bio tags in play (plant, microbe and animal tags count as bio tags)"
   },
   {
     "name": "Tycoon",
-    "description": "Have 15 project cards (blue and green cards)"
+    "description": "Have 15 project cards in play (not events.)"
   },
   {
     "name": "Legend",
-    "description": "Have played 5 events"
+    "description": "Have 5 cards in your event pile"
   },
   {
     "name": "Diversifier",
-    "description": "Have 8 different tags"
+    "description": "Have 8 different tags in play"
   },
   {
     "name": "Tactician",
-    "description": "Have 5 cards with requirements"
+    "description": "Have 5 cards with requirements in play"
   },
   {
     "name": "Polar Explorer",
@@ -57,7 +57,7 @@
   },
   {
     "name": "Rim Settler",
-    "description": "Have 3 Jovian tags"
+    "description": "Have 3 Jovian tags in play"
   },
   {
     "name": "Hoverlord",
@@ -77,7 +77,7 @@
   },
   {
     "name": "Colonizer",
-    "description": "Have built 4 colonies"
+    "description": "Have 4 colonies"
   },
   {
     "name": "Farmer",
@@ -89,7 +89,7 @@
   },
   {
     "name": "Terran",
-    "description": "Have 6 Earth tags"
+    "description": "Have 6 Earth tags in play"
   },
   {
     "name": "Tropicalist",
@@ -101,23 +101,23 @@
   },
   {
     "name": "Pioneer",
-    "description": "Have built 3 colonies"
+    "description": "Have 3 colonies"
   },
   {
     "name": "Land Specialist",
-    "description": "Have 3 special (normally, brown) tiles"
+    "description": "Own 3 special (normally, brown) tiles"
   },
   {
     "name": "Martian",
-    "description": "Have 4 Mars tags"
+    "description": "Have 4 Mars tags in play"
   },
   {
     "name": "Businessperson",
-    "description": "Have 6 Earth tags"
+    "description": "Have 6 Earth tags in play"
   },
   {
     "name": "Collector",
-    "description": "Have 3 sets of automated, active and event cards"
+    "description": "Have 3 sets of automated (green), active (blue) and event (red) project cards in play"
   },
   {
     "name": "Firestarter",
@@ -129,7 +129,7 @@
   },
   {
     "name": "Spacefarer",
-    "description": "Have 6 space tags"
+    "description": "Have 6 space tags in play"
   },
   {
     "name": "Gambler",
@@ -137,7 +137,7 @@
   },
   {
     "name": "Electrician",
-    "description": "Have 4 power tags"
+    "description": "Have 4 power tags in play"
   },
   {
     "name": "Smith",
@@ -156,12 +156,20 @@
     "description": "Have 64 M€"
   },
   {
+    "name": "Risktaker",
+    "description": "Have at least 3 NEGATIVE VPs among your cards. (Event cards count.)"
+  },
+  {
+    "name": "Tunneler",
+    "description": "Have at least 7 excavation markers"
+  },
+  {
     "name": "Landlord",
     "description": "Own the most tiles"
   },
   {
     "name": "Scientist",
-    "description": "Have the most science tags"
+    "description": "Have the most science tags in play"
   },
   {
     "name": "Banker",
@@ -169,19 +177,19 @@
   },
   {
     "name": "Thermalist",
-    "description": "Have the most heat (after final production round)"
+    "description": "Have the most heat"
   },
   {
     "name": "Miner",
-    "description": "Have the most steel and titanium (after final production round)"
+    "description": "Have the most steel and titanium"
   },
   {
     "name": "Celebrity",
-    "description": "Play the most cards with a base cost of at least 20 M€ (not events.)"
+    "description": "Have the most project cards in play with a base cost of at least 20 M€ (not events.)"
   },
   {
     "name": "Industrialist",
-    "description": "Have most steel and energy (after final production round)"
+    "description": "Have most steel and energy"
   },
   {
     "name": "Desert Settler",
@@ -201,23 +209,23 @@
   },
   {
     "name": "Magnate",
-    "description": "Play the most automated cards (green cards)"
+    "description": "Have the most automated (green) project cards in play"
   },
   {
     "name": "Space Baron",
-    "description": "Have the most space tags"
+    "description": "Have the most space tags in play"
   },
   {
     "name": "Excentric",
-    "description": "Have the most resources on cards"
+    "description": "Have the most resources on cards in play"
   },
   {
     "name": "Contractor",
-    "description": "Have the most building tags"
+    "description": "Have the most building tags in play"
   },
   {
     "name": "Venuphile",
-    "description": "Have the most Venus tags"
+    "description": "Have the most Venus tags in play"
   },
   {
     "name": "Entrepreneur",
@@ -225,7 +233,7 @@
   },
   {
     "name": "Full Moon",
-    "description": "Have the most moon tags"
+    "description": "Have the most Moon tags in play"
   },
   {
     "name": "Lunar Magnate",
@@ -233,15 +241,15 @@
   },
   {
     "name": "Curator",
-    "description": "Have the most tags of any one type"
+    "description": "Have the most tags of any one type in play"
   },
   {
     "name": "Engineer",
-    "description": "Play the most cards that directly alter your own production"
+    "description": "Have the most cards in play that directly alter your own production"
   },
   {
     "name": "Historian",
-    "description": "Play the most event cards"
+    "description": "Have the most cards in your event pile"
   },
   {
     "name": "Tourist",
@@ -261,7 +269,7 @@
   },
   {
     "name": "Coordinator",
-    "description": "Have the most event cards"
+    "description": "Have the most cards in your event pile"
   },
   {
     "name": "Zoologist",
@@ -269,15 +277,15 @@
   },
   {
     "name": "Manufacturer",
-    "description": "Have the most active (blue) cards"
+    "description": "Have the most active (blue) project cards in play"
   },
   {
     "name": "Biologist",
-    "description": "Have the most bio tags (animal, plant, and microbe tags count as bio tags.)"
+    "description": "Have the most animal, plant, and microbe tags in play"
   },
   {
     "name": "T. Economizer",
-    "description": "Play the most cards with a base cost of 10 M€ or less (not events.)"
+    "description": "Have the most project cards in play with a base cost of 10 M€ or less (not events.)"
   },
   {
     "name": "Politician",
@@ -293,7 +301,7 @@
   },
   {
     "name": "Adapter",
-    "description": "Play the most cards with requirements"
+    "description": "Have the most cards with requirements in play"
   },
   {
     "name": "Edgedancer",
@@ -309,6 +317,14 @@
   },
   {
     "name": "Voyager",
-    "description": "Have the most Jovian tags"
+    "description": "Have the most Jovian tags in play"
+  },
+  {
+    "name": "Kingpin",
+    "description": "Play the highest number of cards with a corruption requirement of at least 1. (Event cards count)"
+  },
+  {
+    "name": "EdgeLord",
+    "description": "Have the highest number of excavation markers on the edges of the board."
   }
 ]

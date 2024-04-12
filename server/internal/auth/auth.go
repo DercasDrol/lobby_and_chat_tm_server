@@ -79,18 +79,6 @@ func onErrorSocketHandler(so socketio.Conn, e error) {
 	log.E("meet error:", e)
 }
 
-func httpSocketIoHandler(w http.ResponseWriter, r *http.Request) {
-	// origin to excape Cross-Origin Resource Sharing (CORS)
-	if origin := r.Header.Get("Origin"); origin != "" {
-		w.Header().Set("Access-Control-Allow-Origin", origin)
-	}
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With")
-
-	socketServer.ServeHTTP(w, r)
-}
-
 func httpOAuthEndpointHandler(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
 	soId := connsState.StateToConnIdMap[state]
@@ -172,11 +160,19 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 	}()
 	defer socketServer.Close()
 
-	httpServeMux.HandleFunc("/socket.io/", httpSocketIoHandler)
-	httpServeMux.HandleFunc(conf.AuthServerConfig.OAuthCallbackEndpoint, httpOAuthEndpointHandler)
+	httpServeMux.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
+		// origin to excape Cross-Origin Resource Sharing (CORS)
+		w.Header().Set("Access-Control-Allow-Origin", *conf.AuthServerConfig.Host)
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With")
 
-	log.I("Serving at %v", conf.AuthServerConfig.Port)
-	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", conf.AuthServerConfig.Port), session.SessionManager.LoadAndSave(httpServeMux)))
+		socketServer.ServeHTTP(w, r)
+	})
+	httpServeMux.HandleFunc(*conf.AuthServerConfig.OAuthCallbackEndpoint, httpOAuthEndpointHandler)
+
+	log.I("Serving at %v", *conf.AuthServerConfig.Port)
+	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", *conf.AuthServerConfig.Port), session.SessionManager.LoadAndSave(httpServeMux)))
 
 	return nil
 }

@@ -30,9 +30,9 @@ class MarsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lobbyCubit = LobbyCubit(repositories.lobby)..init();
-    final gameChatCubit = ChatCubit(repositories.chat, null)..init();
-    final generalChatCubit = ChatCubit(repositories.chat, "General")..init();
+    final lobbyCubit = LobbyCubit(Repositories.lobby)..init();
+    final gameChatCubit = ChatCubit(Repositories.chat, null)..init();
+    final generalChatCubit = ChatCubit(Repositories.chat, "General")..init();
     lobbyCubit.stream.listen((state) {
       if (gameChatCubit.state.chatKey != state.gameIdToAction?.toString())
         gameChatCubit.chatKey = state.gameIdToAction?.toString();
@@ -49,7 +49,7 @@ class MarsApp extends StatelessWidget {
             GoRoute(
               path: 'auth',
               builder: (BuildContext context, GoRouterState state) =>
-                  AuthScreen(repositories.auth.authUrl),
+                  AuthScreen(Repositories.auth.authUrl),
             ),
             GoRoute(
                 path: 'game',
@@ -102,7 +102,7 @@ class MarsApp extends StatelessWidget {
     );
 
     final listener = () {
-      final jwt = repositories.auth.jwt.value;
+      final jwt = Repositories.auth.jwt.value;
 
       final cRoute = _router.routeInformationProvider.value.uri.path;
 
@@ -114,20 +114,20 @@ class MarsApp extends StatelessWidget {
       } else if (jwtIsOk && cRoute == AUTH_ROUTE) {
         _router.routeInformationProvider.go(LOBBY_ROUTE);
       } else if (cRoute == AUTH_ROUTE) {
-        repositories.auth.initAuth();
+        Repositories.auth.initAuth();
       }
 
       if (jwtIsOk &&
           [LOBBY_ROUTE, GAME_ROUTE].contains(cRoute) &&
-          !repositories.chat.isChatConnectionOk.value) {
-        repositories.chat.initConnectionToChatServer(jwt);
+          !Repositories.chat.isChatConnectionOk.value) {
+        Repositories.chat.initConnectionToChatServer(jwt);
       }
       if (jwtIsOk && LOBBY_ROUTE == cRoute && lobbyCubit.needGoToGame) {
         _router.routeInformationProvider.go(GAME_ROUTE);
       }
     };
 
-    repositories.auth.jwt.addListener(listener);
+    Repositories.auth.jwt.addListener(listener);
 
     _router.routeInformationProvider.addListener(listener);
 
@@ -136,9 +136,9 @@ class MarsApp extends StatelessWidget {
     html.window.addEventListener('beforeunload', (event) {
       logger.d("onBeforeUnload event: $event");
       _router.routeInformationProvider.dispose();
-      repositories.auth.dispose();
-      repositories.chat.dispose();
-      repositories.lobby.dispose();
+      Repositories.auth.dispose();
+      Repositories.chat.dispose();
+      Repositories.lobby.dispose();
       lobbyCubit.close();
       gameChatCubit.close();
       generalChatCubit.close();

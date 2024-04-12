@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class SpaceId extends Equatable {
-  late final String? id;
+  final String? id;
   SpaceId(this.id);
   factory SpaceId.fromString(String? string) {
     return SpaceId(RegExp(r'[0-9][0-9]').hasMatch((string ?? "")) &&
@@ -30,7 +30,7 @@ class SpaceId extends Equatable {
 }
 
 class PlayerId implements ParticipantId {
-  late final String? id;
+  final String? id;
   PlayerId(this.id);
   factory PlayerId.fromString(String? string) {
     return PlayerId((string ?? "").startsWith('p') ? string : null);
@@ -57,7 +57,7 @@ class GameId {
 }
 
 class SpectatorId implements ParticipantId {
-  late final String? id;
+  final String? id;
   SpectatorId(this.id);
   factory SpectatorId.fromString(String? string) {
     return SpectatorId((string ?? "").startsWith('s') ? string : null);

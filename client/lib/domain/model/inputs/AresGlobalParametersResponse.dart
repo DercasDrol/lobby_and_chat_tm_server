@@ -1,13 +1,13 @@
 abstract class AresGlobalParametersResponse {
   factory AresGlobalParametersResponse.fromJson({required json}) {
     if (json['oxygenDelta'] != null) {
-      return OxygenDelta(json['oxygenDelta']);
+      return OxygenDelta.fromNum(json['oxygenDelta'] as int);
     } else if (json['temperatureDelta'] != null) {
-      return TemperatureDelta(json['temperatureDelta']);
+      return TemperatureDelta.fromNum(json['temperatureDelta'] as int);
     } else if (json['highOceanDelta'] != null) {
-      return HighOceanDelta(json['highOceanDelta']);
+      return HighOceanDelta.fromNum(json['highOceanDelta'] as int);
     } else if (json['lowOceanDelta'] != null) {
-      return LowOceanDelta(json['lowOceanDelta']);
+      return LowOceanDelta.fromNum(json['lowOceanDelta'] as int);
     } else {
       throw Exception('Unknown AresGlobalParametersResponse');
     }
@@ -20,10 +20,14 @@ abstract class AresGlobalParametersResponse {
 const _POSSIBLE_VALUES = [-1, 0, 1];
 
 class LowOceanDelta implements AresGlobalParametersResponse {
-  late final int value;
-  factory LowOceanDelta(num) {
-    return LowOceanDelta(_POSSIBLE_VALUES.contains(num) ? num : 0);
+  final int value;
+
+  LowOceanDelta._(this.value);
+
+  factory LowOceanDelta.fromNum(num) {
+    return LowOceanDelta._(_POSSIBLE_VALUES.contains(num) ? num : 0);
   }
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -33,9 +37,10 @@ class LowOceanDelta implements AresGlobalParametersResponse {
 }
 
 class HighOceanDelta implements AresGlobalParametersResponse {
-  late final int value;
-  factory HighOceanDelta(num) {
-    return HighOceanDelta(_POSSIBLE_VALUES.contains(num) ? num : 0);
+  final int value;
+  HighOceanDelta._(this.value);
+  factory HighOceanDelta.fromNum(num) {
+    return HighOceanDelta._(_POSSIBLE_VALUES.contains(num) ? num : 0);
   }
   @override
   Map<String, dynamic> toJson() {
@@ -46,9 +51,11 @@ class HighOceanDelta implements AresGlobalParametersResponse {
 }
 
 class TemperatureDelta implements AresGlobalParametersResponse {
-  late final int value;
-  factory TemperatureDelta(num) {
-    return TemperatureDelta(_POSSIBLE_VALUES.contains(num) ? num : 0);
+  final int value;
+
+  TemperatureDelta._(this.value);
+  factory TemperatureDelta.fromNum(num) {
+    return TemperatureDelta._(_POSSIBLE_VALUES.contains(num) ? num : 0);
   }
   @override
   Map<String, dynamic> toJson() {
@@ -59,9 +66,11 @@ class TemperatureDelta implements AresGlobalParametersResponse {
 }
 
 class OxygenDelta implements AresGlobalParametersResponse {
-  late final int value;
-  factory OxygenDelta(num) {
-    return OxygenDelta(_POSSIBLE_VALUES.contains(num) ? num : 0);
+  final int value;
+
+  OxygenDelta._(this.value);
+  factory OxygenDelta.fromNum(num) {
+    return OxygenDelta._(_POSSIBLE_VALUES.contains(num) ? num : 0);
   }
   @override
   Map<String, dynamic> toJson() {

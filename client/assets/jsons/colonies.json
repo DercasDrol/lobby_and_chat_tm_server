@@ -2,6 +2,11 @@
   {
     "module": "colonies",
     "name": "Ceres",
+    "description": [
+      "Gain 1 steel production",
+      "Gain n steel",
+      "Gain 2 steel"
+    ],
     "buildType": 8,
     "buildQuantity": [
       1,
@@ -28,6 +33,11 @@
   {
     "module": "colonies",
     "name": "Enceladus",
+    "description": [
+      "Add 3 microbes to ANY card",
+      "Add n microbes to ANY card",
+      "Add 1 microbe to ANY card"
+    ],
     "buildType": 0,
     "buildQuantity": [
       3,
@@ -52,6 +62,11 @@
   {
     "module": "colonies",
     "name": "Europa",
+    "description": [
+      "Place an ocean tile",
+      "Gain 1 unit of production of the type under the track marker",
+      "Gain 1 M€"
+    ],
     "buildType": 16,
     "buildQuantity": [
       1,
@@ -85,6 +100,11 @@
   {
     "module": "colonies",
     "name": "Ganymede",
+    "description": [
+      "Gain 1 plant production",
+      "Gain n plants",
+      "Gain 1 plant"
+    ],
     "buildType": 8,
     "buildQuantity": [
       1,
@@ -111,6 +131,11 @@
   {
     "module": "colonies",
     "name": "Io",
+    "description": [
+      "Gain 1 heat production",
+      "Gain n heat",
+      "Gain 2 heat"
+    ],
     "buildType": 8,
     "buildQuantity": [
       1,
@@ -137,6 +162,11 @@
   {
     "module": "colonies",
     "name": "Luna",
+    "description": [
+      "Gain 2 M€ production",
+      "Gain n M€",
+      "Gain 2 M€"
+    ],
     "buildType": 8,
     "buildQuantity": [
       2,
@@ -163,6 +193,11 @@
   {
     "module": "colonies",
     "name": "Miranda",
+    "description": [
+      "Add 1 animal to ANY card",
+      "Add n animals to ANY card",
+      "Draw 1 card"
+    ],
     "buildType": 0,
     "buildQuantity": [
       1,
@@ -187,6 +222,11 @@
   {
     "module": "colonies",
     "name": "Titan",
+    "description": [
+      "Add 3 floaters to ANY card",
+      "Add n floaters to ANY card",
+      "Add 1 floater to ANY card"
+    ],
     "buildType": 0,
     "buildQuantity": [
       3,
@@ -211,6 +251,11 @@
   {
     "module": "colonies",
     "name": "Callisto",
+    "description": [
+      "Gain 1 energy production",
+      "Gain n energy",
+      "Gain 3 energy"
+    ],
     "buildType": 8,
     "buildQuantity": [
       1,
@@ -237,6 +282,11 @@
   {
     "module": "colonies",
     "name": "Pluto",
+    "description": [
+      "Draw 2 cards",
+      "Draw n cards",
+      "Draw 1 card and then discard 1 card"
+    ],
     "buildType": 3,
     "buildQuantity": [
       2,
@@ -260,6 +310,11 @@
   {
     "module": "colonies",
     "name": "Triton",
+    "description": [
+      "Gain 3 titanium",
+      "Gain n titanium",
+      "Gain 1 titanium"
+    ],
     "buildType": 9,
     "buildQuantity": [
       3,
@@ -286,6 +341,11 @@
   {
     "module": "community",
     "name": "Iapetus",
+    "description": [
+      "Gain 1 TR",
+      "Gain n TR",
+      "Pay 1 M€ less for cards this generation"
+    ],
     "buildType": 11,
     "buildQuantity": [
       1,
@@ -309,6 +369,11 @@
   {
     "module": "community",
     "name": "Mercury",
+    "description": [
+      "Gain the trade bonus of any colony tile. (This does not move the markers.)",
+      "Gain 1 unit of production of the type below the track marker",
+      "Gain 2 M€"
+    ],
     "buildType": 2,
     "buildQuantity": [
       1,
@@ -342,6 +407,11 @@
   {
     "module": "community",
     "name": "Hygiea",
+    "description": [
+      "Choose opponent to discard 1 card",
+      "Steal 3 units of the listed type",
+      "Gain 3 M€"
+    ],
     "buildType": 15,
     "buildQuantity": [
       1,
@@ -375,6 +445,11 @@
   {
     "module": "community",
     "name": "Titania",
+    "description": [
+      "Gain 5, 3, or 2 VP",
+      "Gain n VP",
+      "Lose 3 M€"
+    ],
     "buildType": 12,
     "buildQuantity": [
       5,
@@ -399,6 +474,11 @@
   {
     "module": "community",
     "name": "Venus",
+    "description": [
+      "Increase Venus 1 step",
+      "Add n resources to ANY Venus card",
+      "Add 1 resource to ANY Venus card"
+    ],
     "buildType": 13,
     "buildQuantity": [
       1,
@@ -422,6 +502,11 @@
   {
     "module": "community",
     "name": "Leavitt",
+    "description": [
+      "Gain 1 science tag",
+      "Draw n cards, keep 1",
+      "Draw 1 card which you may pay to keep"
+    ],
     "buildType": 10,
     "buildQuantity": [
       1,
@@ -445,6 +530,11 @@
   {
     "module": "community",
     "name": "Pallas",
+    "description": [
+      "Gain +1 influence",
+      "Place n delegates",
+      "Gain 1 M€ for each delegate in any party"
+    ],
     "buildType": 18,
     "buildQuantity": [
       1,
@@ -468,6 +558,11 @@
   {
     "module": "pathfinders",
     "name": "Iapetus II",
+    "description": [
+      "Add 3 data to ANY card",
+      "Add n data to ANY card",
+      "Add 1 data to ANY card"
+    ],
     "buildType": 0,
     "buildQuantity": [
       3,

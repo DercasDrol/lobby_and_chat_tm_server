@@ -14,8 +14,7 @@ import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 class GameAPIClient {
   GameId _gameId = GameId.fromString("g6491874bdbcc"); //use for debug only
   // static const String _lobbyServerPath = "http://localhost:3000/";
-  static const String _serverPath =
-      "${GAME_SERVER_PROTOCOL}://${GAME_SERVER_HOST}/";
+  static const String _serverPath = "${GAME_SERVER_HOST}/";
   String getPath(RequestPath requestPath) =>
       _serverPath + requestPath.toString() + "?id=";
   String get _playerPath => getPath(RequestPath.API_PLAYER);

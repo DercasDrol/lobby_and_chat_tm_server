@@ -1,0 +1,14 @@
+{
+    "Auth": {
+        "ClientID": "ClientID",
+        "ClientSecret": "ClientSecret",
+        "JwtSecret": "JwtSecret"
+    },
+    "DB" : {
+        "Host": "localhost",
+        "Port": 5433,
+        "User": "postgres",
+        "Password": "Password",
+        "Database": "lobby_and_chat"
+    }
+}

@@ -19,9 +19,11 @@ enum AgendaStyle {
 }
 
 class BonusId {
-  late final String? id;
-  factory BonusId(string) {
-    return BonusId(RegExp(r'[m,s,u,k,r,g][b][0][1,2]').hasMatch(string) &&
+  final String? id;
+
+  BonusId._(this.id);
+  factory BonusId.fromString(string) {
+    return BonusId._(RegExp(r'[m,s,u,k,r,g][b][0][1,2]').hasMatch(string) &&
             string.length == 4
         ? string
         : null);
@@ -31,9 +33,10 @@ class BonusId {
 }
 
 class PolicyId {
-  late final String? id;
-  factory PolicyId(string) {
-    return PolicyId(RegExp(string.length == 4
+  final String? id;
+  PolicyId._(this.id);
+  factory PolicyId.fromString(string) {
+    return PolicyId._(RegExp(string.length == 4
                     ? r'[m,s,u,k,r,g][b][0][1,2]'
                     : r'[m,s,u,k,r,g][f][b][0][1,2]')
                 .hasMatch(string) &&
@@ -52,8 +55,8 @@ class Agenda {
 
   static Agenda fromJson(Map<String, dynamic> json) {
     return Agenda(
-      bonusId: BonusId(json['bonusId'] as String),
-      policyId: PolicyId(json['policyId'] as String),
+      bonusId: BonusId.fromString(json['bonusId'] as String),
+      policyId: PolicyId.fromString(json['policyId'] as String),
     );
   }
 }

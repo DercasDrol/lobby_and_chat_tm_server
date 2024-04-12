@@ -1,19 +1,316 @@
 [
   {
     "module": "turmoil",
+    "name": "Jovian Tax Rights",
+    "description": "Increase M€ production 1 step for each colony. Gain 1 titanium for each influence.",
+    "revealedDelegate": "Scientists",
+    "currentDelegate": "Unity",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "rows": [
+              [
+                {
+                  "type": "megacredits",
+                  "amount": 1,
+                  "is": "item",
+                  "clone": false,
+                  "cancelled": false,
+                  "showDigit": false,
+                  "amountInside": true,
+                  "size": "M"
+                }
+              ]
+            ],
+            "is": "production-box"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "colonies",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "M"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "titanium",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "turmoil",
+    "name": "Microgravity Health Problems",
+    "description": "Lose 3 M€ for each colony (max 5, then reduced by influence).",
+    "revealedDelegate": "Mars First",
+    "currentDelegate": "Scientists",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "megacredits",
+            "amount": -3,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "colonies",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "M"
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "turmoil",
+    "name": "Cloud Societies",
+    "description": "Add a floater to each card that can collect floaters. Add 1 floater for each influence to a card.",
+    "revealedDelegate": "Unity",
+    "currentDelegate": "Reds",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "cards",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "secondaryTag": "floater"
+          },
+          {
+            "type": ":",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "floaters",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "floaters",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "turmoil",
+    "name": "Corrosive Rain",
+    "description": "Lose 2 floaters from a card or 10 M€. Draw 1 card for each influence.",
+    "revealedDelegate": "Kelvinists",
+    "currentDelegate": "Greens",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "-",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "floaters",
+            "amount": 2,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "OR",
+            "size": "S",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "megacredits",
+            "amount": -10,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "cards",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "turmoil",
+    "name": "Venus Infrastructure",
+    "description": "Gain 2 M€ per Venus tag (max 5) and influence.",
+    "revealedDelegate": "Mars First",
+    "currentDelegate": "Unity",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "megacredits",
+            "amount": 2,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "venus",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "isPlayed": true
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "turmoil",
     "name": "Sponsored Projects",
     "description": "All cards with resources on them gain 1 resource. Draw 1 card for each influence.",
     "revealedDelegate": "Scientists",
     "currentDelegate": "Greens",
     "renderData": {
       "rows": [
-        [],
         [
           {
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "secondaryTag": "wild-resource"
@@ -28,10 +325,8 @@
             "type": "wild",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -43,10 +338,8 @@
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -58,10 +351,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -81,10 +372,8 @@
             "type": "titanium",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -96,7 +385,6 @@
             "type": "jovian",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -105,7 +393,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -128,10 +415,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -146,10 +431,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "+",
@@ -161,7 +444,6 @@
             "type": "tr",
             "amount": 5,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "showDigit": true,
@@ -184,21 +466,11 @@
       "rows": [
         [
           {
-            "type": "vspace",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          }
-        ],
-        [
-          {
             "type": "plants",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -213,10 +485,8 @@
                   "type": "plants",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 }
               ]
             ],
@@ -232,7 +502,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -255,10 +524,8 @@
             "type": "steel",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -273,10 +540,8 @@
                   "type": "steel",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 }
               ]
             ],
@@ -292,7 +557,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -315,10 +579,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -333,7 +595,6 @@
             "type": "earth",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -342,7 +603,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -365,10 +625,8 @@
             "type": "temperature",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -383,10 +641,8 @@
                   "type": "heat",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 }
               ]
             ],
@@ -402,10 +658,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -422,21 +676,11 @@
       "rows": [
         [
           {
-            "type": "vspace",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          }
-        ],
-        [
-          {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "9",
             "size": "M",
             "isUppercase": false,
@@ -446,17 +690,14 @@
             "type": "diverse_tag",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "isPlayed": true
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -471,10 +712,8 @@
             "type": "megacredits",
             "amount": 10,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -500,10 +739,8 @@
                   "type": "energy",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 }
               ]
             ],
@@ -519,7 +756,6 @@
             "type": "energy",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -528,7 +764,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -551,10 +786,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -569,7 +802,6 @@
             "type": "space",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -578,7 +810,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -601,10 +832,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -619,7 +848,6 @@
             "type": "event",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -628,7 +856,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -651,10 +878,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -669,7 +894,6 @@
             "type": "science",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -678,7 +902,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -701,10 +924,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "size": "S"
+            "cancelled": false
           },
           {
             "type": "+",
@@ -716,7 +937,6 @@
             "type": "building",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S",
@@ -732,25 +952,24 @@
             "type": "city",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "size": "S"
+            "size": "M"
           },
           {
             "type": ":",
             "size": "M",
             "isIcon": false,
             "is": "symbol"
-          },
+          }
+        ],
+        [
           {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "1st:",
             "size": "S",
             "isUppercase": false,
@@ -760,20 +979,22 @@
             "type": "tr",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "showDigit": true,
             "size": "XS"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
           },
           {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "2nd:",
             "size": "S",
             "isUppercase": false,
@@ -783,7 +1004,6 @@
             "type": "tr",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "XS"
@@ -806,10 +1026,8 @@
             "type": "oceans",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -821,19 +1039,15 @@
             "type": "plants",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "steel",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -845,10 +1059,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -868,10 +1080,8 @@
             "type": "megacredits",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -886,16 +1096,13 @@
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -918,10 +1125,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -936,17 +1141,14 @@
             "type": "city",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "size": "M"
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -969,11 +1171,9 @@
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
-            "text": "lose all",
+            "text": "Lose all",
             "size": "M",
             "isUppercase": false,
             "isBold": true
@@ -982,21 +1182,21 @@
             "type": "heat",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          }
-        ],
-        [
+            "cancelled": false
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
           {
             "type": "megacredits",
             "amount": -2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1011,7 +1211,6 @@
             "type": "building",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -1020,7 +1219,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1043,10 +1241,8 @@
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "max 3",
             "size": "M",
             "isUppercase": false,
@@ -1056,16 +1252,13 @@
             "type": "plants",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1094,10 +1287,8 @@
             "type": "titanium",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -1109,7 +1300,6 @@
             "type": "jovian",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -1118,7 +1308,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1147,10 +1336,8 @@
             "type": "megacredits",
             "amount": 4,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1165,26 +1352,21 @@
             "type": "oceans",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "empty_tile",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "size": "M"
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1202,14 +1384,11 @@
     "currentDelegate": "Mars First",
     "renderData": {
       "rows": [
-        [],
-        [],
         [
           {
             "type": "earth",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S",
@@ -1225,25 +1404,23 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "size": "S"
+            "cancelled": false
           },
           {
             "type": ":",
             "size": "M",
             "isIcon": false,
             "is": "symbol"
-          },
+          }
+        ],
+        [
           {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "1st:",
             "size": "S",
             "isUppercase": false,
@@ -1259,20 +1436,22 @@
             "type": "tr",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "showDigit": true,
             "size": "XS"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
           },
           {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "2nd:",
             "size": "S",
             "isUppercase": false,
@@ -1288,10 +1467,8 @@
             "type": "tr",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "showDigit": true,
             "size": "XS"
           }
         ]
@@ -1318,10 +1495,8 @@
             "type": "megacredits",
             "amount": 4,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1336,17 +1511,14 @@
             "type": "city",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "size": "M"
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1364,7 +1536,6 @@
     "currentDelegate": "Reds",
     "renderData": {
       "rows": [
-        [],
         [
           {
             "rows": [
@@ -1379,19 +1550,15 @@
                   "type": "energy",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 },
                 {
                   "type": "steel",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
-                  "cancelled": false,
-                  "questionMark": false
+                  "cancelled": false
                 }
               ]
             ],
@@ -1413,10 +1580,8 @@
             "type": "steel",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -1425,19 +1590,12 @@
             "is": "symbol"
           },
           {
-            "type": "nbsp",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          },
-          {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "size": "S"
+            "size": "M"
           }
         ]
       ],
@@ -1463,10 +1621,8 @@
             "type": "temperature",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -1478,10 +1634,8 @@
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -1493,10 +1647,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -1516,10 +1668,8 @@
             "type": "megacredits",
             "amount": -3,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1534,7 +1684,6 @@
             "type": "building",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -1543,7 +1692,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1572,10 +1720,8 @@
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "4",
             "size": "M",
             "isUppercase": false,
@@ -1585,16 +1731,13 @@
             "type": "tr",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1612,7 +1755,6 @@
     "currentDelegate": "Reds",
     "renderData": {
       "rows": [
-        [],
         [
           {
             "type": "-",
@@ -1624,10 +1766,8 @@
             "type": "cards",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -1639,22 +1779,24 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
           },
           {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -1680,10 +1822,8 @@
             "type": "oceans",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -1701,10 +1841,8 @@
             "type": "wild",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -1716,10 +1854,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -1734,17 +1870,13 @@
     "currentDelegate": "Reds",
     "renderData": {
       "rows": [
-        [],
-        [],
         [
           {
             "type": "megacredits",
             "amount": -3,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1759,7 +1891,6 @@
             "type": "tr",
             "amount": 5,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "showDigit": true,
@@ -1778,10 +1909,8 @@
                   "type": "megacredits",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
                   "cancelled": false,
-                  "questionMark": false,
                   "showDigit": false,
                   "amountInside": true,
                   "size": "M"
@@ -1800,12 +1929,11 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
-        ]
+        ],
+        []
       ],
       "is": "root"
     }
@@ -1829,10 +1957,8 @@
             "type": "megacredits",
             "amount": 3,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1847,7 +1973,6 @@
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "secondaryTag": "blue"
@@ -1856,7 +1981,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -1885,10 +2009,8 @@
             "type": "megacredits",
             "amount": 3,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -1903,7 +2025,6 @@
             "type": "space",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -1912,329 +2033,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "size": "S"
-          }
-        ]
-      ],
-      "is": "root"
-    }
-  },
-  {
-    "module": "turmoil",
-    "name": "Jovian Tax Rights",
-    "description": "Increase M€ production 1 step for each colony. Gain 1 titanium for each influence.",
-    "revealedDelegate": "Scientists",
-    "currentDelegate": "Unity",
-    "renderData": {
-      "rows": [
-        [
-          {
-            "rows": [
-              [
-                {
-                  "type": "megacredits",
-                  "amount": 1,
-                  "is": "item",
-                  "multiplier": false,
-                  "clone": false,
-                  "cancelled": false,
-                  "questionMark": false,
-                  "showDigit": false,
-                  "amountInside": true,
-                  "size": "M"
-                }
-              ]
-            ],
-            "is": "production-box"
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "colonies",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false,
-            "size": "M"
-          },
-          {
-            "type": "nbsp",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          },
-          {
-            "type": "titanium",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "influence",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          }
-        ]
-      ],
-      "is": "root"
-    }
-  },
-  {
-    "module": "turmoil",
-    "name": "Microgravity Health Problems",
-    "description": "Lose 3 M€ for each colony (max 5, then reduced by influence).",
-    "revealedDelegate": "Mars First",
-    "currentDelegate": "Scientists",
-    "renderData": {
-      "rows": [
-        [
-          {
-            "type": "megacredits",
-            "amount": -3,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false,
-            "showDigit": false,
-            "amountInside": true,
-            "size": "M"
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "colonies",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false,
-            "size": "M"
-          },
-          {
-            "type": "influence",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "size": "S"
-          }
-        ]
-      ],
-      "is": "root"
-    }
-  },
-  {
-    "module": "turmoil",
-    "name": "Cloud Societies",
-    "description": "Add a floater to each card that can collect floaters. Add 1 floater for each influence to a card.",
-    "revealedDelegate": "Unity",
-    "currentDelegate": "Reds",
-    "renderData": {
-      "rows": [
-        [],
-        [
-          {
-            "type": "cards",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "secondaryTag": "floater"
-          },
-          {
-            "type": ":",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "floaters",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          },
-          {
-            "type": "nbsp",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          },
-          {
-            "type": "floaters",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "influence",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          }
-        ]
-      ],
-      "is": "root"
-    }
-  },
-  {
-    "module": "turmoil",
-    "name": "Corrosive Rain",
-    "description": "Lose 2 floaters from a card or 10 M€. Draw 1 card for each influence.",
-    "revealedDelegate": "Kelvinists",
-    "currentDelegate": "Greens",
-    "renderData": {
-      "rows": [
-        [
-          {
-            "type": "-",
-            "size": "M",
-            "isIcon": true,
-            "is": "symbol"
-          },
-          {
-            "type": "floaters",
-            "amount": 2,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          },
-          {
-            "type": "OR",
-            "size": "S",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "megacredits",
-            "amount": -10,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false,
-            "showDigit": false,
-            "amountInside": true,
-            "size": "M"
-          }
-        ],
-        [
-          {
-            "type": "cards",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "influence",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false
-          }
-        ]
-      ],
-      "is": "root"
-    }
-  },
-  {
-    "module": "turmoil",
-    "name": "Venus Infrastructure",
-    "description": "Gain 2 M€ per Venus tag (max 5) and influence.",
-    "revealedDelegate": "Mars First",
-    "currentDelegate": "Unity",
-    "renderData": {
-      "rows": [
-        [
-          {
-            "type": "megacredits",
-            "amount": 2,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "questionMark": false,
-            "showDigit": false,
-            "amountInside": true,
-            "size": "M"
-          },
-          {
-            "type": "/",
-            "size": "M",
-            "isIcon": false,
-            "is": "symbol"
-          },
-          {
-            "type": "venus",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
-            "clone": false,
-            "cancelled": false,
-            "isPlayed": true
-          },
-          {
-            "type": "influence",
-            "amount": 1,
-            "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -2257,10 +2055,8 @@
             "type": "cards",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -2272,10 +2068,8 @@
             "type": "party_leaders",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "+",
@@ -2287,10 +2081,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -2310,10 +2102,8 @@
             "type": "megacredits",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -2328,7 +2118,6 @@
             "type": "mars",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -2337,7 +2126,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -2363,10 +2151,8 @@
                   "type": "megacredits",
                   "amount": 1,
                   "is": "item",
-                  "multiplier": false,
                   "clone": false,
                   "cancelled": false,
-                  "questionMark": false,
                   "showDigit": false,
                   "amountInside": true,
                   "size": "M"
@@ -2385,10 +2171,8 @@
             "type": "empty_tile_special",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -2400,10 +2184,8 @@
             "type": "energy",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -2415,10 +2197,8 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -2444,10 +2224,8 @@
             "type": "megacredits",
             "amount": 10,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -2456,7 +2234,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -2465,19 +2242,15 @@
             "type": "plantary-track",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "text",
             "amount": -1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "text": "2",
             "size": "M",
             "isUppercase": false,
@@ -2507,10 +2280,8 @@
             "type": "plants",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -2522,7 +2293,6 @@
             "type": "earth",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "isPlayed": true
@@ -2531,7 +2301,6 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
             "size": "S"
@@ -2560,10 +2329,8 @@
             "type": "temperature",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "nbsp",
@@ -2581,10 +2348,8 @@
             "type": "oxygen",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           }
         ]
       ],
@@ -2604,10 +2369,8 @@
             "type": "megacredits",
             "amount": -10,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false,
-            "questionMark": false,
             "showDigit": false,
             "amountInside": true,
             "size": "M"
@@ -2622,7 +2385,6 @@
             "type": "data resource",
             "amount": 2,
             "is": "item",
-            "multiplier": false,
             "clone": false,
             "cancelled": false
           },
@@ -2642,10 +2404,8 @@
             "type": "data resource",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
             "clone": false,
-            "cancelled": false,
-            "questionMark": false
+            "cancelled": false
           },
           {
             "type": "/",
@@ -2657,10 +2417,388 @@
             "type": "influence",
             "amount": 1,
             "is": "item",
-            "multiplier": false,
+            "clone": false,
+            "cancelled": false
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "underworld",
+    "name": "Lagging Regulation",
+    "description": "Count corruption and ADD influence. Players with the most get 1 corruption and 3 M€ production. Players with 2nd most get 1 corruption and 1 M€ production. Min 1 to place. (SOLO: Place 1st with sum of 5 or more.)",
+    "revealedDelegate": "Scientists",
+    "currentDelegate": "Reds",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "corruption",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": ":",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "text",
+            "amount": -1,
+            "is": "item",
             "clone": false,
             "cancelled": false,
-            "questionMark": false
+            "text": "1st/2nd",
+            "size": "S",
+            "isUppercase": false,
+            "isBold": true
+          },
+          {
+            "type": "corruption",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "rows": [
+              [
+                {
+                  "type": "megacredits",
+                  "amount": 3,
+                  "is": "item",
+                  "clone": false,
+                  "cancelled": false,
+                  "showDigit": false,
+                  "amountInside": true,
+                  "size": "M"
+                },
+                {
+                  "type": "/",
+                  "size": "M",
+                  "isIcon": false,
+                  "is": "symbol"
+                },
+                {
+                  "type": "megacredits",
+                  "amount": 1,
+                  "is": "item",
+                  "clone": false,
+                  "cancelled": false,
+                  "showDigit": false,
+                  "amountInside": true,
+                  "size": "M"
+                }
+              ]
+            ],
+            "is": "production-box"
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "underworld",
+    "name": "Migration Underground",
+    "description": "Gain 1 M€ production (max 5) for every 2 excavation markers you own. Each point of influence counts as an extra excavation marker.",
+    "revealedDelegate": "Reds",
+    "currentDelegate": "Greens",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "rows": [
+              [
+                {
+                  "type": "megacredits",
+                  "amount": 1,
+                  "is": "item",
+                  "clone": false,
+                  "cancelled": false,
+                  "showDigit": false,
+                  "amountInside": true,
+                  "size": "M"
+                }
+              ]
+            ],
+            "is": "production-box"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "excavate",
+            "amount": 2,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": true
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "underworld",
+    "name": "Fair Trade Complaint",
+    "description": "Lose 1 M€ for each card in your hand over 6 (no limit) reduced by 2 M€ per influence (min 0M€). Draw 2 cards if your hand contains 6 cards or less.",
+    "revealedDelegate": "Kelvinists",
+    "currentDelegate": "Unity",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "megacredits",
+            "amount": -1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "cards",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "over": 6
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "text",
+            "amount": -1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "text": "MAX 6",
+            "size": "M",
+            "isUppercase": false,
+            "isBold": true
+          },
+          {
+            "type": "cards",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": ":",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "cards",
+            "amount": 2,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": true
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "underworld",
+    "name": "Seismic Predictions",
+    "description": "Discard all unclaimed underground resources. Lose 2 M€ for each tile on Mars you own WITHOUT excavation markers (max 5) minus influence.",
+    "revealedDelegate": "Scientists",
+    "currentDelegate": "Mars First",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "text",
+            "amount": -1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "text": "ALL",
+            "size": "M",
+            "isUppercase": false,
+            "isBold": true
+          },
+          {
+            "type": "underground-resources",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": true
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "megacredits",
+            "amount": -2,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "empty_tile",
+            "amount": -1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "M"
+          },
+          {
+            "type": "*",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          }
+        ]
+      ],
+      "is": "root"
+    }
+  },
+  {
+    "module": "underworld",
+    "name": "Media Stir",
+    "description": "Lose 3 M€ per corruption resource you have (max 5), minus influence. Players with 0 corruption gain 1 TR.",
+    "revealedDelegate": "Unity",
+    "currentDelegate": "Mars First",
+    "renderData": {
+      "rows": [
+        [
+          {
+            "type": "megacredits",
+            "amount": -3,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "showDigit": false,
+            "amountInside": true,
+            "size": "M"
+          },
+          {
+            "type": "/",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "corruption",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": "influence",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "size": "S"
+          },
+          {
+            "type": "nbsp",
+            "size": "M",
+            "isIcon": true,
+            "is": "symbol"
+          },
+          {
+            "type": "text",
+            "amount": -1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false,
+            "text": "0",
+            "size": "M",
+            "isUppercase": false,
+            "isBold": true
+          },
+          {
+            "type": "corruption",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
+          },
+          {
+            "type": ":",
+            "size": "M",
+            "isIcon": false,
+            "is": "symbol"
+          },
+          {
+            "type": "tr",
+            "amount": 1,
+            "is": "item",
+            "clone": false,
+            "cancelled": false
           }
         ]
       ],

@@ -36,7 +36,7 @@ func main() {
 	pConf := config.GetPrivateConfigInstance()
 
 	authConf := &oauth2.Config{
-		RedirectURL:  fmt.Sprintf("%v:%v%v", pConf.DB.Host, conf.AuthServerConfig.Port, conf.AuthServerConfig.OAuthCallbackEndpoint),
+		RedirectURL:  *conf.AuthServerConfig.OAuthCallbackEndpoint,
 		ClientID:     *pConf.Auth.ClientID,
 		ClientSecret: *pConf.Auth.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify},
@@ -93,11 +93,15 @@ func Initialize() error {
 		os.Exit(1)
 	}
 	log.I("Configuration has been loaded.")
-	dbUrl := fmt.Sprintf("postgres://postgres:%v@%v:%v/%v", pConf.DB.Password, pConf.DB.Host, pConf.DB.Port, pConf.DB.Database)
-	db.InitDB(dbUrl)
+	dbUrl := fmt.Sprintf("postgres://postgres:%v@%v:%v/%v", *pConf.DB.Password, *pConf.DB.Host, *pConf.DB.Port, *pConf.DB.Database)
+	err := db.InitDB(dbUrl)
+	if err != nil {
+		log.E("Failed to initialize DB: %v", err)
+		os.Exit(1)
+	}
 
 	// Setup log level
-	logger.SetupLogger(conf.Logging.Enable, conf.Logging.Level)
+	logger.SetupLogger(*conf.Logging.Enable, *conf.Logging.Level)
 
 	// Setup signal handlers for interruption and termination
 	sigCh := make(chan os.Signal, 1)
@@ -105,8 +109,8 @@ func Initialize() error {
 	go func() {
 		for sig := range sigCh {
 			if sig == syscall.SIGINT || sig == syscall.SIGTERM {
-				log.D("Graceful Termination Time = %d", conf.GracefulTermTimeMillis)
-				time.Sleep(time.Duration(conf.GracefulTermTimeMillis) * time.Millisecond)
+				log.D("Graceful Termination Time = %d", *conf.GracefulTermTimeMillis)
+				time.Sleep(time.Duration(*conf.GracefulTermTimeMillis) * time.Millisecond)
 				Finalize()
 				os.Exit(ExitFailure)
 			}

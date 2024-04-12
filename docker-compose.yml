@@ -1,0 +1,71 @@
+version: '2'
+networks:
+  intranet:
+    name: intranet
+    driver: bridge
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    image: postgres:15.6
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - intranet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  tm-auth-lobby-chat:
+    build: .
+    image: tm-auth-lobby-chat
+    networks:
+      - intranet
+    ports:
+      - 80:80
+      - 443:443
+      - "${CHAT_PORT}:${CHAT_PORT}"
+      - "${LOBBY_PORT}:${LOBBY_PORT}"
+      - "${AUTH_PORT}:${AUTH_PORT}"
+    environment:
+      AUTH_CHAT_LOBBY_WS_HOST: ${AUTH_CHAT_LOBBY_WS_HOST}
+      AUTH_CHAT_LOBBY_HTTP_HOST: ${AUTH_CHAT_LOBBY_HTTP_HOST}
+      CHAT_PORT: ${CHAT_PORT}
+      LOBBY_PORT: ${LOBBY_PORT}
+      AUTH_PORT: ${AUTH_PORT}
+      GAME_SERVER_HOST: ${GAME_SERVER_HOST}
+      CLIENT_LOGGING_ENABLED: ${CLIENT_LOGGING_ENABLED}
+      CLIENT_LOGGING_LEVEL: ${CLIENT_LOGGING_LEVEL}
+      SERVER_LOGGING_ENABLED: ${SERVER_LOGGING_ENABLED}
+      SERVER_LOGGING_LEVEL: ${SERVER_LOGGING_LEVEL}
+      GRACEFUL_TERM_TIME_MILLIS: ${GRACEFUL_TERM_TIME_MILLIS}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT: ${AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=intranet"
+      - "traefik.http.routers.tm-auth-lobby-chat.rule=Host(`${AUTH_CHAT_LOBBY_HTTP_HOST}`) || Host(`www.${AUTH_CHAT_LOBBY_HTTP_HOST}`)"
+      - "traefik.http.routers.tm-auth-lobby-chat.entrypoints=websecure"
+      - "traefik.http.routers.tm-auth-lobby-chat.service=tm-auth-lobby-chat"
+      - "traefik.http.routers.tm-auth-lobby-chat.tls.certresolver=letsencrypt"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
