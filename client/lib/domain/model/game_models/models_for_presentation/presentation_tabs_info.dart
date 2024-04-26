@@ -107,6 +107,17 @@ class PresentationTabsInfo extends Equatable {
     this.leftTabInfo,
   });
 
+  bool get onlyOneTabWithOptions =>
+      this.rightTabInfo?.options != null &&
+      this.midleTabInfo?.options == null &&
+      this.leftTabInfo?.options == null &&
+      this.rightTabInfo?.cards == null &&
+      this.midleTabInfo?.cards == null &&
+      this.leftTabInfo?.cards == null &&
+      this.rightTabInfo?.disabledCards == null &&
+      this.midleTabInfo?.disabledCards == null &&
+      this.leftTabInfo?.disabledCards == null;
+
   @override
   List<Object?> get props => [
         playerColor,

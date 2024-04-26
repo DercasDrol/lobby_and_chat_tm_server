@@ -7,7 +7,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/ch
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/common/options_miniatures_row.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common/game_option_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 
 class ExpansionsView extends StatelessWidget {
   final List<ExpansionType> expansions;

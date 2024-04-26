@@ -9,8 +9,7 @@ enum CardType {
   CEO,
   STANDARD_PROJECT,
   STANDARD_ACTION,
-  PROXY,
-  UNKNOWN;
+  PROXY;
 
   static const _TO_STRING_MAP = {
     EVENT: 'event',
@@ -23,7 +22,6 @@ enum CardType {
     STANDARD_ACTION: 'standard_action',
     // Proxy cards are not real cards, but for operations that need a card-like behavior.
     PROXY: 'proxy',
-    UNKNOWN: 'Unknown',
   };
   static final _TO_COLOR_MAP = {
     EVENT: Color.fromARGB(255, 241, 140, 24),
@@ -35,12 +33,11 @@ enum CardType {
     STANDARD_PROJECT: Colors.white,
     STANDARD_ACTION: Colors.grey,
     PROXY: Colors.white,
-    UNKNOWN: Colors.white,
   };
   Color? toColor() => _TO_COLOR_MAP[this];
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
-  static fromString(String value) => _TO_ENUM_MAP[value] ?? UNKNOWN;
+  static fromString(String value) => _TO_ENUM_MAP[value];
 }

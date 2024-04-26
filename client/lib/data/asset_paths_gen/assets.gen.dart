@@ -594,6 +594,8 @@ class $AssetsMaGen {
   /// File path: assets/ma/tycoon.png
   AssetGenImage get tycoon => const AssetGenImage('assets/ma/tycoon.png');
 
+  $AssetsMaUnderworldGen get underworld => const $AssetsMaUnderworldGen();
+
   /// File path: assets/ma/venuphile.png
   AssetGenImage get venuphile => const AssetGenImage('assets/ma/venuphile.png');
 
@@ -1851,6 +1853,9 @@ class $AssetsUnderworldGen {
 class $AssetsJsonsLocalesGen {
   const $AssetsJsonsLocalesGen();
 
+  /// File path: assets/jsons/locales/bg.json
+  String get bg => 'assets/jsons/locales/bg.json';
+
   /// File path: assets/jsons/locales/br.json
   String get br => 'assets/jsons/locales/br.json';
 
@@ -1866,11 +1871,20 @@ class $AssetsJsonsLocalesGen {
   /// File path: assets/jsons/locales/fr.json
   String get fr => 'assets/jsons/locales/fr.json';
 
+  /// File path: assets/jsons/locales/hu.json
+  String get hu => 'assets/jsons/locales/hu.json';
+
   /// File path: assets/jsons/locales/it.json
   String get it => 'assets/jsons/locales/it.json';
 
+  /// File path: assets/jsons/locales/jp.json
+  String get jp => 'assets/jsons/locales/jp.json';
+
   /// File path: assets/jsons/locales/ko.json
   String get ko => 'assets/jsons/locales/ko.json';
+
+  /// File path: assets/jsons/locales/nl.json
+  String get nl => 'assets/jsons/locales/nl.json';
 
   /// File path: assets/jsons/locales/pl.json
   String get pl => 'assets/jsons/locales/pl.json';
@@ -1879,7 +1893,8 @@ class $AssetsJsonsLocalesGen {
   String get ru => 'assets/jsons/locales/ru.json';
 
   /// List of all assets
-  List<String> get values => [br, cn, de, es, fr, it, ko, pl, ru];
+  List<String> get values =>
+      [bg, br, cn, de, es, fr, hu, it, jp, ko, nl, pl, ru];
 }
 
 class $AssetsMaFanmadeGen {
@@ -1988,6 +2003,29 @@ class $AssetsMaFanmadeGen {
         warmonger,
         zoologist
       ];
+}
+
+class $AssetsMaUnderworldGen {
+  const $AssetsMaUnderworldGen();
+
+  /// File path: assets/ma/underworld/edgelord.png
+  AssetGenImage get edgelord =>
+      const AssetGenImage('assets/ma/underworld/edgelord.png');
+
+  /// File path: assets/ma/underworld/kingpin.png
+  AssetGenImage get kingpin =>
+      const AssetGenImage('assets/ma/underworld/kingpin.png');
+
+  /// File path: assets/ma/underworld/risktaker.png
+  AssetGenImage get risktaker =>
+      const AssetGenImage('assets/ma/underworld/risktaker.png');
+
+  /// File path: assets/ma/underworld/tunneler.png
+  AssetGenImage get tunneler =>
+      const AssetGenImage('assets/ma/underworld/tunneler.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [edgelord, kingpin, risktaker, tunneler];
 }
 
 class $AssetsTilesSpecialTileIconsGen {

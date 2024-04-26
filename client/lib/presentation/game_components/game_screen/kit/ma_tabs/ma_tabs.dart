@@ -39,8 +39,8 @@ class MaTabs extends StatelessWidget {
           ),
         ],
         tabs: [
-          "Milestones",
-          "Awards",
+          Text("Milestones"),
+          Text("Awards"),
         ],
         selectedTextStyle: TextStyle(
           color: Colors.white,

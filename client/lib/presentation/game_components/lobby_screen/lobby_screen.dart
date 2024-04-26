@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mars_flutter/common/log.dart';
-import 'package:mars_flutter/data/api/chat/chat_api_client.dart';
-import 'package:mars_flutter/data/jwt.dart';
 import 'package:mars_flutter/domain/chat_cubit.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/lobby_state.dart';
@@ -12,7 +10,6 @@ import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_
 import 'package:mars_flutter/presentation/game_components/common/stars_background.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/game_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/lobby_view/lobby_view.dart';
-import 'package:tab_container/tab_container.dart';
 
 //list of the games in left area, and chat in right area
 class MainLobbyScreen extends StatelessWidget {
@@ -31,8 +28,6 @@ class MainLobbyScreen extends StatelessWidget {
     final userId = lobbyCubit.userId;
     final leftPartHeight = 600.0;
     final leftPartWidth = 580.0;
-    final lobbyTabsController =
-        TabContainerController(initialIndex: 0, length: 2);
     return Scaffold(
       body: Stack(
         children: [
@@ -61,7 +56,6 @@ class MainLobbyScreen extends StatelessWidget {
                               lobbyCubit: lobbyCubit,
                               width: leftPartWidth,
                               height: leftPartHeight,
-                              controller: lobbyTabsController,
                             )
                           : GameOptionsView(
                               lobbyCubit: lobbyCubit,

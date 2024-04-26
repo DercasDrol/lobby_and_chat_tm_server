@@ -14,21 +14,23 @@ import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 class GameAPIClient {
   GameId _gameId = GameId.fromString("g6491874bdbcc"); //use for debug only
   // static const String _lobbyServerPath = "http://localhost:3000/";
-  static const String _serverPath = "${GAME_SERVER_HOST}/";
-  String getPath(RequestPath requestPath) =>
-      _serverPath + requestPath.toString() + "?id=";
-  String get _playerPath => getPath(RequestPath.API_PLAYER);
+  static const String serverPath = "${GAME_SERVER_HOST}/";
 
-  String get _spectatorPath => getPath(RequestPath.API_SPECTATOR);
+  String _getPathWithId(RequestPath requestPath) =>
+      serverPath + requestPath.toString() + "?id=";
+  String get _playerPath => _getPathWithId(RequestPath.API_PLAYER);
 
-  String get _playerInputPath => getPath(RequestPath.PLAYER_INPUT);
+  String get _spectatorPath => _getPathWithId(RequestPath.API_SPECTATOR);
 
-  String get _playerWaitingForPath => getPath(RequestPath.API_WAITING_FOR);
+  String get _playerInputPath => _getPathWithId(RequestPath.PLAYER_INPUT);
 
-  String get _gameLogsPath => getPath(RequestPath.API_GAME_LOGS);
+  String get _playerWaitingForPath =>
+      _getPathWithId(RequestPath.API_WAITING_FOR);
+
+  String get _gameLogsPath => _getPathWithId(RequestPath.API_GAME_LOGS);
 
   String get _gameInfoPath =>
-      _serverPath +
+      serverPath +
       RequestPath.API_GAME.toString() +
       "?id=" +
       (_gameId.id ?? "");

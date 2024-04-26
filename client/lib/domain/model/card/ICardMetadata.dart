@@ -6,10 +6,12 @@ class ICardMetadata {
   String? cardNumber;
   ICardRenderDescription? description;
   CardComponent? renderData;
+  bool? hasExternalHelp;
   ICardRenderVictoryPoints? victoryPoints;
   ICardMetadata({
     this.cardNumber,
     this.description,
+    this.hasExternalHelp,
     this.renderData,
     this.victoryPoints,
   });
@@ -22,6 +24,7 @@ class ICardMetadata {
               ? ICardRenderDescription(
                   json['description'], DescriptionAlign.CENTER)
               : ICardRenderDescription.fromJson(json['description']),
+      hasExternalHelp: json['hasExternalHelp'],
       renderData: json['renderData'] == null
           ? null
           : CardComponent.fromJson(json['renderData']),

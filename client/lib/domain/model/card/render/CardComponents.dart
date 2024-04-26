@@ -1,3 +1,5 @@
+import 'package:mars_flutter/common/log.dart';
+
 import '../../TileType.dart';
 import '../Tag.dart';
 import 'AltSecondaryTag.dart';
@@ -122,13 +124,18 @@ class ICardRenderTile extends CardComponent {
   ICardRenderTile(
       {required this.tile, required this.hasSymbol, required this.isAres});
   factory ICardRenderTile.fromJson(json) {
-    return ICardRenderTile(
-      tile: json['tile'].runtimeType == int
-          ? TileType.values[json['tile']]
-          : TileType.fromString(json['tile']),
-      hasSymbol: json['hasSymbol'] ?? false,
-      isAres: json['isAres'] ?? false,
-    );
+    try {
+      return ICardRenderTile(
+        tile: json['tile'].runtimeType == int
+            ? TileType.values[json['tile']]
+            : TileType.fromString(json['tile']),
+        hasSymbol: json['hasSymbol'] ?? false,
+        isAres: json['isAres'] ?? false,
+      );
+    } catch (e) {
+      logger.d('Error parsing tile: $json, $e');
+      rethrow;
+    }
   }
 }
 
@@ -234,6 +241,8 @@ class ICardRenderItem extends CardComponent {
   bool? isPlayed;
   /** used text instead of integers in some cases */
   String? text;
+  /** used inside MC typically */
+  String? innerText;
   /** for uppercase text */
   bool? isUppercase;
   /** for bold text */
@@ -244,8 +253,6 @@ class ICardRenderItem extends CardComponent {
   CardItemSize size;
   /** adding tag dependency (top right bubble of this item) */
   SecondaryTag? secondaryTag;
-  /** used for amount labels like 2x, x, etc. */
-  bool? multiplier;
   /** places the pathfinder Clone symbol in the object */
   bool? clone;
   /** add a symbol on top of the item to show it's cancelled or negated in some way (usually X) */
@@ -262,12 +269,12 @@ class ICardRenderItem extends CardComponent {
     this.amountInside,
     this.isPlayed,
     this.text,
+    this.innerText,
     this.isUppercase,
     this.isBold,
     this.isPlate,
     required this.size,
     this.secondaryTag,
-    this.multiplier,
     this.clone,
     this.cancelled,
     this.over,
@@ -282,6 +289,7 @@ class ICardRenderItem extends CardComponent {
       amountInside: json['amountInside'] ?? false,
       isPlayed: json['isPlayed'] ?? false,
       text: json['text'] ?? null,
+      innerText: json['innerText'] ?? null,
       isUppercase: json['isUppercase'] ?? false,
       isBold: json['isBold'] ?? false,
       isPlate: json['isPlate'] ?? false,
@@ -291,7 +299,6 @@ class ICardRenderItem extends CardComponent {
       secondaryTag: json['secondaryTag'] == null
           ? null
           : SecondaryTag.fromJson(json['secondaryTag']),
-      multiplier: json['multiplier'] ?? false,
       clone: json['clone'] ?? false,
       cancelled: json['cancelled'] ?? false,
       over: json['over'] ?? null,

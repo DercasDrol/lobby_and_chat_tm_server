@@ -7,14 +7,15 @@ enum GameModule {
   VENUS,
   COLONIES,
   PRELUDE,
+  PRELUDE2,
   TURMOIL,
   COMMUNITY,
   ARES,
   MOON,
   PATHFINDER,
   CEO,
-  UNDERWORLD,
-  UNKNOWN;
+  SRARWARS,
+  UNDERWORLD;
 
   static const _TO_STRING_MAP = {
     BASE: 'base',
@@ -23,15 +24,37 @@ enum GameModule {
     VENUS: 'venus',
     COLONIES: 'colonies',
     PRELUDE: 'prelude',
+    PRELUDE2: 'prelude2',
     TURMOIL: 'turmoil',
     COMMUNITY: 'community',
     ARES: 'ares',
     MOON: 'moon',
     PATHFINDER: 'pathfinders',
     CEO: 'ceo',
-    UNDERWORLD: 'underworld',
-    UNKNOWN: 'Unknown',
+    SRARWARS: 'starwars',
+    UNDERWORLD: 'underworld'
   };
+
+  static final _MODULE_NAMES = {
+    BASE: 'Base',
+    CORPERA: 'Corporate Era',
+    PROMO: 'Promo',
+    VENUS: 'Venus Next',
+    COLONIES: 'Colonies',
+    PRELUDE: 'Prelude',
+    PRELUDE2: 'Prelude 2',
+    TURMOIL: 'Turmoil',
+    COMMUNITY: 'Community',
+    ARES: 'Ares',
+    MOON: 'The Moon',
+    PATHFINDER: 'Pathfinders',
+    CEO: 'CEOs',
+    SRARWARS: 'Star Wars',
+    UNDERWORLD: 'Underworld',
+  };
+
+  String? get moduleName => _MODULE_NAMES[this];
+
   static final _TO_ICON_PATH_MAP = {
     CORPERA: Assets.cardModuleIcons.corpera.path,
     PROMO: Assets.cardModuleIcons.promo.path,
@@ -52,5 +75,5 @@ enum GameModule {
   String? toIconPath() => _TO_ICON_PATH_MAP[this];
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
-  static fromString(String value) => _TO_ENUM_MAP[value] ?? UNKNOWN;
+  static fromString(String value) => _TO_ENUM_MAP[value];
 }

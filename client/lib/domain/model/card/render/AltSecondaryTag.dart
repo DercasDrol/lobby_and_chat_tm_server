@@ -4,6 +4,7 @@ enum AltSecondaryTag {
   TURMOIL,
   FLOATER,
   BLUE,
+  NO_TAGS,
   MOON_MINING_RATE,
   MOON_HABITAT_RATE,
   MOON_LOGISTICS_RATE,
@@ -23,6 +24,7 @@ enum AltSecondaryTag {
     FLOATER: 'floater',
     BLUE: 'blue',
 
+    NO_TAGS: 'no_tags',
     MOON_MINING_RATE: 'moon-mine',
     MOON_HABITAT_RATE: 'moon-colony',
     MOON_LOGISTICS_RATE: 'moon-road',

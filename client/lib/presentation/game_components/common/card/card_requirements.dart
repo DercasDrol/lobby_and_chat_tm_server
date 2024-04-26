@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
-import 'package:mars_flutter/domain/model/card/ICardRequirement.dart';
+import 'package:mars_flutter/domain/model/card/CardRequirementDescriptor.dart';
+
 import 'package:mars_flutter/domain/model/card/RequirementType.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/card_utils.dart';
 import 'package:mars_flutter/presentation/game_components/common/production_box.dart';
@@ -8,7 +9,7 @@ import 'package:mars_flutter/presentation/game_components/common/production_box.
 class CardRequirementsView extends StatelessWidget {
   final double height;
   final double width;
-  final List<ICardRequirement> requirements;
+  final List<CardRequirementDescriptor> requirements;
 
   const CardRequirementsView({
     required this.width,
@@ -18,7 +19,8 @@ class CardRequirementsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMax = requirements.any((requirement) => requirement.isMax);
+    final bool isMax =
+        requirements.any((requirement) => requirement.max ?? false);
     List<Widget> requirementsViews = requirements.map((requirement) {
       Widget resPrepare({
         required bool addMinus,
@@ -35,21 +37,22 @@ class CardRequirementsView extends StatelessWidget {
           ),
         );
         final reqViewWithRedBox =
-            requirement.type.toItemShape() != null && requirement.isAny
+            requirement.requirementType.toItemShape() != null &&
+                    (requirement.all ?? false)
                 ? RedItemBox(
                     child: reqView,
                     width: height,
-                    shape: requirement.type.toItemShape()!,
+                    shape: requirement.requirementType.toItemShape()!,
                   )
                 : reqView;
         List<Widget> multiplyReqView =
-            requirement.amount > 3 || isTemp || isOxygen
+            (requirement.count ?? 0) > 3 || isTemp || isOxygen
                 ? [
                     Padding(
                         padding: EdgeInsets.symmetric(horizontal: 3.0),
                         child: Text(
                           (isMax ? "max" : "") +
-                              requirement.amount.toString() +
+                              requirement.count.toString() +
                               (isTemp ? "°C" : "") +
                               (isOxygen ? "%" : ""),
                           style: TextStyle(
@@ -73,7 +76,7 @@ class CardRequirementsView extends StatelessWidget {
                                 ))
                           ]
                         : []),
-                    ...Iterable<int>.generate(requirement.amount)
+                    ...Iterable<int>.generate(requirement.count ?? 0)
                         .map((_) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: 1.5),
                             child: reqViewWithRedBox))
@@ -96,23 +99,21 @@ class CardRequirementsView extends StatelessWidget {
       }
 
       return resPrepare(
-          addMinus: requirement.type == RequirementType.REMOVED_PLANTS,
-          isProduction: requirement.type == RequirementType.PRODUCTION,
-          isTemp: requirement.type == RequirementType.TEMPERATURE,
-          isOxygen: requirement.type == RequirementType.OXYGEN,
+          addMinus:
+              requirement.requirementType == RequirementType.REMOVED_PLANTS,
+          isProduction:
+              requirement.requirementType == RequirementType.PRODUCTION,
+          isTemp: requirement.requirementType == RequirementType.TEMPERATURE,
+          isOxygen: requirement.requirementType == RequirementType.OXYGEN,
           reqView: Image(
             image: AssetImage(
-              requirement.runtimeType == ITagCardRequirement
-                  ? (requirement as ITagCardRequirement).tag.toImagePath()!
-                  : requirement.runtimeType == IProductionCardRequirement
-                      ? (requirement as IProductionCardRequirement)
-                          .resource
-                          .toImagePath()!
-                      : requirement.runtimeType == IPartyCardRequirement
-                          ? (requirement as IPartyCardRequirement)
-                              .party
-                              .toImagePath()!
-                          : requirement.type.toImagePath()!,
+              requirement.tag != null
+                  ? requirement.tag!.toImagePath()!
+                  : requirement.production != null
+                      ? requirement.production!.toImagePath()!
+                      : requirement.party != null
+                          ? requirement.party!.toImagePath()!
+                          : requirement.requirementType.toImagePath()!,
             ),
           ));
     }).toList();

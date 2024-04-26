@@ -7,7 +7,6 @@ import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/selected_cards_model.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/container_with_tabs.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
-import 'package:tab_container/tab_container.dart';
 
 void showPopupWithTabs({
   required final BuildContext context,
@@ -23,21 +22,10 @@ void showPopupWithTabs({
   final SelectedCards midleTabSelectedCards =
       SelectedCards.fromList(tabsInfo.midleTabInfo?.cards ?? []);
   final ValueNotifier<int?> rightTabSelectedOption = ValueNotifier(null);
-  final TabContainerController tabController = TabContainerController(
-    length: tabsInfo.leftTabInfo?.cards == null &&
-            tabsInfo.leftTabInfo?.disabledCards == null
-        ? tabsInfo.midleTabInfo?.cards == null &&
-                tabsInfo.midleTabInfo?.disabledCards == null
-            ? 1
-            : 2
-        : tabsInfo.midleTabInfo?.cards == null &&
-                tabsInfo.midleTabInfo?.disabledCards == null
-            ? 2
-            : 3,
-  );
+  final ValueNotifier<int> selectedTab = ValueNotifier(0);
 
   String? getButtonText() => tabsInfo.getConfirmButtonText?.call(UserActionInfo(
-        tabIndex: tabController.index,
+        tabIndex: selectedTab.value,
         leftTabCards: leftTabSelectedCards.selectedCardModels,
         midleTabCards: midleTabSelectedCards.selectedCardModels,
         rightTabCards: rightTabSelectedCards.selectedCardModels,
@@ -45,7 +33,7 @@ void showPopupWithTabs({
       ));
 
   Widget _listenableBuilder(builder) => ListenableBuilder(
-        listenable: tabController,
+        listenable: selectedTab,
         builder: (BuildContext context, Widget? child) => ListenableBuilder(
           listenable: rightTabSelectedCards,
           builder: (BuildContext context, Widget? child) => ListenableBuilder(
@@ -69,7 +57,7 @@ void showPopupWithTabs({
                   color: tabsInfo.playerColor.toColor(true),
                   context: context,
                   paymentInfo: tabsInfo.getPaymentInfo?.call(UserActionInfo(
-                    tabIndex: tabController.index,
+                    tabIndex: selectedTab.value,
                     leftTabCards: leftTabSelectedCards.selectedCardModels,
                     midleTabCards: midleTabSelectedCards.selectedCardModels,
                     rightTabCards: rightTabSelectedCards.selectedCardModels,
@@ -78,7 +66,7 @@ void showPopupWithTabs({
                     var getOnConfirmButtonFn = tabsInfo.getOnConfirmButtonFn;
                     if (getOnConfirmButtonFn != null) {
                       var onConfirmFn = getOnConfirmButtonFn(UserActionInfo(
-                        tabIndex: tabController.index,
+                        tabIndex: selectedTab.value,
                         leftTabCards: leftTabSelectedCards.selectedCardModels,
                         midleTabCards: midleTabSelectedCards.selectedCardModels,
                         rightTabCards: rightTabSelectedCards.selectedCardModels,
@@ -91,7 +79,7 @@ void showPopupWithTabs({
                   },
                   counters:
                       tabsInfo.getMegacreditsCounters?.call(UserActionInfo(
-                    tabIndex: tabController.index,
+                    tabIndex: selectedTab.value,
                     leftTabCards: leftTabSelectedCards.selectedCardModels,
                     midleTabCards: midleTabSelectedCards.selectedCardModels,
                     rightTabCards: rightTabSelectedCards.selectedCardModels,
@@ -100,16 +88,6 @@ void showPopupWithTabs({
                 ));
 
   Widget _getContainerWithTabs(BoxConstraints constraints) {
-    final bool onlyOneTabWithOptions = tabsInfo.rightTabInfo?.options != null &&
-        tabsInfo.midleTabInfo?.options == null &&
-        tabsInfo.leftTabInfo?.options == null &&
-        tabsInfo.rightTabInfo?.cards == null &&
-        tabsInfo.midleTabInfo?.cards == null &&
-        tabsInfo.leftTabInfo?.cards == null &&
-        tabsInfo.rightTabInfo?.disabledCards == null &&
-        tabsInfo.midleTabInfo?.disabledCards == null &&
-        tabsInfo.leftTabInfo?.disabledCards == null;
-
     return Padding(
       padding: EdgeInsets.only(
         bottom: topPadding < bottomPadding ? bottomPadding - topPadding : 0,
@@ -119,7 +97,7 @@ void showPopupWithTabs({
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: onlyOneTabWithOptions
+              width: tabsInfo.onlyOneTabWithOptions
                   ? max(
                       (tabsInfo.rightTabInfo?.options?.fold<int>(
                                           0,
@@ -131,7 +109,7 @@ void showPopupWithTabs({
                           100,
                       400)
                   : constraints.maxWidth * 0.8,
-              height: onlyOneTabWithOptions
+              height: tabsInfo.onlyOneTabWithOptions
                   ? (tabsInfo.rightTabInfo?.options?.length ?? 1) * 50 + 70
                   : constraints.maxHeight - topPadding - bottomPadding,
               decoration: BoxDecoration(
@@ -140,7 +118,7 @@ void showPopupWithTabs({
               ),
               child: ContainerWithTabs(
                 tabsInfo: tabsInfo,
-                tabController: tabController,
+                selectedTab: selectedTab,
                 leftTabSelectedCards: leftTabSelectedCards,
                 rightTabSelectedCards: rightTabSelectedCards,
                 midleTabSelectedCards: midleTabSelectedCards,
@@ -161,7 +139,7 @@ void showPopupWithTabs({
             rightTabSelectedCards.dispose();
             leftTabSelectedCards.dispose();
             midleTabSelectedCards.dispose();
-            tabController.dispose();
+            selectedTab.dispose();
             rightTabSelectedOption.dispose();
           },
           child: LayoutBuilder(

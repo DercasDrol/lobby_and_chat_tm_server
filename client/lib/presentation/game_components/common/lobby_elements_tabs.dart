@@ -4,7 +4,7 @@ import 'package:tab_container/tab_container.dart';
 class LobbyElementsTabs extends StatelessWidget {
   final double width;
   final double height;
-  final TabContainerController? controller;
+  //final TabContainerController? controller;
   final List<Widget> children;
   final List<String> tabsNames;
   final BorderRadius? borderRadius;
@@ -15,7 +15,7 @@ class LobbyElementsTabs extends StatelessWidget {
     required this.height,
     required this.children,
     required this.tabsNames,
-    this.controller,
+    //this.controller,
     this.borderRadius,
   });
 
@@ -30,12 +30,12 @@ class LobbyElementsTabs extends StatelessWidget {
       ),
       child: TabContainer(
         key: UniqueKey(),
-        controller: controller,
+        //controller: controller,
         color: Colors.grey[700],
         enabled: true,
         //childPadding: EdgeInsets.all(5.0),
         children: children,
-        tabs: tabsNames,
+        tabs: tabsNames.map((e) => Text(e)).toList(),
         selectedTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 14,

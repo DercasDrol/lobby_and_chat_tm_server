@@ -123,8 +123,8 @@ class ChatView extends StatelessWidget {
             if (gameChatState.chatKey != null) "Game Chat",
             "General Chat",
           ],
-          controller: TabContainerController(
-              initialIndex: 0, length: gameChatState.chatKey != null ? 2 : 1),
+          //controller: TabContainerController(
+          //   initialIndex: 0, length: gameChatState.chatKey != null ? 2 : 1),
         );
       },
     );

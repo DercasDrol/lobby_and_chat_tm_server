@@ -108,7 +108,7 @@ class CardView extends StatelessWidget {
         alignment: Alignment.topRight,
       );
       final requirementsHeight = card_height * 0.10;
-      final cardRequirements = card.requirements == null
+      final cardRequirements = card.requirements.isEmpty
           ? SizedBox.shrink()
           : Padding(
               padding: EdgeInsets.only(top: card_height * 0.24),
@@ -117,11 +117,11 @@ class CardView extends StatelessWidget {
                 child: CardRequirementsView(
                   width: cadr_width - 30,
                   height: requirementsHeight,
-                  requirements: card.requirements!.requirements,
+                  requirements: card.requirements,
                 ),
               ),
             );
-      final cardBodyTopPadding = card.requirements != null
+      final cardBodyTopPadding = card.requirements.isNotEmpty
           ? card_height * 0.25 + requirementsHeight
           : card_height * 0.25;
       final cardBody = Padding(

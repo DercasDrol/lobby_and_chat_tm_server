@@ -59,7 +59,11 @@ enum AwardName implements MilestoneAwardName {
   EDGEDANCER,
   HOARDER,
   NATURALIST,
-  VOYAGER;
+  VOYAGER,
+
+  // Underworld
+  KINGPIN,
+  EDGELORD;
 
   static const _TO_STRING_MAP = {
     LANDLORD: 'Landlord',
@@ -119,6 +123,9 @@ enum AwardName implements MilestoneAwardName {
     HOARDER: 'Hoarder',
     NATURALIST: 'Naturalist',
     VOYAGER: 'Voyager',
+    // Underworld
+    KINGPIN: 'Kingpin',
+    EDGELORD: 'EdgeLord',
   };
   static final _TO_IMAGE_PATH_MAP = {
     LANDLORD: Assets.ma.landlord.path,
@@ -178,6 +185,10 @@ enum AwardName implements MilestoneAwardName {
     HOARDER: Assets.ma.hoarder.path,
     NATURALIST: Assets.ma.naturalist.path,
     VOYAGER: Assets.ma.voyager.path,
+
+    // Underworld
+    KINGPIN: Assets.ma.underworld.kingpin.path,
+    EDGELORD: Assets.ma.underworld.edgelord.path,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

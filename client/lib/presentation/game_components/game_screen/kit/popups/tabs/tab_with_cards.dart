@@ -3,7 +3,7 @@ import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tag_info.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/card_view.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/common/cards_list.dart';
+import 'package:mars_flutter/presentation/game_components/common/cards_list.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/selected_cards_model.dart';
 
 class TabWithCards extends StatelessWidget {

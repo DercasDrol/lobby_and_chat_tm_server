@@ -6,7 +6,7 @@ import 'package:mars_flutter/domain/model/Resource.dart';
 import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
-import 'package:mars_flutter/domain/model/card/ITagCount.dart';
+import 'package:mars_flutter/domain/model/card/TagCount.dart';
 import 'package:mars_flutter/domain/model/card/Tag.dart';
 import 'package:mars_flutter/domain/model/game/IVictoryPointsBreakdown.dart';
 import 'package:mars_flutter/domain/model/game_models/ActionLabel.dart';
@@ -279,7 +279,7 @@ final class PublicPlayerModel extends Equatable {
   final int steel;
   final int steelProduction;
   final int steelValue;
-  final List<ITagCount> tags;
+  final List<TagCount> tags;
   final int terraformRating;
   final TimerModel timer;
   final int titanium;
@@ -387,8 +387,8 @@ final class PublicPlayerModel extends Equatable {
       steelProduction: json['steelProduction'] as int,
       steelValue: json['steelValue'] as int,
       tags: (json['tags'])
-          .map((e) => ITagCount.fromJson(e as Map<String, dynamic>))
-          .cast<ITagCount>()
+          .map((e) => TagCount.fromJson(e as Map<String, dynamic>))
+          .cast<TagCount>()
           .toList(),
       terraformRating: json['terraformRating'] as int,
       timer: TimerModel.fromJson(json['timer'] as Map<String, dynamic>),

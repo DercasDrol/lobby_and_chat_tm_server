@@ -18,9 +18,11 @@ class ClientCardsParser {
 
     final data = await getData();
     final decodedJson = jsonDecode(data);
-    ClientCard.allCards = decodedJson
-        .map((json) => ClientCard.fromJson(json))
-        .cast<ClientCard>()
-        .toList();
+    ClientCard.setAllCards(
+      decodedJson
+          .map((json) => ClientCard.fromJson(json))
+          .cast<ClientCard>()
+          .toList(),
+    );
   }
 }

@@ -10,14 +10,12 @@ class LobbyView extends StatelessWidget {
   final LobbyCubit lobbyCubit;
   final double width;
   final double height;
-  final TabContainerController controller;
 
   const LobbyView({
     super.key,
     required this.lobbyCubit,
     required this.width,
     required this.height,
-    required this.controller,
   });
 
   @override

@@ -10,7 +10,7 @@ import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/commo
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/game_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common/game_option_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 
 class GameRow extends StatelessWidget {
   final LobbyCubit lobbyCubit;

@@ -4,7 +4,7 @@ import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/lobby_game.dart';
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common/game_option_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 
 class MultiplayerOptionsView extends StatelessWidget {
   final LobbyCubit lobbyCubit;

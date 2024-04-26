@@ -129,8 +129,14 @@ class TileView extends StatelessWidget {
       case TileType.MARTIAN_NATURE_WONDERS:
         return Image(
             image: AssetImage(Assets.pathfinders.martianNatureWonders.path));
-      case TileType.UNKNOWN:
+      case TileType.CRASHLANDING:
+        return Image(image: AssetImage(Assets.pathfinders.crashlanding.path));
+      case TileType.MARS_NOMADS:
         return SizedBox.shrink();
+      case TileType.REY_SKYWALKER:
+        return SizedBox.shrink();
+      case TileType.MAN_MADE_VOLCANO:
+        return _getSpecialTile(Assets.tiles.specialTileIcons.lavaFlows.path);
     }
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-enum GameOptionType { SIMPLE, TOGGLE_BUTTON, DROPDOWN }
+enum GameOptionType { SIMPLE, TOGGLE_BUTTON, DROPDOWN, BUTTON }
 
 class GameOptionView extends StatelessWidget {
   final String? image;
@@ -18,6 +18,7 @@ class GameOptionView extends StatelessWidget {
   final int? dropdownDefaultValueIdx;
   final bool? isSelected;
   final bool? useTwoLines;
+  final bool? useBigberSize;
   final void Function(String?)? onDropdownOptionChangedOrOptionToggled;
   static final _defaultSelectedColor = Colors.black;
   static final _defaultNotSelectedColor = Colors.white;
@@ -37,12 +38,20 @@ class GameOptionView extends StatelessWidget {
     this.isSelected,
     this.dropdownItemWidth,
     this.useTwoLines,
+    this.useBigberSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isInteractive =
-        [GameOptionType.TOGGLE_BUTTON, GameOptionType.DROPDOWN].contains(type);
+    final iconSize = useBigberSize ?? false ? 30.0 : 20.0;
+    final fontSize = useBigberSize ?? false
+        ? GAME_OPTIONS_CONSTANTS.biggerFontSize
+        : GAME_OPTIONS_CONSTANTS.fontSize;
+    final isInteractive = [
+      GameOptionType.TOGGLE_BUTTON,
+      GameOptionType.DROPDOWN,
+      GameOptionType.BUTTON
+    ].contains(type);
     final _fontColor = isInteractive
         ? (isSelected ?? false
             ? _defaultSelectedColor
@@ -51,15 +60,16 @@ class GameOptionView extends StatelessWidget {
     String? _selectedValue = dropdownDefaultValueIdx != null
         ? dropdownOptions![dropdownDefaultValueIdx!]
         : null;
-    final addInkWell = (child) => type == GameOptionType.TOGGLE_BUTTON &&
-            onDropdownOptionChangedOrOptionToggled != null
-        ? InkWell(
-            onTap: onDropdownOptionChangedOrOptionToggled != null
-                ? () => onDropdownOptionChangedOrOptionToggled!(null)
-                : null,
-            child: child,
-          )
-        : child;
+    final addInkWell = (child) =>
+        [GameOptionType.TOGGLE_BUTTON, GameOptionType.BUTTON].contains(type) &&
+                onDropdownOptionChangedOrOptionToggled != null
+            ? InkWell(
+                onTap: onDropdownOptionChangedOrOptionToggled != null
+                    ? () => onDropdownOptionChangedOrOptionToggled!(null)
+                    : null,
+                child: child,
+              )
+            : child;
     final getDropdown = () => onDropdownOptionChangedOrOptionToggled != null
         ? DropdownButtonHideUnderline(
             child: DropdownButton2<String>(
@@ -88,7 +98,7 @@ class GameOptionView extends StatelessWidget {
                       value,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: GAME_OPTIONS_CONSTANTS.fontSize,
+                        fontSize: fontSize,
                       ),
                     ),
                   ),
@@ -109,7 +119,7 @@ class GameOptionView extends StatelessWidget {
                       style: TextStyle(
                         color: GAME_OPTIONS_CONSTANTS
                             .dropdownSelectedItemTextColor,
-                        fontSize: GAME_OPTIONS_CONSTANTS.fontSize,
+                        fontSize: fontSize,
                       ),
                       textAlign: TextAlign.center,
                     );
@@ -132,7 +142,7 @@ class GameOptionView extends StatelessWidget {
               _selectedValue ?? ' ',
               style: TextStyle(
                 color: GAME_OPTIONS_CONSTANTS.dropdownSelectedItemTextColor,
-                fontSize: GAME_OPTIONS_CONSTANTS.fontSize,
+                fontSize: fontSize,
               ),
               textAlign: TextAlign.center,
             ),
@@ -149,14 +159,15 @@ class GameOptionView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (imageAsWidget != null) imageAsWidget!,
-              if (image != null) Image.asset(image!, width: 20, height: 20),
+              if (image != null)
+                Image.asset(image!, width: iconSize, height: iconSize),
               if (image != null || imageAsWidget != null) SizedBox(width: 5),
               if (lablePart1 != null)
                 Text(
                   lablePart1!,
                   style: TextStyle(
                     color: _fontColor,
-                    fontSize: GAME_OPTIONS_CONSTANTS.fontSize,
+                    fontSize: fontSize,
                   ),
                 ),
               if (type == GameOptionType.DROPDOWN &&
@@ -168,7 +179,7 @@ class GameOptionView extends StatelessWidget {
                   lablePart2!,
                   style: TextStyle(
                     color: _fontColor,
-                    fontSize: GAME_OPTIONS_CONSTANTS.fontSize,
+                    fontSize: fontSize,
                   ),
                 ),
               if (descriptionUrl != null)

@@ -34,6 +34,7 @@ class MAIN_MENU_CONSTANTS {
 
 class GAME_OPTIONS_CONSTANTS {
   static const fontSize = 14.0;
+  static const biggerFontSize = 16.0;
   static const buttonheight = 25.0;
   static const spaceBetweenOptions = 5.0;
   static const internalOptionsPadding = 5.0;

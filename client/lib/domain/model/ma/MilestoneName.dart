@@ -59,7 +59,10 @@ enum MilestoneName implements MilestoneAwardName {
   SMITH,
   TRADESMAN,
   IRRIGATOR,
-  CAPITALIST;
+  CAPITALIST,
+  // Underworld
+  TUNNELER,
+  RISKTAKER;
 
   static const _TO_STRING_MAP = {
     // Tharsis
@@ -120,6 +123,10 @@ enum MilestoneName implements MilestoneAwardName {
     TRADESMAN: 'Tradesman',
     IRRIGATOR: 'Irrigator',
     CAPITALIST: 'Capitalist',
+
+    // Underworld
+    TUNNELER: 'Tunneler',
+    RISKTAKER: 'Risktaker',
   };
   static final _TO_IMAGE_PATH_MAP = {
     // Tharsis
@@ -180,6 +187,10 @@ enum MilestoneName implements MilestoneAwardName {
     TRADESMAN: Assets.ma.tradesman.path,
     IRRIGATOR: Assets.ma.irrigator.path,
     CAPITALIST: Assets.ma.capitalist.path,
+
+    // Underworld
+    TUNNELER: Assets.ma.underworld.tunneler.path,
+    RISKTAKER: Assets.ma.underworld.risktaker.path,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

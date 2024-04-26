@@ -26,9 +26,10 @@ enum SpaceBonus {
   // Vastitas Borealis-specific
   TEMPERATURE, // 13
   // Amazonis-specific
-  // TODO(kberg): move RESTRICTED to SpaceType?
-  RESTRICTED, // 14  // RESTRICTED is just a that a space is empty, not an actual bonus.
-  ASTEROID; // 15 // Used by Deimos Down Ares
+  _RESTRICTED, // 14  // RESTRICTED is just a that a space is empty, not an actual bonus.
+  ASTEROID, // 15 // Used by Deimos Down Ares
+  // Terra Cimerria-specific
+  DELEGATE; // 16
 
   static const _TO_STRING_MAP = {
     TITANIUM: 'Titanium',
@@ -45,8 +46,9 @@ enum SpaceBonus {
     SCIENCE: 'Science',
     ENERGY_PRODUCTION: 'Energy Production',
     TEMPERATURE: 'Temperature',
-    RESTRICTED: 'Restricted',
+    _RESTRICTED: 'UNUSED',
     ASTEROID: 'Asteroid',
+    DELEGATE: 'Delegate',
   };
   static final _TO_IMAGE_PATH_MAP = {
     TITANIUM: Assets.resources.titanium.path,
@@ -63,8 +65,9 @@ enum SpaceBonus {
     SCIENCE: Assets.resources.science.path,
     ENERGY_PRODUCTION: Assets.resources.power.path,
     TEMPERATURE: Assets.globalParameters.temperature.path,
-    RESTRICTED: Assets.resources.radiation.path,
+    _RESTRICTED: Assets.resources.radiation.path,
     ASTEROID: Assets.resources.asteroid.path,
+    DELEGATE: Assets.misc.delegate.path,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

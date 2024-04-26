@@ -24,6 +24,8 @@ enum RequirementType {
   HABITAT_TILES,
   MINING_TILES,
   ROAD_TILES,
+  EXCAVATION,
+  CORRUPTION,
   UNKNOWN;
 
   static const _TO_STRING_MAP = {
@@ -43,12 +45,15 @@ enum RequirementType {
     PRODUCTION: 'production',
     PARTY: 'party',
     REMOVED_PLANTS: 'Removed plants',
-    HABITAT_RATE: 'habitat rate',
+    HABITAT_RATE: 'Habitat rate',
     MINING_RATE: 'Mining rate',
     LOGISTIC_RATE: 'Logistic rate',
     HABITAT_TILES: 'Habitat tiles',
     MINING_TILES: 'Mine tiles',
     ROAD_TILES: 'Road tiles',
+    // Underworld
+    EXCAVATION: 'Excavation',
+    CORRUPTION: 'Corruption',
   };
   static final _TO_IMAGE_PATH_MAP = {
     OXYGEN: Assets.globalParameters.oxygen.path,

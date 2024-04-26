@@ -8,7 +8,7 @@ import 'package:mars_flutter/domain/model/ma/RandomMAOptionType.dart';
 import 'package:mars_flutter/domain/model/turmoil/Types.dart';
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common/game_option_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 
 class ExpansionsOptionsView extends StatelessWidget {
   final LobbyCubit lobbyCubit;

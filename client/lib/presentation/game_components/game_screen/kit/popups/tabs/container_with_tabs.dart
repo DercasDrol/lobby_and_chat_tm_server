@@ -5,94 +5,121 @@ import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/tab_with_options.dart';
 import 'package:tab_container/tab_container.dart';
 
-class ContainerWithTabs extends StatelessWidget {
+class ContainerWithTabs extends StatefulWidget {
   final PresentationTabsInfo tabsInfo;
   final SelectedCards leftTabSelectedCards;
   final SelectedCards midleTabSelectedCards;
   final SelectedCards rightTabSelectedCards;
-  final TabContainerController tabController;
-
+  final ValueNotifier<int> selectedTab;
   final ValueNotifier<int?> rightTabSelectedOption;
 
   const ContainerWithTabs({
     required this.tabsInfo,
     required this.leftTabSelectedCards,
     required this.rightTabSelectedCards,
-    required this.tabController,
     required this.rightTabSelectedOption,
     required this.midleTabSelectedCards,
+    required this.selectedTab,
   });
+
+  @override
+  State<ContainerWithTabs> createState() => _ContainerWithTabsState();
+}
+
+class _ContainerWithTabsState extends State<ContainerWithTabs>
+    with SingleTickerProviderStateMixin {
+  late TabController _controller;
+  late List<Widget> tabsTitles;
+  @override
+  void initState() {
+    super.initState();
+    tabsTitles = [
+      ...(widget.tabsInfo.leftTabInfo?.cards == null &&
+              widget.tabsInfo.leftTabInfo?.disabledCards == null
+          ? []
+          : [Text(widget.tabsInfo.leftTabInfo?.tabTitle ?? " ")]),
+      ...(widget.tabsInfo.midleTabInfo?.cards == null &&
+              widget.tabsInfo.midleTabInfo?.disabledCards == null
+          ? []
+          : [Text(widget.tabsInfo.midleTabInfo?.tabTitle ?? " ")]),
+      ...[Text(widget.tabsInfo.rightTabInfo?.tabTitle ?? " ")],
+    ];
+    _controller = TabController(vsync: this, length: tabsTitles.length);
+    _controller.addListener(() {
+      widget.selectedTab.value = _controller.index;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return TabContainer(
-      controller: tabController,
-      color: tabsInfo.playerColor.toColor(true),
+      controller: _controller,
+      color: widget.tabsInfo.playerColor.toColor(true),
       childPadding: EdgeInsets.all(5.0),
       tabEdge: TabEdge.top,
       children: [
-        ...(tabsInfo.leftTabInfo?.cards == null &&
-                tabsInfo.leftTabInfo?.disabledCards == null
+        ...(widget.tabsInfo.leftTabInfo?.cards == null &&
+                widget.tabsInfo.leftTabInfo?.disabledCards == null
             ? []
             : [
                 TabWithCards(
-                  tabInfo: tabsInfo.leftTabInfo!,
-                  selectedCards: leftTabSelectedCards,
-                  tagsDiscounts: (tabsInfo.leftTabInfo?.showDiscount ?? false)
-                      ? tabsInfo.tagsDiscounts
-                      : null,
+                  tabInfo: widget.tabsInfo.leftTabInfo!,
+                  selectedCards: widget.leftTabSelectedCards,
+                  tagsDiscounts:
+                      (widget.tabsInfo.leftTabInfo?.showDiscount ?? false)
+                          ? widget.tabsInfo.tagsDiscounts
+                          : null,
                   allCardsDiscount:
-                      (tabsInfo.leftTabInfo?.showDiscount ?? false)
-                          ? tabsInfo.allCardsDiscount
+                      (widget.tabsInfo.leftTabInfo?.showDiscount ?? false)
+                          ? widget.tabsInfo.allCardsDiscount
                           : null,
                 )
               ]),
-        ...(tabsInfo.midleTabInfo?.cards == null &&
-                tabsInfo.midleTabInfo?.disabledCards == null
+        ...(widget.tabsInfo.midleTabInfo?.cards == null &&
+                widget.tabsInfo.midleTabInfo?.disabledCards == null
             ? []
             : [
                 TabWithCards(
-                  tabInfo: tabsInfo.midleTabInfo!,
-                  selectedCards: midleTabSelectedCards,
-                  tagsDiscounts: (tabsInfo.midleTabInfo?.showDiscount ?? false)
-                      ? tabsInfo.tagsDiscounts
-                      : null,
+                  tabInfo: widget.tabsInfo.midleTabInfo!,
+                  selectedCards: widget.midleTabSelectedCards,
+                  tagsDiscounts:
+                      (widget.tabsInfo.midleTabInfo?.showDiscount ?? false)
+                          ? widget.tabsInfo.tagsDiscounts
+                          : null,
                   allCardsDiscount:
-                      (tabsInfo.midleTabInfo?.showDiscount ?? false)
-                          ? tabsInfo.allCardsDiscount
+                      (widget.tabsInfo.midleTabInfo?.showDiscount ?? false)
+                          ? widget.tabsInfo.allCardsDiscount
                           : null,
                 )
               ]),
-        tabsInfo.rightTabInfo?.cards == null &&
-                tabsInfo.rightTabInfo?.disabledCards == null
-            ? tabsInfo.rightTabInfo?.options == null
+        widget.tabsInfo.rightTabInfo?.cards == null &&
+                widget.tabsInfo.rightTabInfo?.disabledCards == null
+            ? widget.tabsInfo.rightTabInfo?.options == null
                 ? SizedBox.shrink()
                 : TabWithOptions(
-                    selectedOption: rightTabSelectedOption,
-                    optionsInfo: tabsInfo.rightTabInfo!.options!,
+                    selectedOption: widget.rightTabSelectedOption,
+                    optionsInfo: widget.tabsInfo.rightTabInfo!.options!,
                   )
             : TabWithCards(
-                tabInfo: tabsInfo.rightTabInfo!,
-                selectedCards: rightTabSelectedCards,
-                tagsDiscounts: (tabsInfo.rightTabInfo?.showDiscount ?? false)
-                    ? tabsInfo.tagsDiscounts
-                    : null,
-                allCardsDiscount: (tabsInfo.rightTabInfo?.showDiscount ?? false)
-                    ? tabsInfo.allCardsDiscount
-                    : null,
+                tabInfo: widget.tabsInfo.rightTabInfo!,
+                selectedCards: widget.rightTabSelectedCards,
+                tagsDiscounts:
+                    (widget.tabsInfo.rightTabInfo?.showDiscount ?? false)
+                        ? widget.tabsInfo.tagsDiscounts
+                        : null,
+                allCardsDiscount:
+                    (widget.tabsInfo.rightTabInfo?.showDiscount ?? false)
+                        ? widget.tabsInfo.allCardsDiscount
+                        : null,
               ),
       ],
-      tabs: [
-        ...(tabsInfo.leftTabInfo?.cards == null &&
-                tabsInfo.leftTabInfo?.disabledCards == null
-            ? []
-            : [tabsInfo.leftTabInfo?.tabTitle]),
-        ...(tabsInfo.midleTabInfo?.cards == null &&
-                tabsInfo.midleTabInfo?.disabledCards == null
-            ? []
-            : [tabsInfo.midleTabInfo?.tabTitle]),
-        ...[tabsInfo.rightTabInfo?.tabTitle],
-      ],
+      tabs: tabsTitles,
       selectedTextStyle: TextStyle(
         color: Colors.white,
         fontSize: 20,

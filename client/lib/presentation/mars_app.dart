@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 
 import 'package:flutter/material.dart';
@@ -18,7 +16,6 @@ import 'package:mars_flutter/presentation/game_components/auth_screen/auth_scree
 
 import 'package:mars_flutter/presentation/game_components/cards_screen/cards_screen.dart';
 
-import 'package:mars_flutter/presentation/game_components/game_screen/game_screen.dart';
 import 'package:mars_flutter/presentation/game_components/iframe_game_screen/iframe_game_screen.dart';
 
 import 'package:mars_flutter/presentation/game_components/lobby_screen/lobby_screen.dart';
@@ -26,13 +23,13 @@ import 'package:mars_flutter/presentation/game_components/lobby_screen/lobby_scr
 import 'package:mars_flutter/presentation/game_components/main_menu_screen/main_menu_screen.dart';
 
 class MarsApp extends StatelessWidget {
-  final Repositories repositories;
-
   @override
   Widget build(BuildContext context) {
     final lobbyCubit = LobbyCubit(Repositories.lobby)..init();
     final gameChatCubit = ChatCubit(Repositories.chat, null)..init();
     final generalChatCubit = ChatCubit(Repositories.chat, "General")..init();
+
+    //change chat channel when game selectien changed
     lobbyCubit.stream.listen((state) {
       if (gameChatCubit.state.chatKey != state.gameIdToAction?.toString())
         gameChatCubit.chatKey = state.gameIdToAction?.toString();
@@ -101,6 +98,7 @@ class MarsApp extends StatelessWidget {
       ],
     );
 
+    //we need call this function each time when jwt or route changed
     final listener = () {
       final jwt = Repositories.auth.jwt.value;
 
@@ -163,5 +161,5 @@ class MarsApp extends StatelessWidget {
     );
   }
 
-  MarsApp({super.key, required this.repositories});
+  MarsApp();
 }

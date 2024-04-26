@@ -87,7 +87,7 @@ class BodyItemView extends StatelessWidget {
               width: height * item.size.toMultiplier(),
               fontSize: height * item.size.toMultiplier() * 0.56,
               cost: item.amount,
-              multiplier: item.multiplier ?? false,
+              multiplier: false,
               useGreyMode: false,
             ),
           );

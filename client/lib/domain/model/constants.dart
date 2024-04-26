@@ -142,6 +142,10 @@ const HELLAS_DESCRIPTION_URL =
     'https://github.com/terraforming-mars/terraforming-mars/wiki/Maps#hellas';
 const ELYSIUM_DESCRIPTION_URL =
     'https://github.com/terraforming-mars/terraforming-mars/wiki/Maps#elysium';
+const UTOPIA_PLANITIA_DESCRIPTION_URL =
+    'https://github.com/terraforming-mars/terraforming-mars/wiki/Maps#utopia-planitia';
+const VASTITAS_BOREALIS_NOVUS_DESCRIPTION_URL =
+    'https://github.com/terraforming-mars/terraforming-mars/wiki/Maps#vastitas-borealis-novus';
 const ARABIA_TERRA_DESCRIPTION_URL =
     'https://github.com/terraforming-mars/terraforming-mars/wiki/Maps#arabia-terra';
 const VASTITAS_BOREALIS_DESCRIPTION_URL =

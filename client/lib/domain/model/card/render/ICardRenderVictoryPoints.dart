@@ -12,12 +12,15 @@ class ICardRenderDynamicVictoryPoints implements ICardRenderVictoryPoints {
   int target;
   bool targetOneOrMore;
   bool anyPlayer;
+  bool? asterisk;
+
   ICardRenderDynamicVictoryPoints({
     this.item,
     required this.points,
     required this.target,
     required this.targetOneOrMore,
     required this.anyPlayer,
+    this.asterisk,
   });
 
   factory ICardRenderDynamicVictoryPoints.fromJson(json) {
@@ -28,6 +31,7 @@ class ICardRenderDynamicVictoryPoints implements ICardRenderVictoryPoints {
       target: json['target'],
       targetOneOrMore: json['targetOneOrMore'],
       anyPlayer: json['anyPlayer'],
+      asterisk: json['asterisk'],
     );
   }
 }

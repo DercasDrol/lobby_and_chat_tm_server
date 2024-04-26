@@ -20,13 +20,14 @@ dependencies:
   just_the_tooltip:
   hexagon:
   http: ^1.0.0
-  tab_container: ^2.0.0
+  tab_container: ^3.5.3
   equatable:
   flutter_bloc:
   flutter:
     sdk: flutter
 
   bloc: any
+  localstorage: ^5.0.0
 dev_dependencies:
   statsfl:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
     - assets/jsons/
     - assets/ma/
     - assets/ma/fanmade/
+    - assets/ma/underworld/
     - assets/misc/
     - assets/moon/
     - assets/parties/

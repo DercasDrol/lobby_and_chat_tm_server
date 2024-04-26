@@ -3,7 +3,7 @@ import 'package:mars_flutter/domain/model/Color.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/domain/model/game/NewGameConfig.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common/game_option_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/players_view/kit/player_view/kit/color_selection.dart';
 
 class PlayerView extends StatelessWidget {
