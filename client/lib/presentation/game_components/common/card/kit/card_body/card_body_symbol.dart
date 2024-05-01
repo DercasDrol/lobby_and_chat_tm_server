@@ -3,7 +3,7 @@ import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderSymbolType.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_body/utils.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/utils.dart';
 
 class BodySymbol extends StatelessWidget {
   const BodySymbol({
@@ -106,8 +106,8 @@ class BodySymbol extends StatelessWidget {
         return BodyItemCover(
           child: SizedBox.shrink(),
           width: parentWidth,
-          height: height * symbol.size.toMultiplier() * 0.35,
-          parentHeight: height,
+          height: 0.0,
+          parentHeight: height * symbol.size.toMultiplier() * 0.3,
         );
       case CardRenderSymbolType.EQUALS:
         return BodyItemCover(

@@ -75,7 +75,10 @@ enum RequirementType {
     HABITAT_TILES: Assets.moon.colonytile.path,
     MINING_TILES: Assets.moon.minetile.path,
     ROAD_TILES: Assets.moon.roadtile.path,
+    CORRUPTION: Assets.underworld.corruption.path,
+    EXCAVATION: Assets.underworld.excavate.path,
   };
+
   static final _TO_ITEM_SHAPE_MAP = {
     OCEANS: ItemShape.hexagon,
     FLOATERS: ItemShape.square,
@@ -83,6 +86,7 @@ enum RequirementType {
     CITIES: ItemShape.hexagon,
     GREENERIES: ItemShape.hexagon,
     COLONIES: ItemShape.triangle,
+    CORRUPTION: ItemShape.square,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

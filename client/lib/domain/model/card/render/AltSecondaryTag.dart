@@ -1,3 +1,5 @@
+import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
+
 enum AltSecondaryTag {
   REQ,
   OXYGEN,
@@ -37,6 +39,22 @@ enum AltSecondaryTag {
     UNKNOWN: 'unknown',
   };
 
+  static final _TO_IMAGE_PATH_MAP = {
+    //REQ: "requirements mini background",
+    OXYGEN: Assets.globalParameters.oxygen.path,
+    TURMOIL: Assets.expansionIcons.expansionIconTurmoil.path,
+    FLOATER: Assets.resources.floater.path,
+    //BLUE: "blue circle",
+    //NO_TAGS: "ring",
+    MOON_MINING_RATE: Assets.moon.cardMiningRate.path,
+    MOON_HABITAT_RATE: Assets.moon.cardColonyRate.path,
+    MOON_LOGISTICS_RATE: Assets.moon.cardLogisticsRate.path,
+    //NO_PLANETARY_TAG: "clone tag image with red cross",
+    WILD_RESOURCE: Assets.resources.wild.path,
+    //DIVERSE: "circle with 3 different colors",
+  };
+
+  String? toImagePath() => _TO_IMAGE_PATH_MAP[this];
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
   @override

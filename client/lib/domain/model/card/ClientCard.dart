@@ -58,7 +58,7 @@ class ClientCard {
                     ];
       final List<CardRequirementDescriptor> requirements =
           value['requirements'] == null ||
-                  value['requirements'].runtimeType == List
+                  value['requirements'].runtimeType != List
               ? []
               : value['requirements']
                   .map((e) => CardRequirementDescriptor.fromJson(e))
@@ -68,6 +68,7 @@ class ClientCard {
       if (cardName == CardName.UNKNOWN) {
         logger.d('Unknown card name: ${value['name']}');
       }
+
       return ClientCard(
         name: cardName,
         module: GameModule.fromString(value['module']),

@@ -1,587 +1,587 @@
 [
-  {
-    "module": "colonies",
-    "name": "Ceres",
-    "description": [
-      "Gain 1 steel production",
-      "Gain n steel",
-      "Gain 2 steel"
-    ],
-    "buildType": 8,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "buildResource": "steel",
-    "tradeType": 9,
-    "tradeQuantity": [
-      1,
-      2,
-      3,
-      4,
-      6,
-      8,
-      10
-    ],
-    "tradeResource": "steel",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 2,
-    "colonyBonusResource": "steel",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Enceladus",
-    "description": [
-      "Add 3 microbes to ANY card",
-      "Add n microbes to ANY card",
-      "Add 1 microbe to ANY card"
-    ],
-    "buildType": 0,
-    "buildQuantity": [
-      3,
-      3,
-      3
-    ],
-    "cardResource": "Microbe",
-    "tradeType": 0,
-    "tradeQuantity": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      4,
-      5
-    ],
-    "colonyBonusType": 0,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Europa",
-    "description": [
-      "Place an ocean tile",
-      "Gain 1 unit of production of the type under the track marker",
-      "Gain 1 M€"
-    ],
-    "buildType": 16,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 8,
-    "tradeQuantity": [
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ],
-    "tradeResource": [
-      "megacredits",
-      "megacredits",
-      "energy",
-      "energy",
-      "plants",
-      "plants",
-      "plants"
-    ],
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 1,
-    "colonyBonusResource": "megacredits",
-    "shouldIncreaseTrack": "ask"
-  },
-  {
-    "module": "colonies",
-    "name": "Ganymede",
-    "description": [
-      "Gain 1 plant production",
-      "Gain n plants",
-      "Gain 1 plant"
-    ],
-    "buildType": 8,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "buildResource": "plants",
-    "tradeType": 9,
-    "tradeQuantity": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
-    "tradeResource": "plants",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 1,
-    "colonyBonusResource": "plants",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Io",
-    "description": [
-      "Gain 1 heat production",
-      "Gain n heat",
-      "Gain 2 heat"
-    ],
-    "buildType": 8,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "buildResource": "heat",
-    "tradeType": 9,
-    "tradeQuantity": [
-      2,
-      3,
-      4,
-      6,
-      8,
-      10,
-      13
-    ],
-    "tradeResource": "heat",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 2,
-    "colonyBonusResource": "heat",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Luna",
-    "description": [
-      "Gain 2 M€ production",
-      "Gain n M€",
-      "Gain 2 M€"
-    ],
-    "buildType": 8,
-    "buildQuantity": [
-      2,
-      2,
-      2
-    ],
-    "buildResource": "megacredits",
-    "tradeType": 9,
-    "tradeQuantity": [
-      1,
-      2,
-      4,
-      7,
-      10,
-      13,
-      17
-    ],
-    "tradeResource": "megacredits",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 2,
-    "colonyBonusResource": "megacredits",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Miranda",
-    "description": [
-      "Add 1 animal to ANY card",
-      "Add n animals to ANY card",
-      "Draw 1 card"
-    ],
-    "buildType": 0,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "cardResource": "Animal",
-    "tradeType": 0,
-    "tradeQuantity": [
-      0,
-      1,
-      1,
-      2,
-      2,
-      3,
-      3
-    ],
-    "colonyBonusType": 3,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Titan",
-    "description": [
-      "Add 3 floaters to ANY card",
-      "Add n floaters to ANY card",
-      "Add 1 floater to ANY card"
-    ],
-    "buildType": 0,
-    "buildQuantity": [
-      3,
-      3,
-      3
-    ],
-    "cardResource": "Floater",
-    "tradeType": 0,
-    "tradeQuantity": [
-      0,
-      1,
-      1,
-      2,
-      3,
-      3,
-      4
-    ],
-    "colonyBonusType": 0,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Callisto",
-    "description": [
-      "Gain 1 energy production",
-      "Gain n energy",
-      "Gain 3 energy"
-    ],
-    "buildType": 8,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "buildResource": "energy",
-    "tradeType": 9,
-    "tradeQuantity": [
-      0,
-      2,
-      3,
-      5,
-      7,
-      10,
-      13
-    ],
-    "tradeResource": "energy",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 3,
-    "colonyBonusResource": "energy",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Pluto",
-    "description": [
-      "Draw 2 cards",
-      "Draw n cards",
-      "Draw 1 card and then discard 1 card"
-    ],
-    "buildType": 3,
-    "buildQuantity": [
-      2,
-      2,
-      2
-    ],
-    "tradeType": 3,
-    "tradeQuantity": [
-      0,
-      1,
-      2,
-      2,
-      3,
-      3,
-      4
-    ],
-    "colonyBonusType": 5,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "colonies",
-    "name": "Triton",
-    "description": [
-      "Gain 3 titanium",
-      "Gain n titanium",
-      "Gain 1 titanium"
-    ],
-    "buildType": 9,
-    "buildQuantity": [
-      3,
-      3,
-      3
-    ],
-    "buildResource": "titanium",
-    "tradeType": 9,
-    "tradeQuantity": [
-      0,
-      1,
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "tradeResource": "titanium",
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 1,
-    "colonyBonusResource": "titanium",
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "community",
-    "name": "Iapetus",
-    "description": [
-      "Gain 1 TR",
-      "Gain n TR",
-      "Pay 1 M€ less for cards this generation"
-    ],
-    "buildType": 11,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 11,
-    "tradeQuantity": [
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      2
-    ],
-    "colonyBonusType": 7,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "community",
-    "name": "Mercury",
-    "description": [
-      "Gain the trade bonus of any colony tile. (This does not move the markers.)",
-      "Gain 1 unit of production of the type below the track marker",
-      "Gain 2 M€"
-    ],
-    "buildType": 2,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 8,
-    "tradeQuantity": [
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ],
-    "tradeResource": [
-      "heat",
-      "heat",
-      "heat",
-      "steel",
-      "steel",
-      "titanium",
-      "titanium"
-    ],
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 2,
-    "colonyBonusResource": "megacredits",
-    "shouldIncreaseTrack": "ask"
-  },
-  {
-    "module": "community",
-    "name": "Hygiea",
-    "description": [
-      "Choose opponent to discard 1 card",
-      "Steal 3 units of the listed type",
-      "Gain 3 M€"
-    ],
-    "buildType": 15,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 17,
-    "tradeQuantity": [
-      3,
-      3,
-      3,
-      3,
-      3,
-      3,
-      3
-    ],
-    "tradeResource": [
-      "megacredits",
-      "megacredits",
-      "heat",
-      "energy",
-      "plants",
-      "steel",
-      "titanium"
-    ],
-    "colonyBonusType": 9,
-    "colonyBonusQuantity": 3,
-    "colonyBonusResource": "megacredits",
-    "shouldIncreaseTrack": "ask"
-  },
-  {
-    "module": "community",
-    "name": "Titania",
-    "description": [
-      "Gain 5, 3, or 2 VP",
-      "Gain n VP",
-      "Lose 3 M€"
-    ],
-    "buildType": 12,
-    "buildQuantity": [
-      5,
-      3,
-      2
-    ],
-    "tradeType": 12,
-    "tradeQuantity": [
-      2,
-      2,
-      2,
-      1,
-      1,
-      0,
-      0
-    ],
-    "colonyBonusType": 14,
-    "colonyBonusQuantity": 3,
-    "colonyBonusResource": "megacredits",
-    "shouldIncreaseTrack": "no"
-  },
-  {
-    "module": "community",
-    "name": "Venus",
-    "description": [
-      "Increase Venus 1 step",
-      "Add n resources to ANY Venus card",
-      "Add 1 resource to ANY Venus card"
-    ],
-    "buildType": 13,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 1,
-    "tradeQuantity": [
-      0,
-      0,
-      0,
-      1,
-      2,
-      3,
-      4
-    ],
-    "colonyBonusType": 1,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "community",
-    "name": "Leavitt",
-    "description": [
-      "Gain 1 science tag",
-      "Draw n cards, keep 1",
-      "Draw 1 card which you may pay to keep"
-    ],
-    "buildType": 10,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 6,
-    "tradeQuantity": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7
-    ],
-    "colonyBonusType": 4,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "community",
-    "name": "Pallas",
-    "description": [
-      "Gain +1 influence",
-      "Place n delegates",
-      "Gain 1 M€ for each delegate in any party"
-    ],
-    "buildType": 18,
-    "buildQuantity": [
-      1,
-      1,
-      1
-    ],
-    "tradeType": 19,
-    "tradeQuantity": [
-      1,
-      1,
-      1,
-      2,
-      2,
-      2,
-      3
-    ],
-    "colonyBonusType": 20,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  },
-  {
-    "module": "pathfinders",
-    "name": "Iapetus II",
-    "description": [
-      "Add 3 data to ANY card",
-      "Add n data to ANY card",
-      "Add 1 data to ANY card"
-    ],
-    "buildType": 0,
-    "buildQuantity": [
-      3,
-      3,
-      3
-    ],
-    "cardResource": "Data",
-    "tradeType": 0,
-    "tradeQuantity": [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
-    "colonyBonusType": 0,
-    "colonyBonusQuantity": 1,
-    "shouldIncreaseTrack": "yes"
-  }
+    {
+        "module": "colonies",
+        "name": "Ceres",
+        "description": [
+            "Gain 1 steel production",
+            "Gain n steel",
+            "Gain 2 steel"
+        ],
+        "buildType": 8,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "buildResource": "steel",
+        "tradeType": 9,
+        "tradeQuantity": [
+            1,
+            2,
+            3,
+            4,
+            6,
+            8,
+            10
+        ],
+        "tradeResource": "steel",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 2,
+        "colonyBonusResource": "steel",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Enceladus",
+        "description": [
+            "Add 3 microbes to ANY card",
+            "Add n microbes to ANY card",
+            "Add 1 microbe to ANY card"
+        ],
+        "buildType": 0,
+        "buildQuantity": [
+            3,
+            3,
+            3
+        ],
+        "cardResource": "Microbe",
+        "tradeType": 0,
+        "tradeQuantity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            4,
+            5
+        ],
+        "colonyBonusType": 0,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Europa",
+        "description": [
+            "Place an ocean tile",
+            "Gain 1 unit of production of the type under the track marker",
+            "Gain 1 M€"
+        ],
+        "buildType": 16,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 8,
+        "tradeQuantity": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "tradeResource": [
+            "megacredits",
+            "megacredits",
+            "energy",
+            "energy",
+            "plants",
+            "plants",
+            "plants"
+        ],
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 1,
+        "colonyBonusResource": "megacredits",
+        "shouldIncreaseTrack": "ask"
+    },
+    {
+        "module": "colonies",
+        "name": "Ganymede",
+        "description": [
+            "Gain 1 plant production",
+            "Gain n plants",
+            "Gain 1 plant"
+        ],
+        "buildType": 8,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "buildResource": "plants",
+        "tradeType": 9,
+        "tradeQuantity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+        ],
+        "tradeResource": "plants",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 1,
+        "colonyBonusResource": "plants",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Io",
+        "description": [
+            "Gain 1 heat production",
+            "Gain n heat",
+            "Gain 2 heat"
+        ],
+        "buildType": 8,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "buildResource": "heat",
+        "tradeType": 9,
+        "tradeQuantity": [
+            2,
+            3,
+            4,
+            6,
+            8,
+            10,
+            13
+        ],
+        "tradeResource": "heat",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 2,
+        "colonyBonusResource": "heat",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Luna",
+        "description": [
+            "Gain 2 M€ production",
+            "Gain n M€",
+            "Gain 2 M€"
+        ],
+        "buildType": 8,
+        "buildQuantity": [
+            2,
+            2,
+            2
+        ],
+        "buildResource": "megacredits",
+        "tradeType": 9,
+        "tradeQuantity": [
+            1,
+            2,
+            4,
+            7,
+            10,
+            13,
+            17
+        ],
+        "tradeResource": "megacredits",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 2,
+        "colonyBonusResource": "megacredits",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Miranda",
+        "description": [
+            "Add 1 animal to ANY card",
+            "Add n animals to ANY card",
+            "Draw 1 card"
+        ],
+        "buildType": 0,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "cardResource": "Animal",
+        "tradeType": 0,
+        "tradeQuantity": [
+            0,
+            1,
+            1,
+            2,
+            2,
+            3,
+            3
+        ],
+        "colonyBonusType": 3,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Titan",
+        "description": [
+            "Add 3 floaters to ANY card",
+            "Add n floaters to ANY card",
+            "Add 1 floater to ANY card"
+        ],
+        "buildType": 0,
+        "buildQuantity": [
+            3,
+            3,
+            3
+        ],
+        "cardResource": "Floater",
+        "tradeType": 0,
+        "tradeQuantity": [
+            0,
+            1,
+            1,
+            2,
+            3,
+            3,
+            4
+        ],
+        "colonyBonusType": 0,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Callisto",
+        "description": [
+            "Gain 1 energy production",
+            "Gain n energy",
+            "Gain 3 energy"
+        ],
+        "buildType": 8,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "buildResource": "energy",
+        "tradeType": 9,
+        "tradeQuantity": [
+            0,
+            2,
+            3,
+            5,
+            7,
+            10,
+            13
+        ],
+        "tradeResource": "energy",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 3,
+        "colonyBonusResource": "energy",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Pluto",
+        "description": [
+            "Draw 2 cards",
+            "Draw n cards",
+            "Draw 1 card and then discard 1 card"
+        ],
+        "buildType": 3,
+        "buildQuantity": [
+            2,
+            2,
+            2
+        ],
+        "tradeType": 3,
+        "tradeQuantity": [
+            0,
+            1,
+            2,
+            2,
+            3,
+            3,
+            4
+        ],
+        "colonyBonusType": 5,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "colonies",
+        "name": "Triton",
+        "description": [
+            "Gain 3 titanium",
+            "Gain n titanium",
+            "Gain 1 titanium"
+        ],
+        "buildType": 9,
+        "buildQuantity": [
+            3,
+            3,
+            3
+        ],
+        "buildResource": "titanium",
+        "tradeType": 9,
+        "tradeQuantity": [
+            0,
+            1,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "tradeResource": "titanium",
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 1,
+        "colonyBonusResource": "titanium",
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "community",
+        "name": "Iapetus",
+        "description": [
+            "Gain 1 TR",
+            "Gain n TR",
+            "Pay 1 M€ less for cards this generation"
+        ],
+        "buildType": 11,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 11,
+        "tradeQuantity": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            2
+        ],
+        "colonyBonusType": 7,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "community",
+        "name": "Mercury",
+        "description": [
+            "Gain the trade bonus of any colony tile. (This does not move the markers.)",
+            "Gain 1 unit of production of the type below the track marker",
+            "Gain 2 M€"
+        ],
+        "buildType": 2,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 8,
+        "tradeQuantity": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "tradeResource": [
+            "heat",
+            "heat",
+            "heat",
+            "steel",
+            "steel",
+            "titanium",
+            "titanium"
+        ],
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 2,
+        "colonyBonusResource": "megacredits",
+        "shouldIncreaseTrack": "ask"
+    },
+    {
+        "module": "community",
+        "name": "Hygiea",
+        "description": [
+            "Choose opponent to discard 1 card",
+            "Steal 3 units of the listed type",
+            "Gain 3 M€"
+        ],
+        "buildType": 15,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 17,
+        "tradeQuantity": [
+            3,
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
+        ],
+        "tradeResource": [
+            "megacredits",
+            "megacredits",
+            "heat",
+            "energy",
+            "plants",
+            "steel",
+            "titanium"
+        ],
+        "colonyBonusType": 9,
+        "colonyBonusQuantity": 3,
+        "colonyBonusResource": "megacredits",
+        "shouldIncreaseTrack": "ask"
+    },
+    {
+        "module": "community",
+        "name": "Titania",
+        "description": [
+            "Gain 5, 3, or 2 VP",
+            "Gain n VP",
+            "Lose 3 M€"
+        ],
+        "buildType": 12,
+        "buildQuantity": [
+            5,
+            3,
+            2
+        ],
+        "tradeType": 12,
+        "tradeQuantity": [
+            2,
+            2,
+            2,
+            1,
+            1,
+            0,
+            0
+        ],
+        "colonyBonusType": 14,
+        "colonyBonusQuantity": 3,
+        "colonyBonusResource": "megacredits",
+        "shouldIncreaseTrack": "no"
+    },
+    {
+        "module": "community",
+        "name": "Venus",
+        "description": [
+            "Increase Venus 1 step",
+            "Add n resources to ANY Venus card",
+            "Add 1 resource to ANY Venus card"
+        ],
+        "buildType": 13,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 1,
+        "tradeQuantity": [
+            0,
+            0,
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "colonyBonusType": 1,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "community",
+        "name": "Leavitt",
+        "description": [
+            "Gain 1 science tag",
+            "Draw n cards, keep 1",
+            "Draw 1 card which you may pay to keep"
+        ],
+        "buildType": 10,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 6,
+        "tradeQuantity": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ],
+        "colonyBonusType": 4,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "community",
+        "name": "Pallas",
+        "description": [
+            "Gain +1 influence",
+            "Place n delegates",
+            "Gain 1 M€ for each delegate in any party"
+        ],
+        "buildType": 18,
+        "buildQuantity": [
+            1,
+            1,
+            1
+        ],
+        "tradeType": 19,
+        "tradeQuantity": [
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            3
+        ],
+        "colonyBonusType": 20,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    },
+    {
+        "module": "pathfinders",
+        "name": "Iapetus II",
+        "description": [
+            "Add 3 data to ANY card",
+            "Add n data to ANY card",
+            "Add 1 data to ANY card"
+        ],
+        "buildType": 0,
+        "buildQuantity": [
+            3,
+            3,
+            3
+        ],
+        "cardResource": "Data",
+        "tradeType": 0,
+        "tradeQuantity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+        ],
+        "colonyBonusType": 0,
+        "colonyBonusQuantity": 1,
+        "shouldIncreaseTrack": "yes"
+    }
 ]

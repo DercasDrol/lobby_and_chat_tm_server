@@ -1,330 +1,330 @@
 [
-  {
-    "name": "Terraformer",
-    "description": "Have a terraform rating of 35 (or 26 with Turmoil.)"
-  },
-  {
-    "name": "Mayor",
-    "description": "Own 3 city tiles"
-  },
-  {
-    "name": "Gardener",
-    "description": "Own 3 greenery tiles"
-  },
-  {
-    "name": "Builder",
-    "description": "Have 8 building tags in play"
-  },
-  {
-    "name": "Planner",
-    "description": "Have 16 cards in your hand"
-  },
-  {
-    "name": "Generalist",
-    "description": "Have increased all 6 productions by 1 step"
-  },
-  {
-    "name": "Specialist",
-    "description": "Have 10 in production of any resource"
-  },
-  {
-    "name": "Ecologist",
-    "description": "Have 4 bio tags in play (plant, microbe and animal tags count as bio tags)"
-  },
-  {
-    "name": "Tycoon",
-    "description": "Have 15 project cards in play (not events.)"
-  },
-  {
-    "name": "Legend",
-    "description": "Have 5 cards in your event pile"
-  },
-  {
-    "name": "Diversifier",
-    "description": "Have 8 different tags in play"
-  },
-  {
-    "name": "Tactician",
-    "description": "Have 5 cards with requirements in play"
-  },
-  {
-    "name": "Polar Explorer",
-    "description": "Own 3 tiles on the two bottom rows"
-  },
-  {
-    "name": "Energizer",
-    "description": "Have 6 energy production"
-  },
-  {
-    "name": "Rim Settler",
-    "description": "Have 3 Jovian tags in play"
-  },
-  {
-    "name": "Hoverlord",
-    "description": "Have 7 floater resources on your cards"
-  },
-  {
-    "name": "Networker",
-    "description": "Have placed 3 tiles adjacent to tiles that grant adjacency bonuses"
-  },
-  {
-    "name": "One Giant Step",
-    "description": "Have 6 moon tags"
-  },
-  {
-    "name": "Lunarchitect",
-    "description": "Own 6 Moon tiles"
-  },
-  {
-    "name": "Colonizer",
-    "description": "Have 4 colonies"
-  },
-  {
-    "name": "Farmer",
-    "description": "Have 4 plant production"
-  },
-  {
-    "name": "Minimalist",
-    "description": "Have no more than 2 cards in hand"
-  },
-  {
-    "name": "Terran",
-    "description": "Have 6 Earth tags in play"
-  },
-  {
-    "name": "Tropicalist",
-    "description": "Own 3 tiles in the middle 3 equatorial rows"
-  },
-  {
-    "name": "Economizer",
-    "description": "Have 5 heat production"
-  },
-  {
-    "name": "Pioneer",
-    "description": "Have 3 colonies"
-  },
-  {
-    "name": "Land Specialist",
-    "description": "Own 3 special (normally, brown) tiles"
-  },
-  {
-    "name": "Martian",
-    "description": "Have 4 Mars tags in play"
-  },
-  {
-    "name": "Businessperson",
-    "description": "Have 6 Earth tags in play"
-  },
-  {
-    "name": "Collector",
-    "description": "Have 3 sets of automated (green), active (blue) and event (red) project cards in play"
-  },
-  {
-    "name": "Firestarter",
-    "description": "Have 20 heat"
-  },
-  {
-    "name": "Terra Pioneer",
-    "description": "Own 5 tiles on Mars"
-  },
-  {
-    "name": "Spacefarer",
-    "description": "Have 6 space tags in play"
-  },
-  {
-    "name": "Gambler",
-    "description": "Fund 2 awards"
-  },
-  {
-    "name": "Electrician",
-    "description": "Have 4 power tags in play"
-  },
-  {
-    "name": "Smith",
-    "description": "Have a total of 7 steel and titanium production"
-  },
-  {
-    "name": "Tradesman",
-    "description": "Have 3 different types of non-standard resources"
-  },
-  {
-    "name": "Irrigator",
-    "description": "Own 4 tiles adjacent to oceans"
-  },
-  {
-    "name": "Capitalist",
-    "description": "Have 64 M€"
-  },
-  {
-    "name": "Risktaker",
-    "description": "Have at least 3 NEGATIVE VPs among your cards. (Event cards count.)"
-  },
-  {
-    "name": "Tunneler",
-    "description": "Have at least 7 excavation markers"
-  },
-  {
-    "name": "Landlord",
-    "description": "Own the most tiles"
-  },
-  {
-    "name": "Scientist",
-    "description": "Have the most science tags in play"
-  },
-  {
-    "name": "Banker",
-    "description": "Have the most M€ production"
-  },
-  {
-    "name": "Thermalist",
-    "description": "Have the most heat"
-  },
-  {
-    "name": "Miner",
-    "description": "Have the most steel and titanium"
-  },
-  {
-    "name": "Celebrity",
-    "description": "Have the most project cards in play with a base cost of at least 20 M€ (not events.)"
-  },
-  {
-    "name": "Industrialist",
-    "description": "Have most steel and energy"
-  },
-  {
-    "name": "Desert Settler",
-    "description": "Own the most tiles south of the equator (the four bottom rows)"
-  },
-  {
-    "name": "Estate Dealer",
-    "description": "Own the most tiles adjacent to ocean tiles"
-  },
-  {
-    "name": "Benefactor",
-    "description": "Have the highest terraform rating"
-  },
-  {
-    "name": "Cultivator",
-    "description": "Own the most greenery tiles"
-  },
-  {
-    "name": "Magnate",
-    "description": "Have the most automated (green) project cards in play"
-  },
-  {
-    "name": "Space Baron",
-    "description": "Have the most space tags in play"
-  },
-  {
-    "name": "Excentric",
-    "description": "Have the most resources on cards in play"
-  },
-  {
-    "name": "Contractor",
-    "description": "Have the most building tags in play"
-  },
-  {
-    "name": "Venuphile",
-    "description": "Have the most Venus tags in play"
-  },
-  {
-    "name": "Entrepreneur",
-    "description": "Own the most tiles that grant adjacency bonuses"
-  },
-  {
-    "name": "Full Moon",
-    "description": "Have the most Moon tags in play"
-  },
-  {
-    "name": "Lunar Magnate",
-    "description": "Own the most tiles on The Moon"
-  },
-  {
-    "name": "Curator",
-    "description": "Have the most tags of any one type in play"
-  },
-  {
-    "name": "Engineer",
-    "description": "Have the most cards in play that directly alter your own production"
-  },
-  {
-    "name": "Historian",
-    "description": "Have the most cards in your event pile"
-  },
-  {
-    "name": "Tourist",
-    "description": "Have the most empty spaces adjacent to your tiles"
-  },
-  {
-    "name": "A. Zoologist",
-    "description": "Own the most animal and microbe resources"
-  },
-  {
-    "name": "Cosmic Settler",
-    "description": "Own the most cities not on Mars"
-  },
-  {
-    "name": "Botanist",
-    "description": "Have the most plant production"
-  },
-  {
-    "name": "Coordinator",
-    "description": "Have the most cards in your event pile"
-  },
-  {
-    "name": "Zoologist",
-    "description": "Have the most animal resources"
-  },
-  {
-    "name": "Manufacturer",
-    "description": "Have the most active (blue) project cards in play"
-  },
-  {
-    "name": "Biologist",
-    "description": "Have the most animal, plant, and microbe tags in play"
-  },
-  {
-    "name": "T. Economizer",
-    "description": "Have the most project cards in play with a base cost of 10 M€ or less (not events.)"
-  },
-  {
-    "name": "Politician",
-    "description": "Place the most delegates"
-  },
-  {
-    "name": "Urbanist",
-    "description": "Have the most VP from city tile adjacencies on Mars"
-  },
-  {
-    "name": "Warmonger",
-    "description": "Play the most cards that reduce other players' resources or production"
-  },
-  {
-    "name": "Adapter",
-    "description": "Have the most cards with requirements in play"
-  },
-  {
-    "name": "Edgedancer",
-    "description": "Own the most tiles on the edges of the board"
-  },
-  {
-    "name": "Hoarder",
-    "description": "Have the most cards in hand"
-  },
-  {
-    "name": "Naturalist",
-    "description": "Have the most plant and heat production"
-  },
-  {
-    "name": "Voyager",
-    "description": "Have the most Jovian tags in play"
-  },
-  {
-    "name": "Kingpin",
-    "description": "Play the highest number of cards with a corruption requirement of at least 1. (Event cards count)"
-  },
-  {
-    "name": "EdgeLord",
-    "description": "Have the highest number of excavation markers on the edges of the board."
-  }
+    {
+        "name": "Terraformer",
+        "description": "Have a terraform rating of 35 (or 26 with Turmoil.)"
+    },
+    {
+        "name": "Mayor",
+        "description": "Own 3 city tiles"
+    },
+    {
+        "name": "Gardener",
+        "description": "Own 3 greenery tiles"
+    },
+    {
+        "name": "Builder",
+        "description": "Have 8 building tags in play"
+    },
+    {
+        "name": "Planner",
+        "description": "Have 16 cards in your hand"
+    },
+    {
+        "name": "Generalist",
+        "description": "Have increased all 6 productions by 1 step"
+    },
+    {
+        "name": "Specialist",
+        "description": "Have 10 in production of any resource"
+    },
+    {
+        "name": "Ecologist",
+        "description": "Have 4 bio tags in play (plant, microbe and animal tags count as bio tags)"
+    },
+    {
+        "name": "Tycoon",
+        "description": "Have 15 project cards in play (not events.)"
+    },
+    {
+        "name": "Legend",
+        "description": "Have 5 cards in your event pile"
+    },
+    {
+        "name": "Diversifier",
+        "description": "Have 8 different tags in play"
+    },
+    {
+        "name": "Tactician",
+        "description": "Have 5 cards with requirements in play"
+    },
+    {
+        "name": "Polar Explorer",
+        "description": "Own 3 tiles on the two bottom rows"
+    },
+    {
+        "name": "Energizer",
+        "description": "Have 6 energy production"
+    },
+    {
+        "name": "Rim Settler",
+        "description": "Have 3 Jovian tags in play"
+    },
+    {
+        "name": "Hoverlord",
+        "description": "Have 7 floater resources on your cards"
+    },
+    {
+        "name": "Networker",
+        "description": "Have placed 3 tiles adjacent to tiles that grant adjacency bonuses"
+    },
+    {
+        "name": "One Giant Step",
+        "description": "Have 6 moon tags"
+    },
+    {
+        "name": "Lunarchitect",
+        "description": "Own 6 Moon tiles"
+    },
+    {
+        "name": "Colonizer",
+        "description": "Have 4 colonies"
+    },
+    {
+        "name": "Farmer",
+        "description": "Have 4 plant production"
+    },
+    {
+        "name": "Minimalist",
+        "description": "Have no more than 2 cards in hand"
+    },
+    {
+        "name": "Terran",
+        "description": "Have 6 Earth tags in play"
+    },
+    {
+        "name": "Tropicalist",
+        "description": "Own 3 tiles in the middle 3 equatorial rows"
+    },
+    {
+        "name": "Economizer",
+        "description": "Have 5 heat production"
+    },
+    {
+        "name": "Pioneer",
+        "description": "Have 3 colonies"
+    },
+    {
+        "name": "Land Specialist",
+        "description": "Own 3 special (normally, brown) tiles"
+    },
+    {
+        "name": "Martian",
+        "description": "Have 4 Mars tags in play"
+    },
+    {
+        "name": "Businessperson",
+        "description": "Have 6 Earth tags in play"
+    },
+    {
+        "name": "Collector",
+        "description": "Have 3 sets of automated (green), active (blue) and event (red) project cards in play"
+    },
+    {
+        "name": "Firestarter",
+        "description": "Have 20 heat"
+    },
+    {
+        "name": "Terra Pioneer",
+        "description": "Own 5 tiles on Mars"
+    },
+    {
+        "name": "Spacefarer",
+        "description": "Have 6 space tags in play"
+    },
+    {
+        "name": "Gambler",
+        "description": "Fund 2 awards"
+    },
+    {
+        "name": "Electrician",
+        "description": "Have 4 power tags in play"
+    },
+    {
+        "name": "Smith",
+        "description": "Have a total of 7 steel and titanium production"
+    },
+    {
+        "name": "Tradesman",
+        "description": "Have 3 different types of non-standard resources"
+    },
+    {
+        "name": "Irrigator",
+        "description": "Own 4 tiles adjacent to oceans"
+    },
+    {
+        "name": "Capitalist",
+        "description": "Have 64 M€"
+    },
+    {
+        "name": "Risktaker",
+        "description": "Have at least 3 NEGATIVE VPs among your cards. (Event cards count.)"
+    },
+    {
+        "name": "Tunneler",
+        "description": "Have at least 7 excavation markers"
+    },
+    {
+        "name": "Landlord",
+        "description": "Own the most tiles"
+    },
+    {
+        "name": "Scientist",
+        "description": "Have the most science tags in play"
+    },
+    {
+        "name": "Banker",
+        "description": "Have the most M€ production"
+    },
+    {
+        "name": "Thermalist",
+        "description": "Have the most heat"
+    },
+    {
+        "name": "Miner",
+        "description": "Have the most steel and titanium"
+    },
+    {
+        "name": "Celebrity",
+        "description": "Have the most project cards in play with a base cost of at least 20 M€ (not events.)"
+    },
+    {
+        "name": "Industrialist",
+        "description": "Have most steel and energy"
+    },
+    {
+        "name": "Desert Settler",
+        "description": "Own the most tiles south of the equator (the four bottom rows)"
+    },
+    {
+        "name": "Estate Dealer",
+        "description": "Own the most tiles adjacent to ocean tiles"
+    },
+    {
+        "name": "Benefactor",
+        "description": "Have the highest terraform rating"
+    },
+    {
+        "name": "Cultivator",
+        "description": "Own the most greenery tiles"
+    },
+    {
+        "name": "Magnate",
+        "description": "Have the most automated (green) project cards in play"
+    },
+    {
+        "name": "Space Baron",
+        "description": "Have the most space tags in play"
+    },
+    {
+        "name": "Excentric",
+        "description": "Have the most resources on cards in play"
+    },
+    {
+        "name": "Contractor",
+        "description": "Have the most building tags in play"
+    },
+    {
+        "name": "Venuphile",
+        "description": "Have the most Venus tags in play"
+    },
+    {
+        "name": "Entrepreneur",
+        "description": "Own the most tiles that grant adjacency bonuses"
+    },
+    {
+        "name": "Full Moon",
+        "description": "Have the most Moon tags in play"
+    },
+    {
+        "name": "Lunar Magnate",
+        "description": "Own the most tiles on The Moon"
+    },
+    {
+        "name": "Curator",
+        "description": "Have the most tags of any one type in play"
+    },
+    {
+        "name": "Engineer",
+        "description": "Have the most cards in play that directly alter your own production"
+    },
+    {
+        "name": "Historian",
+        "description": "Have the most cards in your event pile"
+    },
+    {
+        "name": "Tourist",
+        "description": "Have the most empty spaces adjacent to your tiles"
+    },
+    {
+        "name": "A. Zoologist",
+        "description": "Own the most animal and microbe resources"
+    },
+    {
+        "name": "Cosmic Settler",
+        "description": "Own the most cities not on Mars"
+    },
+    {
+        "name": "Botanist",
+        "description": "Have the most plant production"
+    },
+    {
+        "name": "Coordinator",
+        "description": "Have the most cards in your event pile"
+    },
+    {
+        "name": "Zoologist",
+        "description": "Have the most animal resources"
+    },
+    {
+        "name": "Manufacturer",
+        "description": "Have the most active (blue) project cards in play"
+    },
+    {
+        "name": "Biologist",
+        "description": "Have the most animal, plant, and microbe tags in play"
+    },
+    {
+        "name": "T. Economizer",
+        "description": "Have the most project cards in play with a base cost of 10 M€ or less (not events.)"
+    },
+    {
+        "name": "Politician",
+        "description": "Place the most delegates"
+    },
+    {
+        "name": "Urbanist",
+        "description": "Have the most VP from city tile adjacencies on Mars"
+    },
+    {
+        "name": "Warmonger",
+        "description": "Play the most cards that reduce other players' resources or production"
+    },
+    {
+        "name": "Adapter",
+        "description": "Have the most cards with requirements in play"
+    },
+    {
+        "name": "Edgedancer",
+        "description": "Own the most tiles on the edges of the board"
+    },
+    {
+        "name": "Hoarder",
+        "description": "Have the most cards in hand"
+    },
+    {
+        "name": "Naturalist",
+        "description": "Have the most plant and heat production"
+    },
+    {
+        "name": "Voyager",
+        "description": "Have the most Jovian tags in play"
+    },
+    {
+        "name": "Kingpin",
+        "description": "Play the highest number of cards with a corruption requirement of at least 1. (Event cards count)"
+    },
+    {
+        "name": "EdgeLord",
+        "description": "Have the highest number of excavation markers on the edges of the board."
+    }
 ]

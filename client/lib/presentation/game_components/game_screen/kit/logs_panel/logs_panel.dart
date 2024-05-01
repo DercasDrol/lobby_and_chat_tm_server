@@ -11,7 +11,7 @@ import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 import 'package:mars_flutter/domain/model/logs/LogMessageDataType.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_name.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_name.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/card_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
 

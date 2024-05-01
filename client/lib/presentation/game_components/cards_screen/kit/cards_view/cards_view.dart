@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
@@ -20,15 +22,57 @@ class CardsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedTagsN = ValueNotifier(Tag.values);
-    final selectedTypesN = ValueNotifier(CardType.values);
-    final selectedModulesN = ValueNotifier(GameModule.values);
-    final ValueNotifier<String?> textFilterN = ValueNotifier(null);
+    final ValueNotifier<List<Tag>> selectedTagsN = ValueNotifier(
+      localStorage.getItem('selectedTags') == null
+          ? Tag.values
+          : jsonDecode(localStorage.getItem('selectedTags') ?? '[]')
+              .map((e) => Tag.fromString(e))
+              .cast<Tag>()
+              .toList(),
+    );
+    selectedTagsN.addListener(() {
+      localStorage.setItem('selectedTags', json.encode(selectedTagsN.value));
+    });
+    logger.d(" selectedTypes: ${localStorage.getItem('selectedTypes')}");
+    final ValueNotifier<List<CardType>> selectedTypesN = ValueNotifier(
+      localStorage.getItem('selectedTypes') == null
+          ? CardType.values
+          : json
+              .decode(localStorage.getItem('selectedTypes') ?? '[]')
+              .map((e) => CardType.fromString(e))
+              .cast<CardType>()
+              .toList(),
+    );
+    selectedTypesN.addListener(() {
+      final res = selectedTypesN.value;
+      logger.d("selectedTypesN.value: ${res}");
+      localStorage.setItem('selectedTypes', json.encode(res));
+    });
+
+    final ValueNotifier<List<GameModule>> selectedModulesN = ValueNotifier(
+      localStorage.getItem('selectedModules') == null
+          ? GameModule.values
+          : jsonDecode(localStorage.getItem('selectedModules') ?? '[]')
+              .map((e) => GameModule.fromString(e))
+              .cast<GameModule>()
+              .toList(),
+    );
+    selectedModulesN.addListener(() {
+      localStorage.setItem(
+          'selectedModules', json.encode(selectedModulesN.value));
+    });
+
+    final ValueNotifier<String?> textFilterN =
+        ValueNotifier(localStorage.getItem('textFilter'));
+    textFilterN.addListener(() {
+      localStorage.setItem('textFilter', textFilterN.value.toString());
+    });
+
     final ValueNotifier<double> headerHeightN = ValueNotifier(2300.0);
     Widget getContentView(Map<CardName, ClientCard> allCards) {
       return LayoutBuilder(builder: (context, constraints) {
         headerHeightN.value = 2300.0;
-        return CustomScrollView(slivers: [
+        return CustomScrollView(scrollBehavior: ScrollBehavior(), slivers: [
           ValueListenableBuilder(
             valueListenable: headerHeightN,
             builder: (context, headerHeight, child) => SliverPersistentHeader(
@@ -93,20 +137,27 @@ class CardsView extends StatelessWidget {
                                 valueListenable: textFilterN,
                                 builder: (context, textFilter, child) {
                                   final filteredCards = allCards.values
-                                      .where((cardInfo) =>
-                                          selectedTypes
-                                              .contains(cardInfo.type) &&
-                                          selectedModules
-                                              .contains(cardInfo.module) &&
-                                          selectedTags.any((tag) =>
-                                              cardInfo.tags.contains(tag)) &&
-                                          (textFilter == null ||
-                                              cardInfo.name
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(textFilter
-                                                      .toLowerCase())))
-                                      .toList();
+                                      .where((cardInfo) {
+                                    if (cardInfo.name == CardName.INCITE) {
+                                      logger.d('cardInfo: $cardInfo');
+                                    }
+                                    return selectedTypes
+                                            .contains(cardInfo.type) &&
+                                        selectedModules
+                                            .contains(cardInfo.module) &&
+                                        (selectedTags.any((tag) =>
+                                                cardInfo.tags.contains(tag)) ||
+                                            cardInfo.tags.isEmpty) &&
+                                        (textFilter == null ||
+                                            cardInfo.name
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(
+                                                    textFilter.toLowerCase()));
+                                  }).toList()
+                                    ..sort((a, b) => a.name
+                                        .toString()
+                                        .compareTo(b.name.toString()));
 
                                   const double cardWidth = CARD_WIDTH * 1.1;
                                   final int crossAxisCount0 =
@@ -123,6 +174,11 @@ class CardsView extends StatelessWidget {
                                     ),
                                     delegate: SliverChildBuilderDelegate(
                                       (BuildContext context, int index) {
+                                        if (filteredCards[index].name ==
+                                            CardName.INCITE) {
+                                          logger.d(
+                                              'cardInfo: $filteredCards[index]');
+                                        }
                                         return CardView(
                                           card: filteredCards[index],
                                           isSelected: false,
@@ -196,7 +252,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Flexible(fit: FlexFit.loose, child: child);
+    return child;
   }
 
   @override

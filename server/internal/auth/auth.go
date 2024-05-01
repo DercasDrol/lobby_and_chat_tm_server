@@ -162,7 +162,7 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 
 	httpServeMux.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
 		// origin to excape Cross-Origin Resource Sharing (CORS)
-		w.Header().Set("Access-Control-Allow-Origin", *conf.AuthServerConfig.Host)
+		w.Header().Set("Access-Control-Allow-Origin", "*") //*conf.AuthServerConfig.Host)
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With")

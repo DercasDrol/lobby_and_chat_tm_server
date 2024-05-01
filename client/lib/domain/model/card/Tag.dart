@@ -60,4 +60,12 @@ enum Tag {
   @override
   String toString() => _TO_STRING_MAP[this]!;
   static fromString(String value) => _TO_ENUM_MAP[value];
+
+  static fromJson(String value) {
+    return fromString(value);
+  }
+
+  String toJson() {
+    return toString();
+  }
 }

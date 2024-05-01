@@ -17,7 +17,16 @@ enum CardResource {
   SPECIALIZED_ROBOT,
   SEED,
   AGENDA,
-  ORBITAL;
+  ORBITAL,
+  GRAPHENE,
+  HYDROELECTRIC_RESOURCE,
+  CLONE_TROOPER,
+  TOOL,
+  WARE,
+  SCOOP,
+  JOURNALISM,
+  ACTIVIST,
+  SUPPLY_CHAIN;
 
   static const _TO_STRING_MAP = {
     ANIMAL: 'Animal',
@@ -37,6 +46,15 @@ enum CardResource {
     SEED: 'Seed',
     AGENDA: 'Agenda',
     ORBITAL: 'Orbital',
+    GRAPHENE: 'Graphene',
+    HYDROELECTRIC_RESOURCE: 'Hydroelectric resource',
+    CLONE_TROOPER: 'Clone Trooper',
+    TOOL: 'Tool',
+    WARE: 'Ware',
+    SCOOP: 'Scoop',
+    JOURNALISM: 'Journalism',
+    ACTIVIST: 'Activist',
+    SUPPLY_CHAIN: 'Supply Chain',
   };
 
   static final _TO_IMAGE_PATH_MAP = {
@@ -57,6 +75,15 @@ enum CardResource {
     SEED: Assets.resources.seed.path,
     AGENDA: Assets.resources.agenda.path,
     ORBITAL: Assets.resources.orbital.path,
+    GRAPHENE: Assets.resources.graphene.path,
+    HYDROELECTRIC_RESOURCE: Assets.resources.hydroelectricResource.path,
+    CLONE_TROOPER: Assets.resources.cloneTrooper.path,
+    TOOL: Assets.underworld.cardResourceTool.path,
+    WARE: Assets.underworld.cardResourceWare.path,
+    SCOOP: Assets.underworld.cardResourceScoop.path,
+    JOURNALISM: Assets.underworld.cardResourceJournalism.path,
+    ACTIVIST: Assets.underworld.cardResourceActivist.path,
+    SUPPLY_CHAIN: Assets.underworld.cardResourceSupplyChain.path,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

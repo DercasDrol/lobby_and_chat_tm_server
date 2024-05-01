@@ -16,7 +16,7 @@ enum CardItemSize {
     SMALL: 0.75,
     MEDIUM: 1.0,
     LARGE: 1.4,
-    TINY: 0.55,
+    TINY: 0.70,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

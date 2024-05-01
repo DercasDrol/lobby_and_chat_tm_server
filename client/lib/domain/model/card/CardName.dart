@@ -1958,10 +1958,17 @@ enum CardName {
     // End Underworld
     UNKNOWN: 'unknown',
   };
-
+  static const _CARDS_WITH_COMPLECATED_VIEW = [
+    CardName.AERON_GENOMICS,
+    CardName.ANUBIS_SECURITIES,
+    CardName.KUIPER_COOPERATIVE,
+    CardName.PHARMACY_UNION,
+    CardName.PROJECT_WORKSHOP,
+  ];
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
+  bool get isComplexView => _CARDS_WITH_COMPLECATED_VIEW.contains(this);
   static fromString(String value) => _TO_ENUM_MAP[value] ?? UNKNOWN;
 }

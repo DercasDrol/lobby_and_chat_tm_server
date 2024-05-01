@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
 
 class ModuleIconView extends StatelessWidget {
@@ -11,7 +12,25 @@ class ModuleIconView extends StatelessWidget {
   final GameModule module;
   @override
   Widget build(BuildContext context) {
-    String? imagePath = module.toIconPath();
+    Widget getImage() {
+      switch (module) {
+        case GameModule.PRELUDE2:
+          return Stack(children: [
+            Image(image: AssetImage(Assets.cardModuleIcons.prelude.path)),
+            Padding(
+              padding: EdgeInsets.all(2.0),
+              child: Image(
+                image: AssetImage(Assets.prelude2.prelude2Triangle16.path),
+              ),
+            )
+          ]);
+        default:
+          return module.toIconPath() == null
+              ? SizedBox.shrink()
+              : Image(image: AssetImage(module.toIconPath()!));
+      }
+    }
+
     return SizedBox(
       height: iconRadius,
       width: iconRadius,
@@ -27,14 +46,7 @@ class ModuleIconView extends StatelessWidget {
             )
           ],
         ),
-        child: Stack(
-          clipBehavior: Clip.hardEdge,
-          children: [
-            imagePath == null
-                ? SizedBox.shrink()
-                : Image(image: AssetImage(imagePath)),
-          ],
-        ),
+        child: getImage(),
       ),
     );
   }

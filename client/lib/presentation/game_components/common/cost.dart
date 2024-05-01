@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
 
 class CostView extends StatelessWidget {
-  final int cost;
+  final String? text;
+  final int? cost;
   final double width;
   final double height;
   final double fontSize;
@@ -20,6 +23,7 @@ class CostView extends StatelessWidget {
     required this.useGreyMode,
     this.discount,
     this.useShadow,
+    this.text,
   });
 
   @override
@@ -34,7 +38,7 @@ class CostView extends StatelessWidget {
             child: child,
           )
         : child;
-    getCost(int costForShowing, double scaleFactor) => Container(
+    getCost(int? costForShowing, double scaleFactor) => Container(
           height: height * scaleFactor,
           width: width * scaleFactor,
           decoration: (useShadow ?? false)
@@ -51,16 +55,27 @@ class CostView extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
-              Image(image: AssetImage(Assets.resources.megacredit.path)),
+              Opacity(
+                  child: Image(
+                    image: AssetImage(Assets.resources.megacredit.path),
+                    color: Colors.black,
+                  ),
+                  opacity: 0.5),
+              Padding(
+                padding: EdgeInsets.all(0.5),
+                child:
+                    Image(image: AssetImage(Assets.resources.megacredit.path)),
+              ),
               Center(
-                  child: Text(
-                costForShowing.toString() + (multiplier ? "X" : ""),
-                style: TextStyle(
-                  fontSize: fontSize * scaleFactor,
-                  fontFamily: FontFamily.prototype,
-                  color: Colors.black,
+                child: Text(
+                  text ?? costForShowing.toString() + (multiplier ? "X" : ""),
+                  style: TextStyle(
+                    fontSize: fontSize * scaleFactor,
+                    fontFamily: FontFamily.prototype,
+                    color: Colors.black,
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         );
@@ -75,7 +90,7 @@ class CostView extends StatelessWidget {
                   children: [
                     getCost(cost, 1.0),
                     SizedBox(height: height * 0.05),
-                    getCost(cost - (discount ?? 0), 0.77),
+                    getCost(cost! - (discount!), 0.77),
                   ],
                 ),
                 Padding(

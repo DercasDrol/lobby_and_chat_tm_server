@@ -281,6 +281,20 @@ enum CardRenderItemType {
     SPECIALIZED_ROBOT: Assets.resources.specializedRobot.path,
     PARTY_LEADERS: Assets.misc.delegate.path,
     GLOBAL_EVENT: Assets.parties.globalEvent.path,
+    CORRUPTION: Assets.underworld.corruption.path,
+    //NOMADS: Assets.misc.nomads.path,
+    HYDROELECTRIC_RESOURCE: Assets.resources.hydroelectricResource.path,
+    CITY_OR_SPECIAL_TILE: Assets.promo.cityOrSpecialTile.path,
+    TOOL: Assets.underworld.cardResourceTool.path,
+    WARE: Assets.underworld.cardResourceWare.path,
+    SCOOP: Assets.underworld.cardResourceScoop.path,
+    JOURNALISM: Assets.underworld.cardResourceJournalism.path,
+    ACTIVIST: Assets.underworld.cardResourceActivist.path,
+    SUPPLY_CHAIN: Assets.underworld.cardResourceSupplyChain.path,
+    GEOSCAN_ICON: Assets.underworld.geoscanIcon.path,
+    EXCAVATE: Assets.underworld.excavate.path,
+    IDENTIFY: Assets.underworld.identify.path,
+    CORRUPTION_SHIELD: Assets.underworld.corruptionBlock.path,
   };
   static final _TO_PLAYED_IMAGE_PATH_MAP = {
     PLANTS: Assets.tags.plant.path,
@@ -293,11 +307,11 @@ enum CardRenderItemType {
     SCIENCE: Assets.tags.science.path,
     EVENT: Assets.tags.event.path,
     SPACE: Assets.tags.space.path,
-    VENUS: Assets.globalParameters.venus.path,
+    VENUS: Assets.tags.venus.path,
     MOON: Assets.tags.moon.path,
-    WILD: Assets.resources.wild.path,
+    WILD: Assets.tags.wild.path,
     MARS: Assets.tags.mars.path,
-    CITY: Assets.tiles.city.path,
+    CITY: Assets.tags.city.path,
   };
   static final _TO_ITEM_SHAPE_MAP = {
     OCEANS: ItemShape.hexagon,
@@ -348,12 +362,15 @@ enum CardRenderItemType {
     VENUSIAN_HABITAT: ItemShape.square,
     PRESERVATION: ItemShape.square,
     SPECIALIZED_ROBOT: ItemShape.square,
+    DELEGATES: ItemShape.square,
+    CORRUPTION: ItemShape.square,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
   String? toImagePath(bool isPlayed) =>
       isPlayed ? _TO_PLAYED_IMAGE_PATH_MAP[this] : _TO_IMAGE_PATH_MAP[this];
-  ItemShape? toItemShape() => _TO_ITEM_SHAPE_MAP[this];
+  ItemShape? toItemShape(bool isPlayed) =>
+      isPlayed ? ItemShape.circle : _TO_ITEM_SHAPE_MAP[this];
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
   static fromString(String value) => _TO_ENUM_MAP[value] ?? UNKNOWN;

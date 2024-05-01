@@ -86,7 +86,11 @@ class CardRequirementDescriptor {
         colonies: json['colonies'],
         party:
             json['party'] == null ? null : PartyName.fromString(json['party']),
-        chairman: json['chairman'],
+        chairman: json['chairman'].runtimeType == bool
+            ? json['chairman']
+                ? 1
+                : 0
+            : json['chairman'],
         partyLeader: json['partyLeader'],
         habitatTiles: json['habitatTiles'],
         miningTiles: json['miningTiles'],
@@ -96,7 +100,7 @@ class CardRequirementDescriptor {
         logisticRate: json['logisticRate'],
         excavation: json['excavation'],
         corruption: json['corruption'],
-        count: json['count'],
+        count: json['count'] ?? 1,
         max: json['max'],
         all: json['all'],
         nextTo: json['nextTo'],

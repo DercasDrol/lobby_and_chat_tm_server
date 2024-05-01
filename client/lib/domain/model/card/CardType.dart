@@ -40,4 +40,14 @@ enum CardType {
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
   static fromString(String value) => _TO_ENUM_MAP[value];
+
+  static CardType fromJson(String value) {
+    try {
+      return _TO_ENUM_MAP[value]!;
+    } catch (e) {
+      throw ('CardType.fromJson: $value', e);
+    }
+  }
+
+  String toJson() => toString();
 }

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/common/log.dart';
+import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
 import 'package:mars_flutter/domain/model/card/Tag.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tag_info.dart';
 import 'package:mars_flutter/presentation/core/on_hover.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_background.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_body/card_body.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_resources.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_background.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/card_body.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_resources.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_type_header_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/cost.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_module_icon.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_name.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_requirements.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_tag.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_module_icon.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_name.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_requirements.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_tag.dart';
 
 const double CARD_WIDTH = 215;
 const double CARD_HEIGHT = 280;
@@ -42,6 +45,9 @@ class CardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (card.name == CardName.ANUBIS_SECURITIES) {
+      logger.d('Advanced Ecosystems');
+    }
     final double cadr_width = CARD_WIDTH * (sizeRatio ?? 1);
     final double card_height = CARD_HEIGHT * (sizeRatio ?? 1);
     final double _kCardPadding = 6 * (sizeRatio ?? 1);
@@ -152,6 +158,12 @@ class CardView extends StatelessWidget {
           cardResources,
           cardName,
           cardCost,
+          CardTypeHeaderView(
+            width: cadr_width * 0.5,
+            height: card_height * 0.04,
+            type: card.type,
+            topPadding: cardBodyTopPadding - card_height * 0.045,
+          ),
           cardTags,
           cardRequirements,
           cardModuleIcon,

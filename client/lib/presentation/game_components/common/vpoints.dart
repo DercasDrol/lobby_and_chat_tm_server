@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:mars_flutter/domain/model/card/render/ICardRenderVictoryPoints.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_utils.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 
 class VpointsView extends StatelessWidget {
   final double height;
@@ -21,20 +21,26 @@ class VpointsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget vpoints;
     final itemWidth = width * 0.35;
-    Widget getItemIcon() => ConstrainedBox(
+    getImageView() {
+      final imagePath = (points as ICardRenderDynamicVictoryPoints)
+          .item!
+          .type
+          .toImagePath(false)!;
+      return ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 0,
             minHeight: 0,
             maxWidth: itemWidth,
             maxHeight: height * 0.9,
           ),
-          child: Image(
-            image: AssetImage((points as ICardRenderDynamicVictoryPoints)
-                .item!
-                .type
-                .toImagePath(false)!),
-          ),
-        );
+          child: (points as ICardRenderDynamicVictoryPoints).item!.anyPlayer ??
+                  false
+              ? RedBorderedImage(imagePath: imagePath)
+              : Image(
+                  image: AssetImage(imagePath),
+                ));
+    }
+
     switch (points.runtimeType) {
       case ICardRenderStaticVictoryPoints:
         vpoints = Text(
@@ -80,18 +86,7 @@ class VpointsView extends StatelessWidget {
                 ],
                 ...((points as ICardRenderDynamicVictoryPoints).item == null
                     ? []
-                    : [
-                        (points as ICardRenderDynamicVictoryPoints)
-                                    .item!
-                                    .anyPlayer ??
-                                false
-                            ? RedItemBox(
-                                child: getItemIcon(),
-                                width: itemWidth,
-                                shape: ItemShape.hexagon,
-                              ) // we expect that this should be only hexagon items with anyPlayer == true
-                            : getItemIcon()
-                      ])
+                    : [getImageView()])
               ]);
         break;
       default:

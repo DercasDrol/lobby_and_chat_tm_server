@@ -76,4 +76,14 @@ enum GameModule {
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
   static fromString(String value) => _TO_ENUM_MAP[value];
+
+  static GameModule fromJson(String value) {
+    try {
+      return _TO_ENUM_MAP[value]!;
+    } catch (e) {
+      throw ('GameModule.fromJson: $value', e);
+    }
+  }
+
+  String toJson() => toString();
 }

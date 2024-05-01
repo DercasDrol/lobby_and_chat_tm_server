@@ -224,6 +224,11 @@ class SecondaryTag {
       secTag: secTag == AltSecondaryTag.UNKNOWN ? null : secTag,
     );
   }
+  String? toImagePath() {
+    if (tag != null) return tag!.toImagePath();
+    if (secTag != null) return secTag!.toImagePath();
+    return null;
+  }
 }
 
 class ICardRenderItem extends CardComponent {
@@ -291,7 +296,7 @@ class ICardRenderItem extends CardComponent {
       text: json['text'] ?? null,
       innerText: json['innerText'] ?? null,
       isUppercase: json['isUppercase'] ?? false,
-      isBold: json['isBold'] ?? false,
+      isBold: json['isBold'],
       isPlate: json['isPlate'] ?? false,
       size: json['size'] == null
           ? CardItemSize.MEDIUM
