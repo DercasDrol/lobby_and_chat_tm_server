@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
 import 'package:mars_flutter/domain/model/card/CardRequirementDescriptor.dart';
 import 'package:mars_flutter/domain/model/card/RequirementType.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/politic_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 import 'package:mars_flutter/presentation/game_components/common/production_box.dart';
 
@@ -97,16 +98,26 @@ class CardRequirementsView extends StatelessWidget {
               : requirement.party != null
                   ? requirement.party!.toImagePath()
                   : requirement.requirementType.toImagePath();
-      return resPrepare(
-          addMinus:
-              requirement.requirementType == RequirementType.REMOVED_PLANTS,
-          isProduction:
-              requirement.requirementType == RequirementType.PRODUCTION,
-          isTemp: requirement.requirementType == RequirementType.TEMPERATURE,
-          isOxygen: requirement.requirementType == RequirementType.OXYGEN,
-          reqView: requirement.all ?? false
+      late final Widget view;
+      switch (requirement.requirementType) {
+        case RequirementType.PARTY_LEADERS:
+          view = PoliticView(
+            withRedBorder: requirement.all ?? false,
+            imagePath: imagePath!,
+          );
+          break;
+        default:
+          view = requirement.all ?? false
               ? RedBorderedImage(imagePath: imagePath!)
-              : Image(image: AssetImage(imagePath!)));
+              : Image(image: AssetImage(imagePath!));
+      }
+      return resPrepare(
+        addMinus: requirement.requirementType == RequirementType.REMOVED_PLANTS,
+        isProduction: requirement.requirementType == RequirementType.PRODUCTION,
+        isTemp: requirement.requirementType == RequirementType.TEMPERATURE,
+        isOxygen: requirement.requirementType == RequirementType.OXYGEN,
+        reqView: view,
+      );
     }).toList();
 
     return requirements.length > 0

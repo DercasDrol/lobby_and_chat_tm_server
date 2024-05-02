@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
-import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:mars_flutter/domain/model/card/render/ICardRenderVictoryPoints.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 
 class VpointsView extends StatelessWidget {
   final double height;
   final double width;
-  final ICardRenderVictoryPoints points;
+  final String? text;
+  final ICardRenderVictoryPoints? points;
   final bool isCardPoints;
 
   const VpointsView({
     required this.width,
     required this.height,
-    required this.points,
+    this.points,
     required this.isCardPoints,
+    this.text,
   });
 
   @override
@@ -41,56 +42,67 @@ class VpointsView extends StatelessWidget {
                 ));
     }
 
-    switch (points.runtimeType) {
-      case ICardRenderStaticVictoryPoints:
-        vpoints = Text(
-          isCardPoints ? points.points.toString() : "VP",
-          style: TextStyle(
-            fontSize: height * 0.64,
-            fontFamily: FontFamily.prototype,
-            color: Colors.black,
-          ),
-        );
-        break;
-      case ICardRenderDynamicVictoryPoints:
-        vpoints = ((points as ICardRenderDynamicVictoryPoints).target == 0 &&
-                    points.points == 0) ||
-                (points.points == -1 &&
-                    (points as ICardRenderDynamicVictoryPoints).target == -1)
-            ? Text(
-                points.points == -1 ? "-1" : "?",
-                style: TextStyle(
-                  fontSize: height * 0.64,
-                  fontFamily: FontFamily.prototype,
-                  color: Colors.black,
-                ),
-              )
-            : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                ...[
-                  Text(
-                    points.points.toString() +
-                        "/" +
-                        ((points as ICardRenderDynamicVictoryPoints).target ==
-                                    1 ||
-                                points.points > 1
-                            ? ''
-                            : (points as ICardRenderDynamicVictoryPoints)
-                                .target
-                                .toString()),
-                    style: TextStyle(
-                      fontSize: height * 0.64,
-                      fontFamily: FontFamily.prototype,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
-                ...((points as ICardRenderDynamicVictoryPoints).item == null
-                    ? []
-                    : [getImageView()])
-              ]);
-        break;
-      default:
-        throw Exception("Unknown victory points type");
+    if (text != null) {
+      vpoints = Text(
+        text!,
+        style: TextStyle(
+          fontSize: height * 0.64,
+          fontFamily: FontFamily.prototype,
+          color: Colors.black,
+        ),
+      );
+    } else {
+      switch (points.runtimeType) {
+        case ICardRenderStaticVictoryPoints:
+          vpoints = Text(
+            isCardPoints ? points!.points.toString() : "VP",
+            style: TextStyle(
+              fontSize: height * 0.64,
+              fontFamily: FontFamily.prototype,
+              color: Colors.black,
+            ),
+          );
+          break;
+        case ICardRenderDynamicVictoryPoints:
+          vpoints = ((points as ICardRenderDynamicVictoryPoints).target == 0 &&
+                      points!.points == 0) ||
+                  (points!.points == -1 &&
+                      (points as ICardRenderDynamicVictoryPoints).target == -1)
+              ? Text(
+                  points!.points == -1 ? "-1" : "?",
+                  style: TextStyle(
+                    fontSize: height * 0.64,
+                    fontFamily: FontFamily.prototype,
+                    color: Colors.black,
+                  ),
+                )
+              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ...[
+                    Text(
+                      points!.points.toString() +
+                          "/" +
+                          ((points as ICardRenderDynamicVictoryPoints).target ==
+                                      1 ||
+                                  points!.points > 1
+                              ? ''
+                              : (points as ICardRenderDynamicVictoryPoints)
+                                  .target
+                                  .toString()),
+                      style: TextStyle(
+                        fontSize: height * 0.64,
+                        fontFamily: FontFamily.prototype,
+                        color: Colors.black,
+                      ),
+                    )
+                  ],
+                  ...((points as ICardRenderDynamicVictoryPoints).item == null
+                      ? []
+                      : [getImageView()])
+                ]);
+          break;
+        default:
+          throw Exception("Unknown victory points type");
+      }
     }
     return ConstrainedBox(
         constraints: BoxConstraints(
@@ -108,7 +120,7 @@ class VpointsView extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color.fromARGB(255, 168, 129, 0),
+                      Color.fromARGB(255, 214, 164, 0),
                       Color.fromARGB(255, 153, 92, 0),
                     ],
                   ),

@@ -1964,6 +1964,8 @@ enum CardName {
     CardName.KUIPER_COOPERATIVE,
     CardName.PHARMACY_UNION,
     CardName.PROJECT_WORKSHOP,
+    CardName.THE_DARKSIDE_OF_THE_MOON_SYNDICATE,
+    CardName.SPIRE,
   ];
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
@@ -109,6 +110,8 @@ class CardsView extends StatelessWidget {
                             onChanged: (text) {
                               textFilterN.value = text;
                             },
+                            controller: TextEditingController()
+                              ..text = textFilterN.value ?? '',
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Enter a search term',

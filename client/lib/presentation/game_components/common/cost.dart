@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 
 class CostView extends StatelessWidget {
   final String? text;
@@ -14,6 +15,7 @@ class CostView extends StatelessWidget {
   final bool useGreyMode;
   final int? discount;
   final bool? useShadow;
+  final bool? showRedBoarder;
   const CostView({
     required this.cost,
     required this.width,
@@ -24,6 +26,7 @@ class CostView extends StatelessWidget {
     this.discount,
     this.useShadow,
     this.text,
+    this.showRedBoarder,
   });
 
   @override
@@ -58,13 +61,16 @@ class CostView extends StatelessWidget {
               Opacity(
                   child: Image(
                     image: AssetImage(Assets.resources.megacredit.path),
-                    color: Colors.black,
+                    color: showRedBoarder ?? false ? Colors.red : Colors.black,
                   ),
                   opacity: 0.5),
               Padding(
                 padding: EdgeInsets.all(0.5),
-                child:
-                    Image(image: AssetImage(Assets.resources.megacredit.path)),
+                child: showRedBoarder ?? false
+                    ? RedBorderedImage(
+                        imagePath: Assets.resources.megacredit.path)
+                    : Image(
+                        image: AssetImage(Assets.resources.megacredit.path)),
               ),
               Center(
                 child: Text(

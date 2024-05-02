@@ -4,14 +4,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
+import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:mars_flutter/domain/model/card/render/Size.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/empty_tag_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/politic_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/secondary_tag_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/utils.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_requirements.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 import 'package:mars_flutter/presentation/game_components/common/cost.dart';
+import 'package:mars_flutter/presentation/game_components/common/vpoints.dart';
 
 class BodyItemView extends StatelessWidget {
   const BodyItemView({
@@ -117,19 +121,23 @@ class BodyItemView extends StatelessWidget {
     Widget createGeneralTile(
         {double? widthMult, double? heightMult, Widget? child}) {
       return (item.amount.abs() > 1 && item.showDigit == true)
-          ? Wrap(children: [
-              BodyItemCover(
-                text: item.amount.abs().toString(),
-                height: height * item.size.toMultiplier() * 0.8,
-                width: width * item.size.toMultiplier() * 0.4,
-                parentHeight: height,
-              ),
-              _applyPadding(
-                child: child ?? _prepareImageView(imagePath!),
-                widthMultiplier: widthMult ?? itemWidthMultiplyer,
-                heightMultiplier: heightMult ?? itemWidthMultiplyer,
-              ),
-            ])
+          ? Wrap(
+              runAlignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              alignment: WrapAlignment.center,
+              children: [
+                  BodyItemCover(
+                    text: item.amount.abs().toString(),
+                    height: height * item.size.toMultiplier() * 0.8,
+                    width: width * item.size.toMultiplier() * 0.4,
+                    parentHeight: height,
+                  ),
+                  _applyPadding(
+                    child: child ?? _prepareImageView(imagePath!),
+                    widthMultiplier: widthMult ?? itemWidthMultiplyer,
+                    heightMultiplier: heightMult ?? itemWidthMultiplyer,
+                  ),
+                ])
           : _applyPadding(
               child: child ?? _prepareImageView(imagePath!),
               widthMultiplier: widthMult ?? itemWidthMultiplyer,
@@ -149,19 +157,20 @@ class BodyItemView extends StatelessWidget {
               text: item.innerText,
               multiplier: false,
               useGreyMode: false,
+              showRedBoarder: item.anyPlayer,
             ),
           );
         case CardRenderItemType.TEMPERATURE:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 1.0,
-            heightMultiplier: 1.5,
+            widthMult: 1.0,
+            heightMult: 1.5,
           );
         case CardRenderItemType.CARDS:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 0.9,
-            heightMultiplier: 1.6,
+            widthMult: 0.9,
+            heightMult: 1.6,
           );
         case CardRenderItemType.RULING_PARTY:
           return _applyPadding(
@@ -234,7 +243,7 @@ class BodyItemView extends StatelessWidget {
                     (item.text == null ? "" : item.text!.toUpperCase()).length *
                         7.5 *
                         item.size.toMultiplier(),
-                    parentWidth * 0.6),
+                    parentWidth * 0.5),
                 height: height * item.size.toMultiplier() * 1.2,
                 alignment: Alignment.center,
                 child: Text(
@@ -262,7 +271,6 @@ class BodyItemView extends StatelessWidget {
           //сделать картинку черно-белой
           return _applyPadding(child: _prepareImageView(imagePath!));
         case CardRenderItemType.TRADE_DISCOUNT:
-          //сделать белый квадрат с черным текстом внутри
           return _applyPadding(
             child: BodyItemCover(
               text: item.text,
@@ -272,7 +280,6 @@ class BodyItemView extends StatelessWidget {
             ),
           );
         case CardRenderItemType.COMMUNITY:
-          //нарисовать квадрат с оранжевой градиентной заливкой от светлооранжевого до темно оранжевого сверху вниз
           return _applyPadding(
             child: Container(
               width: width * item.size.toMultiplier(),
@@ -293,8 +300,27 @@ class BodyItemView extends StatelessWidget {
               ),
             ),
           );
+        case CardRenderItemType.NO_TAGS:
+          return _applyPadding(
+              child: Stack(alignment: Alignment.center, children: [
+            EmptyTagView(
+              width: width * item.size.toMultiplier(),
+              height: height * item.size.toMultiplier(),
+            ),
+            CrossView(
+              size: width * item.size.toMultiplier(),
+              color: Colors.black,
+              strokeWidth: 4.0,
+            ),
+          ]));
+        case CardRenderItemType.EMPTY_TAG:
+          return _applyPadding(
+            child: EmptyTagView(
+              width: width * item.size.toMultiplier(),
+              height: height * item.size.toMultiplier(),
+            ),
+          );
         case CardRenderItemType.DIVERSE_TAG:
-          //нарисовать круг с градиентной заливкой под 45 градусов (зеленый, желтый, красный) и черным контуром
           return Container(
             width: width * item.size.toMultiplier(),
             height: height * item.size.toMultiplier(),
@@ -316,10 +342,44 @@ class BodyItemView extends StatelessWidget {
             ),
           );
         case CardRenderItemType.PRELUDE:
-          //нарисовать металлический прямоугольник внутри которго будет розовый прямоугольник с надписью "PREL"
-          return SizedBox.shrink();
+          return Container(
+            width: width * item.size.toMultiplier() * 1.8,
+            height: height * item.size.toMultiplier() * 0.8,
+            padding: EdgeInsets.all(5.0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.black,
+                  Colors.grey.shade700,
+                  Colors.grey.shade500,
+                  Colors.grey.shade700,
+                  Colors.grey.shade800,
+                  Colors.black,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(3.0),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: CardType.PRELUDE.toColor(),
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+              child: Center(
+                child: Text(
+                  "PREL",
+                  style: TextStyle(
+                    fontSize: height * item.size.toMultiplier() * 0.4,
+                    fontFamily: FontFamily.prototype,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+              ),
+            ),
+          );
         case CardRenderItemType.COLONY_TILE:
-          //нарисовать черный овал с белыи контуром и надписью "COLONY"
           return Container(
             margin: EdgeInsets.only(left: width * 0.2),
             width: width * 3 * item.size.toMultiplier(),
@@ -371,8 +431,30 @@ class BodyItemView extends StatelessWidget {
                 ),
               ]));
         case CardRenderItemType.AWARD:
-          //нарисовать оранжевый прямоугольник с черным текстом внутри "AWARD"
-          return SizedBox.shrink();
+          return Container(
+            margin: EdgeInsets.all(3.0),
+            width: width * 2,
+            height: height * 0.7,
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(3.0),
+              border: Border.all(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "AWARD",
+                style: TextStyle(
+                  fontSize: height * 0.4,
+                  fontFamily: FontFamily.prototype,
+                  color: Colors.black,
+                  height: 1.0,
+                ),
+              ),
+            ),
+          );
         case CardRenderItemType.MILESTONE:
           //нарисовать оранжевый прямоугольник с черным текстом внутри "MILESTONE"
           return SizedBox.shrink();
@@ -383,11 +465,19 @@ class BodyItemView extends StatelessWidget {
           //взять картинку карты и поверх нее нарисовать цифру 2 в круге и 2 тэга сверху (билдинг и космос)
           return SizedBox.shrink();
         case CardRenderItemType.PARTY_LEADERS:
-          //взять картинку delegate на фоне черном надгробии
-          return SizedBox.shrink();
+          return createGeneralTile(
+            child: PoliticView(
+              withRedBorder: item.anyPlayer ?? false,
+              imagePath: imagePath!,
+            ),
+          );
         case CardRenderItemType.VP:
-          //отрисовать уменьшенный фон для вп с вопросом внутри
-          return SizedBox.shrink();
+          return VpointsView(
+            height: height * item.size.toMultiplier(),
+            width: width * item.size.toMultiplier(),
+            isCardPoints: true,
+            text: "?",
+          );
         case CardRenderItemType.MULTIPLIER_WHITE:
           //отрисовать белый квадрат с черным Х внутри
           return SizedBox.shrink();
@@ -470,20 +560,9 @@ class BodyItemView extends StatelessWidget {
           );
         case CardRenderItemType.CHAIRMAN:
           return createGeneralTile(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  topRight: Radius.circular(10.0),
-                  bottomLeft: Radius.circular(2.0),
-                  bottomRight: Radius.circular(2.0),
-                ),
-                color: Colors.black.withOpacity(0.7),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Image(image: AssetImage(imagePath!)),
-              ),
+            child: PoliticView(
+              withRedBorder: item.anyPlayer ?? false,
+              imagePath: imagePath!,
             ),
           );
         default:

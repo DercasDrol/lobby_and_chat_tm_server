@@ -282,7 +282,6 @@ enum CardRenderItemType {
     PARTY_LEADERS: Assets.misc.delegate.path,
     GLOBAL_EVENT: Assets.parties.globalEvent.path,
     CORRUPTION: Assets.underworld.corruption.path,
-    //NOMADS: Assets.misc.nomads.path,
     HYDROELECTRIC_RESOURCE: Assets.resources.hydroelectricResource.path,
     CITY_OR_SPECIAL_TILE: Assets.promo.cityOrSpecialTile.path,
     TOOL: Assets.underworld.cardResourceTool.path,

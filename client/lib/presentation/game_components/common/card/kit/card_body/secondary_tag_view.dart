@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/card/render/AltSecondaryTag.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/empty_tag_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/utils.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_requirements.dart';
 
@@ -46,17 +47,7 @@ class SecondaryTagView extends StatelessWidget {
             ),
           );
         case AltSecondaryTag.NO_TAGS:
-          return Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.black,
-                width: 2,
-              ),
-            ),
-          );
+          return EmptyTagView(width: width, height: height);
         case AltSecondaryTag.NO_PLANETARY_TAG:
           return Stack(
             children: [
