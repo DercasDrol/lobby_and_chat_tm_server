@@ -14,7 +14,7 @@ enum GameModule {
   MOON,
   PATHFINDER,
   CEO,
-  SRARWARS,
+  STARWARS,
   UNDERWORLD;
 
   static const _TO_STRING_MAP = {
@@ -31,7 +31,7 @@ enum GameModule {
     MOON: 'moon',
     PATHFINDER: 'pathfinders',
     CEO: 'ceo',
-    SRARWARS: 'starwars',
+    STARWARS: 'starwars',
     UNDERWORLD: 'underworld'
   };
 
@@ -49,7 +49,7 @@ enum GameModule {
     MOON: 'The Moon',
     PATHFINDER: 'Pathfinders',
     CEO: 'CEOs',
-    SRARWARS: 'Star Wars',
+    STARWARS: 'Star Wars',
     UNDERWORLD: 'Underworld',
   };
 
@@ -67,6 +67,7 @@ enum GameModule {
     MOON: Assets.cardModuleIcons.moon.path,
     PATHFINDER: Assets.cardModuleIcons.pathfinders.path,
     UNDERWORLD: Assets.cardModuleIcons.underworld.path,
+    STARWARS: Assets.cardModuleIcons.starWars.path,
     CEO: Assets.cardModuleIcons.ceo.path,
   };
   static final _TO_ENUM_MAP =

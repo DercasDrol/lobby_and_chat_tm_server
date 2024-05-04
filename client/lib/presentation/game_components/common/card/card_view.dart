@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/common/log.dart';
+import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
@@ -103,13 +104,24 @@ class CardView extends StatelessWidget {
       final cardTags = Align(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: card.tags
-                  .map((tag) =>
-                      TagView(tagRadius: card_height * 0.135, tag: tag))
-                  .toList() +
-              (card.type == CardType.EVENT
-                  ? [TagView(tagRadius: card_height * 0.135, tag: Tag.EVENT)]
-                  : []),
+          children: card.name == CardName.PUBLIC_SPACELINE
+              ? [
+                  TagView(
+                      tagRadius: card_height * 0.135,
+                      imagePath: Assets.underworld.asteriskTag.path)
+                ]
+              : card.tags
+                      .map((tag) => TagView(
+                          tagRadius: card_height * 0.135,
+                          imagePath: tag.toImagePath() ?? ''))
+                      .toList() +
+                  (card.type == CardType.EVENT
+                      ? [
+                          TagView(
+                              tagRadius: card_height * 0.135,
+                              imagePath: Tag.EVENT.toImagePath() ?? '')
+                        ]
+                      : []),
         ),
         alignment: Alignment.topRight,
       );

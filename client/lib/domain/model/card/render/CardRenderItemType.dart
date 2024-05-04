@@ -1,4 +1,5 @@
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
+import 'package:mars_flutter/domain/model/constants.dart';
 
 enum CardRenderItemType {
   TEMPERATURE,
@@ -243,7 +244,7 @@ enum CardRenderItemType {
     WILD: Assets.resources.wild.path,
     CAMPS: Assets.resources.camp.path,
     CITY: Assets.tiles.city.path,
-    GREENERY: Assets.tiles.greenery.path,
+    GREENERY: Assets.tiles.greeneryNoO2.path,
     DISEASE: Assets.resources.disease.path,
     MARS: Assets.tags.mars.path,
     AGENDA: Assets.resources.agenda.path,
@@ -258,8 +259,8 @@ enum CardRenderItemType {
     INFLUENCE: Assets.misc.influence.path,
     DELEGATES: Assets.misc.delegate.path,
     CHAIRMAN: Assets.misc.chairman.path,
-    EMPTY_TILE: Assets.tiles.empty.path,
-    EMPTY_TILE_GOLDEN: Assets.tiles.empty.path,
+    EMPTY_TILE: Assets.tiles.emptyTile.path,
+    EMPTY_TILE_GOLDEN: Assets.tiles.emptyTileGolden.path,
     EMPTY_TILE_SPECIAL: Assets.tiles.special.path,
     MOON_HABITAT: Assets.moon.colonytile.path,
     MOON_HABITAT_RATE: Assets.moon.cardColonyRate.path,
@@ -294,6 +295,9 @@ enum CardRenderItemType {
     EXCAVATE: Assets.underworld.excavate.path,
     IDENTIFY: Assets.underworld.identify.path,
     CORRUPTION_SHIELD: Assets.underworld.corruptionBlock.path,
+    GRAPHENE: Assets.resources.graphene.path,
+    CLONE_TROOPER: Assets.resources.cloneTrooper.path,
+    CATHEDRAL: Assets.promo.cathedral.path,
   };
   static final _TO_PLAYED_IMAGE_PATH_MAP = {
     PLANTS: Assets.tags.plant.path,
@@ -366,8 +370,9 @@ enum CardRenderItemType {
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
-  String? toImagePath(bool isPlayed) =>
-      isPlayed ? _TO_PLAYED_IMAGE_PATH_MAP[this] : _TO_IMAGE_PATH_MAP[this];
+  String? toImagePath(bool isPlayed) => isPlayed
+      ? _TO_PLAYED_IMAGE_PATH_MAP[this] ?? _TO_IMAGE_PATH_MAP[this]
+      : _TO_IMAGE_PATH_MAP[this];
   ItemShape? toItemShape(bool isPlayed) =>
       isPlayed ? ItemShape.circle : _TO_ITEM_SHAPE_MAP[this];
   @override

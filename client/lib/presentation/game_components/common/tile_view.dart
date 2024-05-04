@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/TileType.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/hexagone_builder.dart';
 
 class TileView extends StatelessWidget {
   const TileView({
@@ -58,31 +60,49 @@ class TileView extends StatelessWidget {
         return _getSpecialTile(
             Assets.tiles.specialTileIcons.ecologicalZone.path);
       case TileType.INDUSTRIAL_CENTER: // Industrial Center
-        return _getSpecialTile(
-            Assets.tiles.specialTileIcons.industrialCenter.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.industrialCenterAres.path))
+            : _getSpecialTile(
+                Assets.tiles.specialTileIcons.industrialCenter.path);
       case TileType.LAVA_FLOWS: // Lava Flows
-        return _getSpecialTile(Assets.tiles.specialTileIcons.lavaFlows.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.lavaFlowsAres.path))
+            : _getSpecialTile(Assets.tiles.specialTileIcons.lavaFlows.path);
       case TileType.MINING_AREA:
         return _getSpecialTile(Assets.tiles.specialTileIcons.miningArea.path);
       case TileType.MINING_RIGHTS:
         return _getSpecialTile(Assets.tiles.specialTileIcons.miningArea.path);
       case TileType.MOHOLE_AREA:
-        return _getSpecialTile(Assets.tiles.specialTileIcons.moholeArea.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.moholeAreaAres.path))
+            : _getSpecialTile(Assets.tiles.specialTileIcons.moholeArea.path);
       case TileType.NATURAL_PRESERVE:
-        return _getSpecialTile(
-            Assets.tiles.specialTileIcons.naturalPreserve.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.naturalPreserveAres.path))
+            : _getSpecialTile(
+                Assets.tiles.specialTileIcons.naturalPreserve.path);
       case TileType.NUCLEAR_ZONE:
-        return _getSpecialTile(Assets.tiles.specialTileIcons.nuclearZone.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.nuclearZoneAres.path))
+            : _getSpecialTile(Assets.tiles.specialTileIcons.nuclearZone.path);
       case TileType.RESTRICTED_AREA:
-        return _getSpecialTile(
-            Assets.tiles.specialTileIcons.restrictedArea.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.restrictedAreaAres.path))
+            : _getSpecialTile(
+                Assets.tiles.specialTileIcons.restrictedArea.path);
       case TileType.DEIMOS_DOWN:
-        return _getSpecialTile(Assets.tiles.specialTileIcons.deimos.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.deimosAres.path))
+            : _getSpecialTile(Assets.tiles.specialTileIcons.deimos.path);
       case TileType.GREAT_DAM:
-        return _getSpecialTile(Assets.tiles.specialTileIcons.greatDam.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.greateDamAres.path))
+            : _getSpecialTile(Assets.tiles.specialTileIcons.greatDam.path);
       case TileType.MAGNETIC_FIELD_GENERATORS:
-        return _getSpecialTile(
-            Assets.tiles.specialTileIcons.magneticFieldGen.path);
+        return isAres
+            ? Image(image: AssetImage(Assets.tiles.magneticFieldAres.path))
+            : _getSpecialTile(
+                Assets.tiles.specialTileIcons.magneticFieldGen.path);
       case TileType.BIOFERTILIZER_FACILITY:
         return Image(
             image: AssetImage(Assets.tiles.biofertilizerFacility.path));
@@ -113,7 +133,7 @@ class TileView extends StatelessWidget {
       case TileType.MOON_HABITAT:
         return SizedBox.shrink();
       case TileType.MOON_ROAD:
-        return SizedBox.shrink();
+        return Image(image: AssetImage(Assets.moon.roadtile.path));
       case TileType.LUNA_TRADE_STATION:
         return Image(image: AssetImage(Assets.moon.lunaTradeStation.path));
       case TileType.LUNA_MINING_HUB:

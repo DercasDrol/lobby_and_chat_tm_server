@@ -28,6 +28,7 @@ class CardRequirementsView extends StatelessWidget {
         required bool isTemp,
         required Widget reqView,
         required bool isOxygen,
+        required bool isVenus,
       }) {
         Widget minusView = Text(
           '-',
@@ -45,7 +46,7 @@ class CardRequirementsView extends StatelessWidget {
                           (isMax ? "max" : "") +
                               requirement.count.toString() +
                               (isTemp ? "°C" : "") +
-                              (isOxygen ? "%" : ""),
+                              (isOxygen || isVenus ? "%" : ""),
                           style: TextStyle(
                             fontSize: height * 0.5,
                             fontFamily: FontFamily.prototype,
@@ -106,6 +107,15 @@ class CardRequirementsView extends StatelessWidget {
             imagePath: imagePath!,
           );
           break;
+        case RequirementType.CHAIRMAN:
+          view = PoliticView(
+            withRedBorder: requirement.all ?? false,
+            imagePath: imagePath!,
+          );
+          break;
+        case RequirementType.REMOVED_PLANTS:
+          view = RedBorderedImage(imagePath: imagePath!);
+          break;
         default:
           view = requirement.all ?? false
               ? RedBorderedImage(imagePath: imagePath!)
@@ -116,6 +126,7 @@ class CardRequirementsView extends StatelessWidget {
         isProduction: requirement.requirementType == RequirementType.PRODUCTION,
         isTemp: requirement.requirementType == RequirementType.TEMPERATURE,
         isOxygen: requirement.requirementType == RequirementType.OXYGEN,
+        isVenus: requirement.requirementType == RequirementType.VENUS,
         reqView: view,
       );
     }).toList();
@@ -177,8 +188,8 @@ class RequirementsBackground extends StatelessWidget {
           BoxShadow(
             color: Color.fromARGB(255, 0, 0, 0),
             offset: Offset(0.0, 0.0),
-            blurRadius: 0.2,
-            spreadRadius: 0.2,
+            blurRadius: 0.4,
+            spreadRadius: 0.4,
           )
         ],
       ),

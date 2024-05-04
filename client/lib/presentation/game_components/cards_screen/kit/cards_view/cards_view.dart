@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
@@ -23,6 +22,7 @@ class CardsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scrollContriller = ScrollController();
     final ValueNotifier<List<Tag>> selectedTagsN = ValueNotifier(
       localStorage.getItem('selectedTags') == null
           ? Tag.values
@@ -73,129 +73,138 @@ class CardsView extends StatelessWidget {
     Widget getContentView(Map<CardName, ClientCard> allCards) {
       return LayoutBuilder(builder: (context, constraints) {
         headerHeightN.value = 2300.0;
-        return CustomScrollView(scrollBehavior: ScrollBehavior(), slivers: [
-          ValueListenableBuilder(
-            valueListenable: headerHeightN,
-            builder: (context, headerHeight, child) => SliverPersistentHeader(
-              pinned: false,
-              floating: true,
-              delegate: _SliverAppBarDelegate(
-                minHeight: headerHeight,
-                maxHeight: headerHeight,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[700],
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: WidgetSize(
-                    onChange: (Size size) {
-                      logger.d(size);
-                      headerHeightN.value = size.height;
-                    },
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                          margin: EdgeInsets.all(7.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5.0),
+        return Scrollbar(
+            controller: scrollContriller,
+            thickness: 15.0,
+            child: CustomScrollView(controller: scrollContriller, slivers: [
+              ValueListenableBuilder(
+                valueListenable: headerHeightN,
+                builder: (context, headerHeight, child) =>
+                    SliverPersistentHeader(
+                  pinned: false,
+                  floating: true,
+                  delegate: _SliverAppBarDelegate(
+                    minHeight: headerHeight,
+                    maxHeight: headerHeight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3),
                           ),
-                          child: TextField(
-                            onChanged: (text) {
-                              textFilterN.value = text;
-                            },
-                            controller: TextEditingController()
-                              ..text = textFilterN.value ?? '',
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter a search term',
-                            ),
-                          )),
-                      ModulesFilterView(selectedModulesN: selectedModulesN),
-                      CardTypeFilterView(selectedCardTypesN: selectedTypesN),
-                      TagsFilterView(selectedTagsN: selectedTagsN),
-                    ]),
+                        ],
+                      ),
+                      child: WidgetSize(
+                        onChange: (Size size) {
+                          logger.d(size);
+                          headerHeightN.value = size.height;
+                        },
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                          Container(
+                              margin: EdgeInsets.all(7.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: TextField(
+                                onChanged: (text) {
+                                  textFilterN.value = text;
+                                },
+                                controller: TextEditingController()
+                                  ..text = textFilterN.value ?? '',
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter a search term',
+                                ),
+                              )),
+                          ModulesFilterView(selectedModulesN: selectedModulesN),
+                          CardTypeFilterView(
+                              selectedCardTypesN: selectedTypesN),
+                          TagsFilterView(selectedTagsN: selectedTagsN),
+                        ]),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          SliverPadding(padding: EdgeInsets.only(top: 20)),
-          ValueListenableBuilder<List<Tag>>(
-              valueListenable: selectedTagsN,
-              builder: (context, selectedTags, child) {
-                return ValueListenableBuilder<List<CardType>>(
-                    valueListenable: selectedTypesN,
-                    builder: (context, selectedTypes, child) {
-                      return ValueListenableBuilder<List<GameModule>>(
-                          valueListenable: selectedModulesN,
-                          builder: (context, selectedModules, child) {
-                            return ValueListenableBuilder<String?>(
-                                valueListenable: textFilterN,
-                                builder: (context, textFilter, child) {
-                                  final filteredCards = allCards.values
-                                      .where((cardInfo) {
-                                    if (cardInfo.name == CardName.INCITE) {
-                                      logger.d('cardInfo: $cardInfo');
-                                    }
-                                    return selectedTypes
-                                            .contains(cardInfo.type) &&
-                                        selectedModules
-                                            .contains(cardInfo.module) &&
-                                        (selectedTags.any((tag) =>
-                                                cardInfo.tags.contains(tag)) ||
-                                            cardInfo.tags.isEmpty) &&
-                                        (textFilter == null ||
-                                            cardInfo.name
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(
-                                                    textFilter.toLowerCase()));
-                                  }).toList()
-                                    ..sort((a, b) => a.name
-                                        .toString()
-                                        .compareTo(b.name.toString()));
-
-                                  const double cardWidth = CARD_WIDTH * 1.1;
-                                  final int crossAxisCount0 =
-                                      (constraints.maxWidth - 40) /
-                                          cardWidth ~/
-                                          1;
-                                  final int crossAxisCount =
-                                      crossAxisCount0 < 1 ? 1 : crossAxisCount0;
-                                  return SliverGrid(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      mainAxisExtent: 300.0,
-                                      crossAxisCount: crossAxisCount,
-                                    ),
-                                    delegate: SliverChildBuilderDelegate(
-                                      (BuildContext context, int index) {
-                                        if (filteredCards[index].name ==
-                                            CardName.INCITE) {
-                                          logger.d(
-                                              'cardInfo: $filteredCards[index]');
+              SliverPadding(padding: EdgeInsets.only(top: 20)),
+              ValueListenableBuilder<List<Tag>>(
+                  valueListenable: selectedTagsN,
+                  builder: (context, selectedTags, child) {
+                    return ValueListenableBuilder<List<CardType>>(
+                        valueListenable: selectedTypesN,
+                        builder: (context, selectedTypes, child) {
+                          return ValueListenableBuilder<List<GameModule>>(
+                              valueListenable: selectedModulesN,
+                              builder: (context, selectedModules, child) {
+                                return ValueListenableBuilder<String?>(
+                                    valueListenable: textFilterN,
+                                    builder: (context, textFilter, child) {
+                                      final filteredCards = allCards.values
+                                          .where((cardInfo) {
+                                        if (cardInfo.name == CardName.INCITE) {
+                                          logger.d('cardInfo: $cardInfo');
                                         }
-                                        return CardView(
-                                          card: filteredCards[index],
-                                          isSelected: false,
-                                          isDeactivated: false,
-                                        );
-                                      },
-                                      childCount: filteredCards.length,
-                                    ),
-                                  );
-                                });
-                          });
-                    });
-              })
-        ]);
+                                        return selectedTypes
+                                                .contains(cardInfo.type) &&
+                                            selectedModules
+                                                .contains(cardInfo.module) &&
+                                            (selectedTags.any((tag) => cardInfo
+                                                    .tags
+                                                    .contains(tag)) ||
+                                                cardInfo.tags.isEmpty) &&
+                                            (textFilter == null ||
+                                                cardInfo.name
+                                                    .toString()
+                                                    .toLowerCase()
+                                                    .contains(textFilter
+                                                        .toLowerCase()));
+                                      }).toList()
+                                        ..sort((a, b) => a.name
+                                            .toString()
+                                            .compareTo(b.name.toString()));
+
+                                      const double cardWidth = CARD_WIDTH * 1.1;
+                                      final int crossAxisCount0 =
+                                          (constraints.maxWidth - 40) /
+                                              cardWidth ~/
+                                              1;
+                                      final int crossAxisCount =
+                                          crossAxisCount0 < 1
+                                              ? 1
+                                              : crossAxisCount0;
+                                      return SliverGrid(
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          mainAxisExtent: 300.0,
+                                          crossAxisCount: crossAxisCount,
+                                        ),
+                                        delegate: SliverChildBuilderDelegate(
+                                          (BuildContext context, int index) {
+                                            if (filteredCards[index].name ==
+                                                CardName.INCITE) {
+                                              logger.d(
+                                                  'cardInfo: $filteredCards[index]');
+                                            }
+                                            return CardView(
+                                              card: filteredCards[index],
+                                              isSelected: false,
+                                              isDeactivated: false,
+                                            );
+                                          },
+                                          childCount: filteredCards.length,
+                                        ),
+                                      );
+                                    });
+                              });
+                        });
+                  })
+            ]));
       });
     }
 

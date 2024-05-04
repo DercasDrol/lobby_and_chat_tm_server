@@ -518,6 +518,7 @@ enum CardName {
   THE_WOMB,
   TYCHO_ROAD_NETWORK,
   ARISTARCHUS_ROAD_NETWORK,
+  SINUS_IRDIUM_ROAD_NETWORK,
   SINUS_IRIDIUM_ROAD_NETWORK,
   MOMENTUM_VIRUM_HABITAT,
   LUNA_TRADE_STATION,
@@ -796,6 +797,8 @@ enum CardName {
   RED_APPEASEMENT,
   SUMMIT_LOGISTICS,
   CERES_TECH_MARKET,
+  GHG_SHIPMENT,
+  SPONSORING_NATION,
 
   // Prelude 2 Preludes
   APPLIED_SCIENCE,
@@ -803,6 +806,13 @@ enum CardName {
   OLD_MINING_COLONY,
   NOBEL_PRIZE,
   COLONY_TRADE_HUB,
+  SPACE_CORRIDORS,
+  CLOUD_TOURISM,
+  FLOATING_REFINERY,
+  VENUS_TRADE_HUB,
+  BOARD_OF_DIRECTORS,
+  CORRIDORS_OF_POWER,
+  ATMOSPHERIC_ENHANCERS,
 
   // Prelude 2 Corps
   NIRGAL_ENTERPRISES,
@@ -1397,12 +1407,16 @@ enum CardName {
     WILDLIFE_DOME: 'Wildlife Dome',
     VOTE_OF_NO_CONFIDENCE: 'Vote Of No Confidence',
 
+    // Prelude 2
     // Prelude 2 Project Cards
+    DIRECTED_HEAT_USAGE: 'Directed Heat Usage',
     ISHTAR_EXPEDITION: 'Ishtar Expedition',
     L1_TRADE_TERMINAL: 'L1 Trade Terminal',
     RED_APPEASEMENT: 'Red Appeasement',
     SUMMIT_LOGISTICS: 'Summit Logistics',
     CERES_TECH_MARKET: 'Ceres Tech Market',
+    GHG_SHIPMENT: 'GHG Shipment',
+    SPONSORING_NATION: 'Sponsoring Nation',
 
     // Prelude 2 Preludes
     APPLIED_SCIENCE: 'Applied Science',
@@ -1410,6 +1424,7 @@ enum CardName {
     OLD_MINING_COLONY: 'Old Mining Colony',
     NOBEL_PRIZE: 'Nobel Prize',
     COLONY_TRADE_HUB: 'Colony Trade Hub',
+    SPACE_CORRIDORS: 'Space Corridors',
 
     // Prelude 2 Corps
     NIRGAL_ENTERPRISES: 'Nirgal Enterprises',
@@ -1417,6 +1432,14 @@ enum CardName {
     ECOTEC: 'EcoTec',
     SAGITTA_FRONTIER_SERVICES: 'Sagitta Frontier Services',
     SPIRE: 'Spire',
+
+    // Other cards known to be in the latest KS and should move appropriately
+    CLOUD_TOURISM: 'Cloud Tourism',
+    FLOATING_REFINERY: 'Floating Refinery',
+    VENUS_TRADE_HUB: 'Venus Trade Hub',
+    BOARD_OF_DIRECTORS: 'Board of Directors',
+    CORRIDORS_OF_POWER: 'Corridors of Power',
+    ATMOSPHERIC_ENHANCERS: 'Atmospheric Enhancers',
 
     // Promo cards
     DUSK_LASER_MINING: 'Dusk Laser Mining',
@@ -1464,7 +1487,7 @@ enum CardName {
     ROBOT_POLLINATORS: 'Robot Pollinators',
     HEAD_START: 'Head Start',
     SUPERCAPACITORS: 'Supercapacitors',
-    DIRECTED_HEAT_USAGE: 'Directed Heat Usage',
+    ANTI_DESERTIFICATION_TECHNIQUES: 'Anti-desertification Techniques',
     TYCHO_MAGNETICS: 'Tycho Magnetics',
     FLOYD_CONTINUUM: 'Floyd Continuum',
     AQUEDUCT_SYSTEMS: 'Aqueduct Systems',
@@ -1501,7 +1524,6 @@ enum CardName {
 
     // Community preludes
     VALUABLE_GASES: 'Valuable Gases',
-    VENUS_FIRST: 'Venus First',
     RESEARCH_GRANT: 'Research Grant',
     AEROSPACE_MISSION: 'Aerospace Mission',
     TRADE_ADVANCE: 'Trade Advance',
@@ -1554,7 +1576,7 @@ enum CardName {
     THE_WOMB: 'The Womb',
     TYCHO_ROAD_NETWORK: 'Tycho Road Network',
     ARISTARCHUS_ROAD_NETWORK: 'Aristarchus Road Network',
-    SINUS_IRIDIUM_ROAD_NETWORK: 'Sinus Iridium Road Network',
+    SINUS_IRDIUM_ROAD_NETWORK: 'Sinus Irdium Road Network',
     MOMENTUM_VIRUM_HABITAT: 'Momentum Virium Habitat',
     LUNA_TRADE_STATION: 'Luna Trade Station',
     LUNA_MINING_HUB: 'Luna Mining Hub',
@@ -1574,7 +1596,7 @@ enum CardName {
     STEEL_MARKET_MONOPOLISTS: 'Steel Market Monopolists',
     TITANIUM_MARKET_MONOPOLISTS: 'Titanium Market Monopolists',
     LUNA_STAGING_STATION: 'Luna Staging Station',
-    NEW_COLONY_PLANNING_INITIAITIVES: 'New Colony Planning Initiaitives',
+    NEW_COLONY_PLANNING_INITIAITIVES: 'New Colony Planning Initiatives',
     AI_CONTROLLED_MINE_NETWORK: 'AI Controlled Mine Network',
     DARKSIDE_METEOR_BOMBARDMENT: 'Darkside Meteor Bombardment',
     UNDERGROUND_DETONATORS: 'Underground Detonators',
@@ -1734,6 +1756,7 @@ enum CardName {
     CONTROLLED_BLOOM: 'Controlled Bloom',
     TERRAFORMING_ROBOTS: 'Terraforming Robots',
 
+    VENUS_FIRST: 'Venus First',
     VALUABLE_GASES_PATHFINDERS: 'Valuable Gases:Pathfinders',
     CO2_REDUCERS: 'CO² Reducers',
     HYDROGEN_BOMBARDMENT: 'Hydrogen Bombardment',
@@ -1746,7 +1769,6 @@ enum CardName {
     VITAL_COLONY: 'Vital Colony',
     STRATEGIC_BASE_PLANNING: 'Strategic Base Planning',
     DEEP_SPACE_OPERATIONS: 'Deep Space Operations',
-    ANTI_DESERTIFICATION_TECHNIQUES: 'Anti-desertification Techniques',
     EXPERIENCED_MARTIANS: 'Experienced Martians',
     THE_NEW_SPACE_RACE: 'The New Space Race',
 
@@ -1756,6 +1778,7 @@ enum CardName {
     RINGCOM: 'Ringcom',
     CHIMERA: 'Chimera',
     SISTEMAS_SEEBECK: 'Sistemas Seebeck',
+    // SPIRE : 'Spire',
     SOYLENT_SEEDLING_SYSTEMS: 'Soylent Seedling Systems',
     STEELARIS: 'Steelaris',
     MARS_MATHS: 'Mars Maths',
@@ -1802,16 +1825,15 @@ enum CardName {
     XAVIER: 'Xavier',
     YVONNE: 'Yvonne',
     ZAN: 'Zan',
-    FARADAY: 'Faraday',
-    HUAN: 'Huan',
-    RYU: 'Ryu',
-    CAESAR: 'Caesar',
-    GAIA: 'Gaia',
-    NEIL: 'Neil',
     APOLLO: 'Apollo',
+    CAESAR: 'Caesar',
+    FARADAY: 'Faraday',
+    GAIA: 'Gaia',
+    HUAN: 'Huan',
+    NEIL: 'Neil',
+    RYU: 'Ryu',
     SHARA: 'Shara',
     XU: 'Xu',
-
     // CEO Preludes
     CO_LEADERSHIP: 'Co-leadership',
 
@@ -1955,7 +1977,6 @@ enum CardName {
     STANDARD_TECHNOLOGY_UNDERWORLD: 'Standard Technology:u',
     HACKERS_UNDERWORLD: 'Hackers:u',
     HIRED_RAIDERS_UNDERWORLD: 'Hired Raiders:u',
-    // End Underworld
     UNKNOWN: 'unknown',
   };
   static const _CARDS_WITH_COMPLECATED_VIEW = [
@@ -1966,11 +1987,25 @@ enum CardName {
     CardName.PROJECT_WORKSHOP,
     CardName.THE_DARKSIDE_OF_THE_MOON_SYNDICATE,
     CardName.SPIRE,
+    CardName.DYSON_SCREENS,
+    CardName.MARTIAN_EXPRESS,
+    CardName.NEUTRINOGRAPH,
+    CardName.SPACE_WARGAMES,
+    CardName.THIOLAVA_VENTS,
+    CardName.VENERA_BASE,
+  ];
+  static const _CARDS_WITH_ULTRA_COMPLECATED_VIEW = [
+    CardName.SPACE_PRIVATEERS,
   ];
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));
   @override
   String toString() => _TO_STRING_MAP[this] ?? 'Unknown';
-  bool get isComplexView => _CARDS_WITH_COMPLECATED_VIEW.contains(this);
+  double get elementsSizeMultiplicator =>
+      _CARDS_WITH_COMPLECATED_VIEW.contains(this)
+          ? 0.85
+          : _CARDS_WITH_ULTRA_COMPLECATED_VIEW.contains(this)
+              ? 0.7
+              : 1.0;
   static fromString(String value) => _TO_ENUM_MAP[value] ?? UNKNOWN;
 }

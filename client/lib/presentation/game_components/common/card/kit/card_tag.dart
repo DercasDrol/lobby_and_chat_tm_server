@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mars_flutter/domain/model/card/Tag.dart';
 
 class TagView extends StatelessWidget {
   final double tagRadius;
 
   const TagView({
-    required this.tag,
+    required this.imagePath,
     required this.tagRadius,
   });
-  final Tag tag;
+  final String imagePath;
   @override
   Widget build(BuildContext context) {
-    String? imagePath = tag.toImagePath();
     return Padding(
       padding: EdgeInsets.only(left: 1, top: 4, right: 1, bottom: 4),
       child: SizedBox(
@@ -32,9 +30,7 @@ class TagView extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.hardEdge,
             children: [
-              imagePath == null
-                  ? SizedBox.shrink()
-                  : Image(image: AssetImage(imagePath)),
+              Image(image: AssetImage(imagePath)),
             ],
           ),
         ),

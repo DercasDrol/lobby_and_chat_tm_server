@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
@@ -13,18 +17,28 @@ class CardBody extends StatelessWidget {
   final ClientCard card;
   final double width;
   final double height;
-  get _calculatedSizeHeight => card.name.isComplexView ? height * 0.85 : height;
+  get _calculatedSizeHeight => height * card.name.elementsSizeMultiplicator;
   const CardBody({
     required this.card,
     required this.width,
     required this.height,
   });
 
-  Widget _getCardComponentView(CardComponent cardComponent) {
-    final Widget res;
+  Widget _getCardComponentView(CardComponent cardComponent,
+      {double? cWidth, double? cHeight}) {
+    final componentWidth = cWidth ?? width;
+    final componentHeight = cHeight ?? height;
+    Widget wrapWithConstrain(child) => ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 0,
+          minHeight: 0,
+          maxWidth: componentWidth,
+          maxHeight: componentHeight,
+        ),
+        child: child);
     switch (cardComponent.runtimeType) {
       case ICardRenderRoot:
-        res = Column(
+        return wrapWithConstrain(Column(
           mainAxisSize: MainAxisSize.min,
           children: (cardComponent as ICardRenderRoot)
               .rows
@@ -32,11 +46,14 @@ class CardBody extends StatelessWidget {
               .map(
                 (cardComponents) => Padding(
                   padding: EdgeInsets.only(
-                      bottom: card.name.isComplexView ? 0.0 : 3.0),
+                      bottom: card.name.elementsSizeMultiplicator < 1.0
+                          ? 0.0
+                          : 3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: cardComponents
-                        .map((cardComponent0) => (cardComponent0.runtimeType ==
+                        .mapIndexed((cardComponent0, i) => (cardComponent0
+                                            .runtimeType ==
                                         ICardRenderItem &&
                                     (cardComponent0 as ICardRenderItem).type ==
                                         CardRenderItemType.TEXT) ||
@@ -44,54 +61,52 @@ class CardBody extends StatelessWidget {
                             ? Flexible(
                                 child: _getCardComponentView(cardComponent0),
                               )
-                            : _getCardComponentView(cardComponent0))
+                            : _getCardComponentView(cardComponent0,
+                                cWidth: max(
+                                    width - _calculatedSizeHeight * 0.15 * i,
+                                    cardComponent0.runtimeType ==
+                                                ICardRenderItem &&
+                                            (cardComponent0 as ICardRenderItem)
+                                                    .showDigit ==
+                                                true
+                                        ? 45.0
+                                        : 25.0)))
                         .toList(),
                   ),
                 ),
               )
               .toList(),
-        );
-        break;
+        ));
       case ICardRenderText:
-        res = (cardComponent as ICardRenderText).text == ''
+        return (cardComponent as ICardRenderText).text == ''
             ? SizedBox.shrink()
             : Padding(
                 padding: EdgeInsets.symmetric(vertical: 1.0),
-                child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: width,
-                      minHeight: 0,
-                      maxWidth: width,
-                      //maxHeight: height,
-                    ),
-                    child: Text(
-                      cardComponent.text,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: width * 0.05,
-                        height: 1.0,
-                      ),
-                    )));
-        break;
+                child: Text(
+                  cardComponent.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: componentWidth * 0.05,
+                    height: 1.0,
+                  ),
+                ));
       case ICardRenderSymbol:
-        res = BodySymbol(
+        return wrapWithConstrain(BodySymbol(
           height: _calculatedSizeHeight * 0.15,
           width: _calculatedSizeHeight * 0.15,
-          parentWidth: width,
+          parentWidth: componentWidth,
           symbol: cardComponent as ICardRenderSymbol,
-        );
-        break;
+        ));
       case ICardRenderTile:
-        res = TileView(
+        return wrapWithConstrain(TileView(
           height: _calculatedSizeHeight * 0.26,
           width: _calculatedSizeHeight * 0.26,
           isCardTile: true,
           tileType: (cardComponent as ICardRenderTile).tile,
           isAres: cardComponent.isAres,
-        );
-        break;
+        ));
       case ICardRenderProductionBox:
-        res = ProductionBox(
+        return wrapWithConstrain(ProductionBox(
             padding: 0.0,
             innerPadding: 3.0,
             child: Column(
@@ -99,36 +114,52 @@ class CardBody extends StatelessWidget {
               children: (cardComponent as ICardRenderProductionBox)
                   .rows
                   .map(
-                    (cardComponents) => Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Wrap(
-                            children: cardComponents
-                                .map((cardComponent0) =>
-                                    _getCardComponentView(cardComponent0))
-                                .toList())
-                      ],
-                    ),
+                    (cardComponents) => Wrap(
+                        alignment: WrapAlignment.center,
+                        runAlignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 5.0,
+                        children: cardComponents
+                            .map((cardComponent0) =>
+                                _getCardComponentView(cardComponent0))
+                            .toList()),
                   )
                   .toList(),
-            ));
-        break;
+            )));
+
       case ICardRenderEffect:
-        res = Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            alignment: WrapAlignment.center,
-            children: (cardComponent as ICardRenderEffect)
-                .rows
-                .map((cardComponents) => cardComponents
-                    .map((cardComponent0) =>
-                        _getCardComponentView(cardComponent0))
-                    .toList())
-                .expand((x) => x)
-                .cast<Widget>()
-                .toList());
-        break;
+        return wrapWithConstrain(
+          Column(mainAxisSize: MainAxisSize.min, children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: (cardComponent as ICardRenderEffect)
+                  .rows
+                  .map((cardComponents) => cardComponents
+                      .map((cardComponent0) =>
+                          cardComponent0.runtimeType == ICardRenderText
+                              ? SizedBox.shrink()
+                              : _getCardComponentView(cardComponent0))
+                      .toList())
+                  .expand((x) => x)
+                  .cast<Widget>()
+                  .toList(),
+            ),
+            cardComponent.rows.fold(
+              SizedBox.shrink(),
+              (acc, cardComponents) => cardComponents.fold(
+                acc,
+                (acc0, cardComponent0) =>
+                    cardComponent0.runtimeType == ICardRenderText
+                        ? _getCardComponentView(cardComponent0)
+                        : acc0,
+              ),
+            )
+          ]),
+        );
       case ICardRenderCorpBoxEffect:
-        res = Wrap(
+        return wrapWithConstrain(Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             alignment: WrapAlignment.center,
             children: (cardComponent as ICardRenderCorpBoxEffect)
@@ -139,10 +170,9 @@ class CardBody extends StatelessWidget {
                     .toList())
                 .expand((x) => x)
                 .cast<Widget>()
-                .toList());
-        break;
+                .toList()));
       case ICardRenderCorpBoxAction:
-        res = Wrap(
+        return wrapWithConstrain(Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             alignment: WrapAlignment.center,
             children: (cardComponent as ICardRenderCorpBoxAction)
@@ -153,27 +183,18 @@ class CardBody extends StatelessWidget {
                     .toList())
                 .expand((x) => x)
                 .cast<Widget>()
-                .toList());
-        break;
+                .toList()));
+
       case ICardRenderItem:
-        res = BodyItemView(
+        return wrapWithConstrain(BodyItemView(
           item: (cardComponent as ICardRenderItem),
           height: _calculatedSizeHeight * 0.15,
           width: _calculatedSizeHeight * 0.15,
-          parentWidth: width,
-        );
-        break;
+          parentWidth: componentWidth,
+        ));
       default:
-        res = Text("default");
+        return wrapWithConstrain(Text("default"));
     }
-    return ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-          maxWidth: width,
-          maxHeight: height,
-        ),
-        child: res);
   }
 
   Widget _getCardDescription(ICardRenderDescription description) {

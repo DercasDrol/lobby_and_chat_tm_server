@@ -26,7 +26,9 @@ class VpointsView extends StatelessWidget {
       final imagePath = (points as ICardRenderDynamicVictoryPoints)
           .item!
           .type
-          .toImagePath(false)!;
+          .toImagePath(
+              (points as ICardRenderDynamicVictoryPoints).item?.isPlayed ??
+                  false)!;
       return ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 0,

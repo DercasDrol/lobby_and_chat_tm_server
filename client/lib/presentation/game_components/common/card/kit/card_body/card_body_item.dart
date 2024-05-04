@@ -166,6 +166,16 @@ class BodyItemView extends StatelessWidget {
             widthMult: 1.0,
             heightMult: 1.5,
           );
+        case CardRenderItemType.CATHEDRAL:
+          return createGeneralTile(
+              child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: _prepareImageView(imagePath!)));
         case CardRenderItemType.CARDS:
           return createGeneralTile(
             child: _prepareImageView(imagePath!),
@@ -185,6 +195,12 @@ class BodyItemView extends StatelessWidget {
             heightMultiplier: 1.2,
           );
         case CardRenderItemType.EXCAVATE:
+          return createGeneralTile(
+            child: _prepareImageView(imagePath!),
+            widthMult: 1.35,
+            heightMult: 1.35,
+          );
+        case CardRenderItemType.GREENERY:
           return _applyPadding(
             child: _prepareImageView(imagePath!),
             widthMultiplier: 1.35,
@@ -207,11 +223,10 @@ class BodyItemView extends StatelessWidget {
                   textWidthBasis: TextWidthBasis.longestLine,
                   style: TextStyle(
                     fontSize: height * item.size.toMultiplier() * 0.5,
-                    height: 1.0,
-                    fontFamily: FontFamily.prototype,
+                    height: item.isBold == true ? 1.5 : 1.0,
                     color: Colors.black,
                     fontWeight: item.isBold == true
-                        ? FontWeight.w500
+                        ? FontWeight.w700
                         : FontWeight.normal,
                   ),
                 );
@@ -253,10 +268,9 @@ class BodyItemView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: height * item.size.toMultiplier() * 0.45,
                     height: 1.0,
-                    fontFamily: FontFamily.prototype,
                     color: Colors.black,
                     fontWeight: item.isBold == true
-                        ? FontWeight.w500
+                        ? FontWeight.w700
                         : FontWeight.normal,
                   ),
                 ),
@@ -272,11 +286,27 @@ class BodyItemView extends StatelessWidget {
           return _applyPadding(child: _prepareImageView(imagePath!));
         case CardRenderItemType.TRADE_DISCOUNT:
           return _applyPadding(
-            child: BodyItemCover(
-              text: item.text,
-              height: height * item.size.toMultiplier() * 0.4,
-              width: width * item.size.toMultiplier(),
-              parentHeight: height,
+            child: Container(
+              alignment: Alignment.center,
+              height: height * item.size.toMultiplier() * 0.9,
+              width: height * item.size.toMultiplier() * 0.9,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1.0,
+                ),
+              ),
+              child: Text(
+                item.amount.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: height * item.size.toMultiplier() * 0.7,
+                  fontFamily: FontFamily.prototype,
+                  color: Colors.black,
+                  height: 1.0,
+                ),
+              ),
             ),
           );
         case CardRenderItemType.COMMUNITY:
@@ -380,10 +410,22 @@ class BodyItemView extends StatelessWidget {
             ),
           );
         case CardRenderItemType.COLONY_TILE:
-          return Container(
-            margin: EdgeInsets.only(left: width * 0.2),
-            width: width * 3 * item.size.toMultiplier(),
-            height: height * item.size.toMultiplier(),
+          addRedBorder(child) => Container(
+              margin: EdgeInsets.only(left: width * 0.2),
+              width: width * 3 * item.size.toMultiplier(),
+              height: height * item.size.toMultiplier(),
+              alignment: Alignment.center,
+              decoration: item.anyPlayer ?? false
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(
+                        color: Colors.red,
+                        width: 2.0,
+                      ),
+                    )
+                  : null,
+              child: child);
+          return addRedBorder(Container(
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(12.0),
@@ -403,7 +445,7 @@ class BodyItemView extends StatelessWidget {
                 ),
               ),
             ),
-          );
+          ));
         case CardRenderItemType.IGNORE_GLOBAL_REQUIREMENTS:
           return Container(
               margin: EdgeInsets.all(3.0),
@@ -492,17 +534,16 @@ class BodyItemView extends StatelessWidget {
                 colors: [
                   Color.fromARGB(255, 255, 196, 0),
                   Color.fromARGB(255, 255, 196, 0),
-                  Colors.brown,
+                  Color.fromARGB(255, 201, 154, 0),
                   Color.fromARGB(255, 255, 196, 0),
                   Color.fromARGB(255, 255, 196, 0),
                 ],
               ),
-              borderRadius: BorderRadius.circular(12.0),
               boxShadow: [
                 BoxShadow(
                   color: Color.fromARGB(255, 0, 0, 0),
-                  offset: Offset(1.0, 1.0),
-                  blurRadius: 3,
+                  offset: Offset(0.0, 0.0),
+                  blurRadius: 0.5,
                   spreadRadius: 0.5,
                 )
               ],
@@ -564,6 +605,12 @@ class BodyItemView extends StatelessWidget {
               withRedBorder: item.anyPlayer ?? false,
               imagePath: imagePath!,
             ),
+          );
+        case CardRenderItemType.COLONIES:
+          return createGeneralTile(
+            child: _prepareImageView(imagePath!),
+            widthMult: item.size == CardItemSize.MEDIUM ? 1.5 : 1.0,
+            heightMult: item.size == CardItemSize.MEDIUM ? 1.5 : 1.0,
           );
         default:
           return createGeneralTile();

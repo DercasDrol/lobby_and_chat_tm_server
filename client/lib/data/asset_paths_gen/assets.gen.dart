@@ -102,6 +102,10 @@ class $AssetsCardModuleIconsGen {
   AssetGenImage get promo =>
       const AssetGenImage('assets/card_module_icons/promo.PNG');
 
+  /// File path: assets/card_module_icons/star_wars.PNG
+  AssetGenImage get starWars =>
+      const AssetGenImage('assets/card_module_icons/star_wars.PNG');
+
   /// File path: assets/card_module_icons/turmoil.PNG
   AssetGenImage get turmoil =>
       const AssetGenImage('assets/card_module_icons/turmoil.PNG');
@@ -125,6 +129,7 @@ class $AssetsCardModuleIconsGen {
         pathfinders,
         prelude,
         promo,
+        starWars,
         turmoil,
         underworld,
         venus
@@ -1556,8 +1561,28 @@ class $AssetsTilesGen {
   AssetGenImage get comercialDistrictAres =>
       const AssetGenImage('assets/tiles/comercial_district_ares.png');
 
+  /// File path: assets/tiles/deimos_ares.png
+  AssetGenImage get deimosAres =>
+      const AssetGenImage('assets/tiles/deimos_ares.png');
+
+  /// File path: assets/tiles/eco_zone_ares.png
+  AssetGenImage get ecoZoneAres =>
+      const AssetGenImage('assets/tiles/eco_zone_ares.png');
+
   /// File path: assets/tiles/empty.png
   AssetGenImage get empty => const AssetGenImage('assets/tiles/empty.png');
+
+  /// File path: assets/tiles/empty_tile.png
+  AssetGenImage get emptyTile =>
+      const AssetGenImage('assets/tiles/empty_tile.png');
+
+  /// File path: assets/tiles/empty_tile_golden.png
+  AssetGenImage get emptyTileGolden =>
+      const AssetGenImage('assets/tiles/empty_tile_golden.png');
+
+  /// File path: assets/tiles/greate_dam_ares.png
+  AssetGenImage get greateDamAres =>
+      const AssetGenImage('assets/tiles/greate_dam_ares.png');
 
   /// File path: assets/tiles/greenery.png
   AssetGenImage get greenery =>
@@ -1570,6 +1595,18 @@ class $AssetsTilesGen {
   /// File path: assets/tiles/hazard.png
   AssetGenImage get hazard => const AssetGenImage('assets/tiles/hazard.png');
 
+  /// File path: assets/tiles/industrial_center_ares.png
+  AssetGenImage get industrialCenterAres =>
+      const AssetGenImage('assets/tiles/industrial_center_ares.png');
+
+  /// File path: assets/tiles/lava_flows_ares.png
+  AssetGenImage get lavaFlowsAres =>
+      const AssetGenImage('assets/tiles/lava_flows_ares.png');
+
+  /// File path: assets/tiles/magnetic_field_ares.png
+  AssetGenImage get magneticFieldAres =>
+      const AssetGenImage('assets/tiles/magnetic_field_ares.png');
+
   /// File path: assets/tiles/metallic_asteroid.png
   AssetGenImage get metallicAsteroid =>
       const AssetGenImage('assets/tiles/metallic_asteroid.png');
@@ -1581,6 +1618,18 @@ class $AssetsTilesGen {
   /// File path: assets/tiles/mining_titanium_bonus.png
   AssetGenImage get miningTitaniumBonus =>
       const AssetGenImage('assets/tiles/mining_titanium_bonus.png');
+
+  /// File path: assets/tiles/mohole_area_ares.png
+  AssetGenImage get moholeAreaAres =>
+      const AssetGenImage('assets/tiles/mohole_area_ares.png');
+
+  /// File path: assets/tiles/natural_preserve_ares.png
+  AssetGenImage get naturalPreserveAres =>
+      const AssetGenImage('assets/tiles/natural_preserve_ares.png');
+
+  /// File path: assets/tiles/nuclear_zone_ares.png
+  AssetGenImage get nuclearZoneAres =>
+      const AssetGenImage('assets/tiles/nuclear_zone_ares.png');
 
   /// File path: assets/tiles/ocean.png
   AssetGenImage get ocean => const AssetGenImage('assets/tiles/ocean.png');
@@ -1596,6 +1645,26 @@ class $AssetsTilesGen {
   /// File path: assets/tiles/ocean_sanctuary.png
   AssetGenImage get oceanSanctuary =>
       const AssetGenImage('assets/tiles/ocean_sanctuary.png');
+
+  /// File path: assets/tiles/red_tile_1_ares.png
+  AssetGenImage get redTile1Ares =>
+      const AssetGenImage('assets/tiles/red_tile_1_ares.png');
+
+  /// File path: assets/tiles/red_tile_2_ares.png
+  AssetGenImage get redTile2Ares =>
+      const AssetGenImage('assets/tiles/red_tile_2_ares.png');
+
+  /// File path: assets/tiles/red_tile_3_ares.png
+  AssetGenImage get redTile3Ares =>
+      const AssetGenImage('assets/tiles/red_tile_3_ares.png');
+
+  /// File path: assets/tiles/red_tile_4_ares.png
+  AssetGenImage get redTile4Ares =>
+      const AssetGenImage('assets/tiles/red_tile_4_ares.png');
+
+  /// File path: assets/tiles/restricted_area_ares.png
+  AssetGenImage get restrictedAreaAres =>
+      const AssetGenImage('assets/tiles/restricted_area_ares.png');
 
   /// File path: assets/tiles/solar_farm.png
   AssetGenImage get solarFarm =>
@@ -1619,17 +1688,33 @@ class $AssetsTilesGen {
         city,
         colony,
         comercialDistrictAres,
+        deimosAres,
+        ecoZoneAres,
         empty,
+        emptyTile,
+        emptyTileGolden,
+        greateDamAres,
         greenery,
         greeneryNoO2,
         hazard,
+        industrialCenterAres,
+        lavaFlowsAres,
+        magneticFieldAres,
         metallicAsteroid,
         miningSteelBonus,
         miningTitaniumBonus,
+        moholeAreaAres,
+        naturalPreserveAres,
+        nuclearZoneAres,
         ocean,
         oceanCity,
         oceanFarm,
         oceanSanctuary,
+        redTile1Ares,
+        redTile2Ares,
+        redTile3Ares,
+        redTile4Ares,
+        restrictedAreaAres,
         solarFarm,
         special,
         trade
@@ -1883,6 +1968,9 @@ class $AssetsJsonsLocalesGen {
   /// File path: assets/jsons/locales/ko.json
   String get ko => 'assets/jsons/locales/ko.json';
 
+  /// File path: assets/jsons/locales/nb.json
+  String get nb => 'assets/jsons/locales/nb.json';
+
   /// File path: assets/jsons/locales/nl.json
   String get nl => 'assets/jsons/locales/nl.json';
 
@@ -1894,7 +1982,7 @@ class $AssetsJsonsLocalesGen {
 
   /// List of all assets
   List<String> get values =>
-      [bg, br, cn, de, es, fr, hu, it, jp, ko, nl, pl, ru];
+      [bg, br, cn, de, es, fr, hu, it, jp, ko, nb, nl, pl, ru];
 }
 
 class $AssetsMaFanmadeGen {

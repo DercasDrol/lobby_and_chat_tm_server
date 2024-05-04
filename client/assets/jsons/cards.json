@@ -1367,7 +1367,8 @@
                 "points": 1,
                 "target": 1,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": true
             }
         },
         "productionBox": {
@@ -4162,7 +4163,8 @@
                 "points": 1,
                 "target": 3,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": false
             }
         },
         "productionBox": {
@@ -12426,7 +12428,8 @@
                 "points": 1,
                 "target": 1,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": true
             }
         },
         "productionBox": {
@@ -21727,6 +21730,50 @@
                 ],
                 "is": "root"
             }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "compatibility": []
+    },
+    {
+        "module": "promo",
+        "name": "City Park",
+        "tags": [
+            "plant"
+        ],
+        "victoryPoints": 2,
+        "cost": 7,
+        "type": "automated",
+        "requirements": [
+            {
+                "cities": 3,
+                "count": 3
+            }
+        ],
+        "metadata": {
+            "description": "Requires that you have 3 cities. Gain 2 plants.",
+            "cardNumber": "",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "type": "plants",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        }
+                    ]
+                ],
+                "is": "root"
+            },
+            "victoryPoints": 2
         },
         "productionBox": {
             "megacredits": 0,
@@ -35396,7 +35443,7 @@
                 ],
                 "is": "root"
             },
-            "description": "Increase your plant production 1 step. Play a card from hand, ignoring global requirements."
+            "description": "Increase your plant production 1 step. PLAY A CARD FROM HAND, IGNORING GLOBAL REQUIREMENTS."
         },
         "productionBox": {
             "megacredits": 0,
@@ -35960,6 +36007,254 @@
         },
         "compatibility": [
             "colonies"
+        ]
+    },
+    {
+        "module": "prelude2",
+        "name": "Cloud Tourism",
+        "tags": [
+            "jovian",
+            "venus"
+        ],
+        "victoryPoints": {
+            "resourcesHere": 1,
+            "per": 3
+        },
+        "cost": 11,
+        "type": "active",
+        "requirements": [],
+        "metadata": {
+            "cardNumber": "",
+            "description": "Increase your M€ production 1 step for each pair of Earth and Venus tags you own. 1 VP for every 3rd floater on this card.",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "rows": [
+                                [
+                                    {
+                                        "type": " ",
+                                        "size": "M",
+                                        "isIcon": false,
+                                        "is": "symbol"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": "->",
+                                        "size": "M",
+                                        "isIcon": true,
+                                        "is": "symbol"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": "floaters",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false
+                                    },
+                                    "Action: Add 1 floater to this card."
+                                ]
+                            ],
+                            "is": "effect"
+                        }
+                    ],
+                    [
+                        {
+                            "rows": [
+                                [
+                                    {
+                                        "type": "megacredits",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "showDigit": false,
+                                        "amountInside": true,
+                                        "size": "M"
+                                    },
+                                    {
+                                        "type": "/",
+                                        "size": "M",
+                                        "isIcon": false,
+                                        "is": "symbol"
+                                    },
+                                    {
+                                        "type": "earth",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "isPlayed": true
+                                    },
+                                    {
+                                        "type": "venus",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "isPlayed": true
+                                    }
+                                ]
+                            ],
+                            "is": "production-box"
+                        }
+                    ]
+                ],
+                "is": "root"
+            },
+            "victoryPoints": {
+                "item": {
+                    "type": "floaters",
+                    "amount": -1,
+                    "is": "item",
+                    "clone": false,
+                    "cancelled": false
+                },
+                "points": 1,
+                "target": 3,
+                "targetOneOrMore": false,
+                "anyPlayer": false
+            }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "resourceType": "Floater",
+        "compatibility": [
+            "venus"
+        ]
+    },
+    {
+        "module": "prelude2",
+        "name": "GHG Shipment",
+        "tags": [
+            "space"
+        ],
+        "cost": 3,
+        "type": "event",
+        "requirements": [
+            {
+                "party": "Kelvinists"
+            }
+        ],
+        "metadata": {
+            "cardNumber": "",
+            "description": "Requires that Kelvinists are in power or that you have 2 delegates there. Increase your heat production 1 step. Gain 1 heat for each floater you have.",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "rows": [
+                                [
+                                    {
+                                        "type": "heat",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false
+                                    }
+                                ]
+                            ],
+                            "is": "production-box"
+                        }
+                    ],
+                    [
+                        {
+                            "type": "heat",
+                            "amount": 1,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        },
+                        {
+                            "type": "/",
+                            "size": "M",
+                            "isIcon": false,
+                            "is": "symbol"
+                        },
+                        {
+                            "type": "floaters",
+                            "amount": 1,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        }
+                    ]
+                ],
+                "is": "root"
+            }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "compatibility": [
+            "turmoil"
+        ]
+    },
+    {
+        "module": "prelude2",
+        "name": "Sponsoring Nation",
+        "tags": [
+            "earth"
+        ],
+        "cost": 21,
+        "type": "automated",
+        "requirements": [
+            {
+                "tag": "earth",
+                "count": 4
+            }
+        ],
+        "metadata": {
+            "cardNumber": "",
+            "description": "Requires 4 Earth tags. Gain 3 TR. Place 2 delegates.",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "type": "tr",
+                            "amount": 3,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        }
+                    ],
+                    [
+                        {
+                            "type": "delegates",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        }
+                    ]
+                ],
+                "is": "root"
+            }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "compatibility": [
+            "turmoil"
         ]
     },
     {
@@ -37079,6 +37374,289 @@
         },
         "startingMegaCredits": 0,
         "compatibility": []
+    },
+    {
+        "module": "prelude2",
+        "name": "Space Corridors",
+        "tags": [
+            "space"
+        ],
+        "cardDiscount": [
+            {
+                "tag": "jovian",
+                "amount": 2
+            },
+            {
+                "tag": "earth",
+                "amount": 2
+            },
+            {
+                "tag": "venus",
+                "amount": 2
+            }
+        ],
+        "cost": 0,
+        "type": "prelude",
+        "requirements": [],
+        "metadata": {
+            "cardNumber": "",
+            "description": "Gain 3 titanium",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "rows": [
+                                [
+                                    {
+                                        "type": "jovian",
+                                        "amount": -1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "isPlayed": true
+                                    },
+                                    {
+                                        "type": "earth",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "isPlayed": true
+                                    },
+                                    {
+                                        "type": "venus",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "isPlayed": true
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": ":",
+                                        "size": "M",
+                                        "isIcon": false,
+                                        "is": "symbol"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": "megacredits",
+                                        "amount": -2,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false,
+                                        "showDigit": false,
+                                        "amountInside": true,
+                                        "size": "M"
+                                    },
+                                    "Effect: When you play a Jovian, Earth, or Venus tag, you pay 2 M€ less for it."
+                                ]
+                            ],
+                            "is": "effect"
+                        }
+                    ],
+                    [
+                        {
+                            "type": "titanium",
+                            "amount": 3,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        }
+                    ]
+                ],
+                "is": "root"
+            }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "startingMegaCredits": 0,
+        "compatibility": []
+    },
+    {
+        "module": "prelude2",
+        "name": "Corridors of Power",
+        "tags": [
+            "earth"
+        ],
+        "cost": 0,
+        "type": "prelude",
+        "requirements": [],
+        "metadata": {
+            "cardNumber": "",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "rows": [
+                                [
+                                    {
+                                        "type": "party_leaders",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": ":",
+                                        "size": "M",
+                                        "isIcon": false,
+                                        "is": "symbol"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "type": "cards",
+                                        "amount": 1,
+                                        "is": "item",
+                                        "clone": false,
+                                        "cancelled": false
+                                    },
+                                    "Effect: Whenever one of your delegates becomes a Party Leader, draw a card"
+                                ]
+                            ],
+                            "is": "effect"
+                        }
+                    ],
+                    [
+                        {
+                            "type": "tr",
+                            "amount": 1,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false
+                        },
+                        {
+                            "type": "megacredits",
+                            "amount": 4,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "showDigit": false,
+                            "amountInside": true,
+                            "size": "M"
+                        }
+                    ],
+                    [
+                        {
+                            "type": "text",
+                            "amount": -1,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "text": "Increase your TR one step. Gain 4 M€",
+                            "size": "S",
+                            "isUppercase": false,
+                            "isBold": false
+                        }
+                    ]
+                ],
+                "is": "root"
+            }
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "startingMegaCredits": 4,
+        "compatibility": [
+            "turmoil"
+        ]
+    },
+    {
+        "module": "prelude2",
+        "name": "Atmospheric Enhancers",
+        "tags": [
+            "venus"
+        ],
+        "cost": 0,
+        "type": "prelude",
+        "requirements": [],
+        "metadata": {
+            "cardNumber": "",
+            "renderData": {
+                "rows": [
+                    [
+                        {
+                            "type": "temperature",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "showDigit": true
+                        },
+                        {
+                            "type": "OR",
+                            "size": "S",
+                            "isIcon": false,
+                            "is": "symbol"
+                        },
+                        {
+                            "type": "oxygen",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "showDigit": true
+                        }
+                    ],
+                    [
+                        {
+                            "type": "OR",
+                            "size": "S",
+                            "isIcon": false,
+                            "is": "symbol"
+                        },
+                        {
+                            "type": "venus",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "showDigit": true
+                        }
+                    ],
+                    [
+                        {
+                            "type": "cards",
+                            "amount": 2,
+                            "is": "item",
+                            "clone": false,
+                            "cancelled": false,
+                            "secondaryTag": "floater"
+                        }
+                    ]
+                ],
+                "is": "root"
+            },
+            "description": "Effect: Raise either the temperature or oxygen or Venus 2 steps. Reveal cards from the deck until you have revealed 2 cards with a floater icon on it. Take those 2 cards into hand and discard the rest."
+        },
+        "productionBox": {
+            "megacredits": 0,
+            "steel": 0,
+            "titanium": 0,
+            "plants": 0,
+            "energy": 0,
+            "heat": 0
+        },
+        "startingMegaCredits": 0,
+        "compatibility": [
+            "venus"
+        ]
     },
     {
         "module": "turmoil",
@@ -40516,7 +41094,8 @@
                 "points": 1,
                 "target": 1,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": true
             }
         },
         "productionBox": {
@@ -40632,7 +41211,8 @@
                 "points": 1,
                 "target": 1,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": false
             }
         },
         "productionBox": {
@@ -43099,7 +43679,7 @@
     },
     {
         "module": "moon",
-        "name": "Sinus Iridium Road Network",
+        "name": "Sinus Irdium Road Network",
         "tags": [
             "moon"
         ],
@@ -45043,7 +45623,7 @@
     },
     {
         "module": "moon",
-        "name": "New Colony Planning Initiaitives",
+        "name": "New Colony Planning Initiatives",
         "tags": [
             "moon"
         ],
@@ -45344,7 +45924,7 @@
                                         "clone": false,
                                         "cancelled": false
                                     },
-                                    "Effect: When you build a habitat on The Moon, you spend 1 titanium less."
+                                    "Effect: When you build a habitat on THE MOON, you spend 1 titanium less."
                                 ]
                             ],
                             "is": "effect"
@@ -46654,7 +47234,8 @@
                 "points": 1,
                 "target": 3,
                 "targetOneOrMore": false,
-                "anyPlayer": false
+                "anyPlayer": false,
+                "asterisk": false
             }
         },
         "productionBox": {
@@ -46759,8 +47340,7 @@
             }
         ],
         "metadata": {
-            "description": "Requires you have 1 mine tile. Increase your M€ production 1 step. Replace one of your mine tiles with this special tile. Raise the habitat rate 1 step. This tile counts both as a habitat and a mine tile.",
-            "cardNumber": "M55",
+            "description": "Requires you have 1 mine tile. Increase your M€ production 1 step. Remove 1 of your mine tiles (does not affect the mining rate.) Place a this special tile there, regardless of placement rules. Gain placement bonuses as usual. This tile counts both as a habitat and a mine tile.",
             "renderData": {
                 "rows": [
                     [
@@ -46780,9 +47360,7 @@
                                 ]
                             ],
                             "is": "production-box"
-                        }
-                    ],
-                    [
+                        },
                         {
                             "type": "moon-colony-rate",
                             "amount": 1,
@@ -70715,7 +71293,8 @@
                 "target": 3,
                 "targetOneOrMore": false,
                 "anyPlayer": false,
-                "asterisk": true
+                "asterisk": true,
+                "asFraction": true
             },
             "renderData": {
                 "rows": [
