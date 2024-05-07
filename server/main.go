@@ -36,7 +36,7 @@ func main() {
 	pConf := config.GetPrivateConfigInstance()
 
 	authConf := &oauth2.Config{
-		RedirectURL:  *conf.AuthServerConfig.OAuthCallbackEndpoint,
+		RedirectURL:  fmt.Sprintf("%v:%v%v", *conf.AuthServerConfig.Host, *conf.AuthServerConfig.Port, *conf.AuthServerConfig.OAuthCallbackEndpoint),
 		ClientID:     *pConf.Auth.ClientID,
 		ClientSecret: *pConf.Auth.ClientSecret,
 		Scopes:       []string{discord.ScopeIdentify},

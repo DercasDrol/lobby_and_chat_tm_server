@@ -7,6 +7,7 @@ import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/common_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/expansions_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/expansions_view.dart';
+import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/filters_options_view/filters_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/multiplayer_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/players_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/players_view/players_view.dart';
@@ -123,6 +124,12 @@ class GameOptionsView extends StatelessWidget {
       isChangesAllowed: isChangesAllowed,
     );
 
+    final filterOptionsView = FiltersOptionsView(
+      lobbyGame: lobbyGame,
+      lobbyCubit: lobbyCubit,
+      isChangesAllowed: isChangesAllowed,
+    );
+
     final tooltipVersion = Container(
       padding: EdgeInsets.all(5),
       constraints: BoxConstraints(
@@ -215,6 +222,7 @@ class GameOptionsView extends StatelessWidget {
                               if (createGameModel.maxPlayers > 1)
                                 getMultiplayerOptionsView(),
                               commonOptionsView,
+                              filterOptionsView,
                             ]),
                           )
                         ],

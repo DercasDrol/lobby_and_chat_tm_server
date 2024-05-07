@@ -1,5 +1,4 @@
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
-import 'package:mars_flutter/domain/model/constants.dart';
 
 enum CardRenderItemType {
   TEMPERATURE,
@@ -298,6 +297,7 @@ enum CardRenderItemType {
     GRAPHENE: Assets.resources.graphene.path,
     CLONE_TROOPER: Assets.resources.cloneTrooper.path,
     CATHEDRAL: Assets.promo.cathedral.path,
+    NEUTRAL_DELEGATE: Assets.misc.delegate.path,
   };
   static final _TO_PLAYED_IMAGE_PATH_MAP = {
     PLANTS: Assets.tags.plant.path,

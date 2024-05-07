@@ -27,7 +27,9 @@ class ModulesFilterView extends StatelessWidget {
                     useImage: true,
                     child: GameOptionView(
                       useBigberSize: true,
-                      image: module.toIconPath(),
+                      images: module.toIconPath() != null
+                          ? [module.toIconPath()!]
+                          : [],
                       lablePart1: module.moduleName,
                       type: GameOptionType.TOGGLE_BUTTON,
                       isSelected: selectedModules.contains(module),

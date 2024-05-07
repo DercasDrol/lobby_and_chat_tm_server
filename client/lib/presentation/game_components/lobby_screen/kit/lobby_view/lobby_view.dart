@@ -4,7 +4,6 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/ch
 import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/lobby_view/kit/games_list/games_list.dart';
-import 'package:tab_container/tab_container.dart';
 
 class LobbyView extends StatelessWidget {
   final LobbyCubit lobbyCubit;

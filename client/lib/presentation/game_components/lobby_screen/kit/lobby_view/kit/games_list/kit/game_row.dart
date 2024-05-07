@@ -45,7 +45,7 @@ class GameRow extends StatelessWidget {
     );
 
     final playersCount = GameOptionView(
-      image: Assets.misc.delegate.path,
+      images: [Assets.misc.delegate.path],
       lablePart1: game.createGameModel.players.length.toString() +
           (!game.isStarted
               ? ' / ' + game.createGameModel.maxPlayers.toString()

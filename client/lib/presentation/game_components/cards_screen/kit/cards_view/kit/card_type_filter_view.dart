@@ -11,16 +11,20 @@ class CardTypeFilterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allValues = CardType.values
+        .where((element) =>
+            ![CardType.PROXY, CardType.STANDARD_ACTION].contains(element))
+        .toList();
     return Wrap(children: [
       InvertButton<CardType>(
         selected: selectedCardTypesN,
-        all: CardType.values,
+        all: allValues,
         onInverted: (inverted) {
           logger.d(inverted);
           selectedCardTypesN.value = inverted;
         },
       ),
-      ...CardType.values
+      ...allValues
           .map((cardType) => ValueListenableBuilder(
                 valueListenable: selectedCardTypesN,
                 builder: (context, selectedCardTypes, child) {

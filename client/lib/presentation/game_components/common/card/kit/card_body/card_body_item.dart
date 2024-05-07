@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
+import 'package:mars_flutter/domain/model/card/Tag.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:mars_flutter/domain/model/card/render/Size.dart';
@@ -13,6 +14,7 @@ import 'package:mars_flutter/presentation/game_components/common/card/kit/card_b
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/secondary_tag_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/utils.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_requirements.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_tag.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 import 'package:mars_flutter/presentation/game_components/common/cost.dart';
 import 'package:mars_flutter/presentation/game_components/common/vpoints.dart';
@@ -29,25 +31,38 @@ class BodyItemView extends StatelessWidget {
   final double width;
   final double parentWidth;
   Widget _applyRedBorderForImage(String imagePath,
-      {bool? invertColor = false}) {
+      {bool invertColor = false,
+      bool greyColor = false,
+      bool darkMode = false}) {
+    final coloredImage = ColorFiltered(
+      colorFilter: invertColor == true
+          ? const ColorFilter.matrix(<double>[
+              -1.0, 0.0, 0.0, 0.0, 255.0, //
+              0.0, -1.0, 0.0, 0.0, 255.0, //
+              0.0, 0.0, -1.0, 0.0, 255.0, //
+              0.0, 0.0, 0.0, 1.0, 0.0, //
+            ])
+          : greyColor
+              ? const ColorFilter.matrix(<double>[
+                  0.2126, 0.7152, 0.0722, 0, 0, //
+                  0.2126, 0.7152, 0.0722, 0, 0, //
+                  0.2126, 0.7152, 0.0722, 0, 0, //
+                  0, 0, 0, 1, 0, //
+                ])
+              : const ColorFilter.matrix(<double>[
+                  1.0, 0.0, 0.0, 0.0, 0.0, //
+                  0.0, 1.0, 0.0, 0.0, 0.0, //
+                  0.0, 0.0, 1.0, 0.0, 0.0, //
+                  0.0, 0.0, 0.0, 1.0, 0.0, //
+                ]),
+      child: Image(
+          image: AssetImage(imagePath),
+          color: darkMode ? Colors.grey.shade400 : null,
+          colorBlendMode: darkMode ? BlendMode.modulate : null),
+    );
     return item.anyPlayer ?? false
-        ? RedBorderedImage(imagePath: imagePath)
-        : ColorFiltered(
-            colorFilter: invertColor == true
-                ? const ColorFilter.matrix(<double>[
-                    -1.0, 0.0, 0.0, 0.0, 255.0, //
-                    0.0, -1.0, 0.0, 0.0, 255.0, //
-                    0.0, 0.0, -1.0, 0.0, 255.0, //
-                    0.0, 0.0, 0.0, 1.0, 0.0, //
-                  ])
-                : const ColorFilter.matrix(<double>[
-                    1.0, 0.0, 0.0, 0.0, 0.0, //
-                    0.0, 1.0, 0.0, 0.0, 0.0, //
-                    0.0, 0.0, 1.0, 0.0, 0.0, //
-                    0.0, 0.0, 0.0, 1.0, 0.0, //
-                  ]),
-            child: Image(image: AssetImage(imagePath)),
-          );
+        ? RedBorderedImage(imagePath: imagePath, child: coloredImage)
+        : coloredImage;
   }
 
   Widget _applyPadding(
@@ -73,11 +88,17 @@ class BodyItemView extends StatelessWidget {
     );
   }
 
-  Widget _prepareImageView(String imagePath, {bool? invertColor = false}) =>
+  Widget _prepareImageView(String imagePath,
+          {bool invertColor = false,
+          bool greyColor = false,
+          bool darkMode = false}) =>
       Stack(
         alignment: Alignment.center,
         children: [
-          _applyRedBorderForImage(imagePath, invertColor: invertColor),
+          _applyRedBorderForImage(imagePath,
+              invertColor: invertColor,
+              greyColor: greyColor,
+              darkMode: darkMode),
           item.cancelled == true
               ? CrossView(
                   size: width * item.size.toMultiplier(),
@@ -145,8 +166,94 @@ class BodyItemView extends StatelessWidget {
             );
     }
 
+    Widget getMaView(String text) => Container(
+        width: text.length * 7.5 + 15.0,
+        height: height * 0.7,
+        decoration: item.anyPlayer ?? false
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(4.0),
+                border: Border.all(
+                  color: Colors.red,
+                  width: 2.0,
+                ),
+              )
+            : null,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(3.0),
+            border: Border.all(
+              color: Colors.black,
+              width: 1.0,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: height * 0.4,
+                fontFamily: FontFamily.prototype,
+                color: Colors.black,
+                height: 1.0,
+              ),
+            ),
+          ),
+        ));
+
     Widget createItem() {
       switch (item.type) {
+        case CardRenderItemType.NEUTRAL_DELEGATE:
+          return createGeneralTile(
+            child: _prepareImageView(imagePath!, darkMode: true),
+          );
+        case CardRenderItemType.SELF_REPLICATING:
+          final w = width * item.size.toMultiplier();
+          final h = height * item.size.toMultiplier();
+          return Container(
+            width: w * 1.4,
+            height: h * 1.6,
+            child: Stack(children: [
+              Container(
+                padding: EdgeInsets.only(top: 6.0, left: 6.0, right: 6.0),
+                width: w * 1.3,
+                height: h * 1.6,
+                child: Image(image: AssetImage(Assets.resources.card.path)),
+              ),
+              Row(children: [
+                TagView(
+                  imagePath: Tag.BUILDING.toImagePath()!,
+                  tagRadius: h * 0.6,
+                ),
+                TagView(
+                  imagePath: Tag.SPACE.toImagePath()!,
+                  tagRadius: h * 0.6,
+                )
+              ]),
+              Container(
+                width: w * 0.6,
+                height: h * 0.6,
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(
+                  top: h * 0.8,
+                  left: w * 0.35,
+                  right: w * 0.35,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.65),
+                  borderRadius: BorderRadius.circular(3.0),
+                ),
+                child: Text(
+                  "2",
+                  style: TextStyle(
+                    fontSize: h * 0.5,
+                    fontFamily: FontFamily.prototype,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+              ),
+            ]),
+          );
         case CardRenderItemType.MEGACREDITS:
           return createGeneralTile(
             child: CostView(
@@ -154,7 +261,7 @@ class BodyItemView extends StatelessWidget {
               width: height * item.size.toMultiplier(),
               fontSize: height * item.size.toMultiplier() * 0.56,
               cost: item.amount,
-              text: item.innerText,
+              text: item.clone == true ? "🪐" : item.innerText,
               multiplier: false,
               useGreyMode: false,
               showRedBoarder: item.anyPlayer,
@@ -183,16 +290,16 @@ class BodyItemView extends StatelessWidget {
             heightMult: 1.6,
           );
         case CardRenderItemType.RULING_PARTY:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 1.7,
-            heightMultiplier: 1.3,
+            widthMult: 1.7,
+            heightMult: 1.3,
           );
         case CardRenderItemType.INFLUENCE:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 1.2,
-            heightMultiplier: 1.2,
+            widthMult: 1.2,
+            heightMult: 1.2,
           );
         case CardRenderItemType.EXCAVATE:
           return createGeneralTile(
@@ -201,16 +308,16 @@ class BodyItemView extends StatelessWidget {
             heightMult: 1.35,
           );
         case CardRenderItemType.GREENERY:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 1.35,
-            heightMultiplier: 1.35,
+            widthMult: 1.35,
+            heightMult: 1.35,
           );
         case CardRenderItemType.VENUS:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMultiplier: 2.0,
-            heightMultiplier: 1.0,
+            widthMult: 1.35,
+            heightMult: 1.35,
           );
         case CardRenderItemType.TEXT:
           return item.text == null || item.text == ""
@@ -276,16 +383,17 @@ class BodyItemView extends StatelessWidget {
                 ),
               ));
         case CardRenderItemType.TRADE_FLEET:
-          return _applyPadding(
+          return createGeneralTile(
             child: _prepareImageView(imagePath!, invertColor: true),
-            widthMultiplier: itemWidthMultiplyer,
-            heightMultiplier: 1.0,
+            widthMult: itemWidthMultiplyer,
+            heightMult: 1.0,
           );
         case CardRenderItemType.REDS_DEACTIVATED:
           //сделать картинку черно-белой
-          return _applyPadding(child: _prepareImageView(imagePath!));
+          return createGeneralTile(
+              child: _prepareImageView(imagePath!, greyColor: true));
         case CardRenderItemType.TRADE_DISCOUNT:
-          return _applyPadding(
+          return createGeneralTile(
             child: Container(
               alignment: Alignment.center,
               height: height * item.size.toMultiplier() * 0.9,
@@ -310,7 +418,7 @@ class BodyItemView extends StatelessWidget {
             ),
           );
         case CardRenderItemType.COMMUNITY:
-          return _applyPadding(
+          return createGeneralTile(
             child: Container(
               width: width * item.size.toMultiplier(),
               height: height * item.size.toMultiplier(),
@@ -331,7 +439,7 @@ class BodyItemView extends StatelessWidget {
             ),
           );
         case CardRenderItemType.NO_TAGS:
-          return _applyPadding(
+          return createGeneralTile(
               child: Stack(alignment: Alignment.center, children: [
             EmptyTagView(
               width: width * item.size.toMultiplier(),
@@ -344,7 +452,7 @@ class BodyItemView extends StatelessWidget {
             ),
           ]));
         case CardRenderItemType.EMPTY_TAG:
-          return _applyPadding(
+          return createGeneralTile(
             child: EmptyTagView(
               width: width * item.size.toMultiplier(),
               height: height * item.size.toMultiplier(),
@@ -473,33 +581,10 @@ class BodyItemView extends StatelessWidget {
                 ),
               ]));
         case CardRenderItemType.AWARD:
-          return Container(
-            margin: EdgeInsets.all(3.0),
-            width: width * 2,
-            height: height * 0.7,
-            decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.circular(3.0),
-              border: Border.all(
-                color: Colors.black,
-                width: 1.0,
-              ),
-            ),
-            child: Center(
-              child: Text(
-                "AWARD",
-                style: TextStyle(
-                  fontSize: height * 0.4,
-                  fontFamily: FontFamily.prototype,
-                  color: Colors.black,
-                  height: 1.0,
-                ),
-              ),
-            ),
-          );
+          return getMaView("AWARD");
         case CardRenderItemType.MILESTONE:
           //нарисовать оранжевый прямоугольник с черным текстом внутри "MILESTONE"
-          return SizedBox.shrink();
+          return getMaView("MILESTONE");
         case CardRenderItemType.PLACE_COLONY:
           //нарисовать черный овал с белым текстом внутри "COLONY"
           return SizedBox.shrink();
@@ -520,9 +605,37 @@ class BodyItemView extends StatelessWidget {
             isCardPoints: true,
             text: "?",
           );
+        case CardRenderItemType.GEOSCAN_ICON:
+          return createGeneralTile(
+            child: _prepareImageView(imagePath!),
+            widthMult: 3.0,
+            heightMult: 3.0,
+          );
         case CardRenderItemType.MULTIPLIER_WHITE:
-          //отрисовать белый квадрат с черным Х внутри
-          return SizedBox.shrink();
+          return createGeneralTile(
+            child: Container(
+              width: width * item.size.toMultiplier(),
+              height: height * item.size.toMultiplier(),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 0.5,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "X",
+                  style: TextStyle(
+                    fontSize: height * item.size.toMultiplier() * 0.6,
+                    fontFamily: FontFamily.prototype,
+                    color: Colors.black,
+                    height: 1.0,
+                  ),
+                ),
+              ),
+            ),
+          );
         case CardRenderItemType.NOMADS:
           return Container(
             width: width * item.size.toMultiplier(),

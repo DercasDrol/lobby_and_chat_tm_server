@@ -146,7 +146,7 @@ class ExpansionsOptionsView extends StatelessWidget {
     final getMerger = () => addPaddingsAndBackground(
           GameOptionView(
             lablePart1: "Merger",
-            image: Assets.expansionIcons.expansionIconPrelude.path,
+            images: [Assets.expansionIcons.expansionIconPrelude.path],
             type: GameOptionType.TOGGLE_BUTTON,
             isSelected: lobbyGame.createGameModel.twoCorpsVariant,
             onDropdownOptionChangedOrOptionToggled: prepareOnChangeFn((__) {
@@ -165,7 +165,7 @@ class ExpansionsOptionsView extends StatelessWidget {
           GameOptionView(
             lablePart2: "Starting CEOs",
             type: GameOptionType.DROPDOWN,
-            image: Assets.expansionIcons.expansionIconCeo.path,
+            images: [Assets.expansionIcons.expansionIconCeo.path],
             dropdownOptions:
                 List.generate(6, (index) => (index + 1).toString()),
             dropdownDefaultValueIdx: lobbyGame.createGameModel.startingCeos - 1,

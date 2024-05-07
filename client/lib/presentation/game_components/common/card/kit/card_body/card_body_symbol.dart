@@ -118,10 +118,11 @@ class BodySymbol extends StatelessWidget {
         );
       case CardRenderSymbolType.SURVEY_MISSION:
         return BodyItemCover(
-          text: CardRenderSymbolType.SURVEY_MISSION.toStringForUI(),
-          width: width * symbol.size.toMultiplier() * 0.5,
-          height: height * symbol.size.toMultiplier() * 0.5,
-          parentHeight: height,
+          child:
+              Image(image: AssetImage(Assets.pathfinders.surveyMission.path)),
+          width: width * symbol.size.toMultiplier() * 1.7,
+          height: height * symbol.size.toMultiplier() * 1.7,
+          parentHeight: height * symbol.size.toMultiplier() * 1.7,
         );
       case CardRenderSymbolType.UNKNOWN:
         return SizedBox.shrink();

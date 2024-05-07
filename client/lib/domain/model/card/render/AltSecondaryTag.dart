@@ -42,7 +42,7 @@ enum AltSecondaryTag {
   static final _TO_IMAGE_PATH_MAP = {
     //REQ: "requirements mini background",
     OXYGEN: Assets.globalParameters.oxygen.path,
-    TURMOIL: Assets.expansionIcons.expansionIconTurmoil.path,
+    TURMOIL: Assets.cardModuleIcons.turmoil.path,
     FLOATER: Assets.resources.floater.path,
     //BLUE: "blue circle",
     //NO_TAGS: "ring",

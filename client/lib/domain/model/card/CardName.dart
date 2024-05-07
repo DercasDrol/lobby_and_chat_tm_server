@@ -1993,6 +1993,10 @@ enum CardName {
     CardName.SPACE_WARGAMES,
     CardName.THIOLAVA_VENTS,
     CardName.VENERA_BASE,
+    CardName.LUNA_MINING_HUB,
+    CardName.SECRET_LABS,
+    CardName.WETLANDS,
+    CardName.HECATE_SPEDITIONS,
   ];
   static const _CARDS_WITH_ULTRA_COMPLECATED_VIEW = [
     CardName.SPACE_PRIVATEERS,

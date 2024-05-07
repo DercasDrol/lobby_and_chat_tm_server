@@ -9,6 +9,7 @@ import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
 import 'package:mars_flutter/domain/model/card/Tag.dart';
+import 'package:mars_flutter/presentation/core/common_future_widget.dart';
 import 'package:mars_flutter/presentation/core/widget_size.dart';
 import 'package:mars_flutter/presentation/game_components/cards_screen/kit/cards_view/kit/card_type_filter_view.dart';
 import 'package:mars_flutter/presentation/game_components/cards_screen/kit/cards_view/kit/modules_filter_view.dart';
@@ -209,38 +210,9 @@ class CardsView extends StatelessWidget {
     }
 
     return Center(
-      child: FutureBuilder<Map<CardName, ClientCard>>(
+      child: CommonFutureWidget<Map<CardName, ClientCard>>(
         future: cardsF,
-        builder: (BuildContext context,
-            AsyncSnapshot<Map<CardName, ClientCard>> snapshot) {
-          if (snapshot.hasData) {
-            return getContentView(snapshot.data!);
-          } else if (snapshot.hasError) {
-            return Wrap(children: <Widget>[
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            ]);
-          } else {
-            return Wrap(children: const <Widget>[
-              SizedBox(
-                width: 60,
-                height: 60,
-                child: CircularProgressIndicator(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting result...'),
-              ),
-            ]);
-          }
-        },
+        getContentView: getContentView,
       ),
     );
   }

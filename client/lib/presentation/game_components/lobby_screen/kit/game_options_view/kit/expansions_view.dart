@@ -82,7 +82,7 @@ class ExpansionsView extends StatelessWidget {
                                           Icons.check_box_outline_blank),
                                   const SizedBox(width: 12),
                                   GameOptionView(
-                                    image: expansion.typeImage,
+                                    images: [expansion.typeImage],
                                     lablePart1: expansion.name,
                                     descriptionUrl: expansion.descriptionUrl,
                                     type: GameOptionType.SIMPLE,

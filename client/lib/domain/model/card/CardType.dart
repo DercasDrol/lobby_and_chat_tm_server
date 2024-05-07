@@ -29,8 +29,8 @@ enum CardType {
     AUTOMATED: Colors.green[500],
     PRELUDE: Colors.pink[300],
     CORPORATION: Colors.white,
-    CEO: Colors.white,
-    STANDARD_PROJECT: Colors.white,
+    CEO: const Color.fromARGB(255, 255, 209, 59),
+    STANDARD_PROJECT: Colors.grey.shade400,
     STANDARD_ACTION: Colors.grey,
     PROXY: Colors.white,
   };

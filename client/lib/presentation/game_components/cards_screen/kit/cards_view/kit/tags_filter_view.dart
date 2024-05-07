@@ -29,7 +29,9 @@ class TagsFilterView extends StatelessWidget {
                         useImage: true,
                         child: GameOptionView(
                           useBigberSize: true,
-                          image: tag.toImagePath(),
+                          images: tag.toImagePath() != null
+                              ? [tag.toImagePath()!]
+                              : [],
                           type: GameOptionType.TOGGLE_BUTTON,
                           isSelected: selectedTags.contains(tag),
                           onDropdownOptionChangedOrOptionToggled: (_) {

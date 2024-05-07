@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 enum GameOptionType { SIMPLE, TOGGLE_BUTTON, DROPDOWN, BUTTON }
 
 class GameOptionView extends StatelessWidget {
-  final String? image;
+  final List<String>? images;
   final Widget? imageAsWidget;
   final String? lablePart1;
   final String? lablePart2;
@@ -25,7 +25,7 @@ class GameOptionView extends StatelessWidget {
 
   const GameOptionView({
     super.key,
-    this.image,
+    this.images,
     this.lablePart1,
     this.lablePart2,
     this.descriptionUrl,
@@ -158,10 +158,19 @@ class GameOptionView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (imageAsWidget != null) imageAsWidget!,
-              if (image != null)
-                Image.asset(image!, width: iconSize, height: iconSize),
-              if (image != null || imageAsWidget != null) SizedBox(width: 5),
+              if (imageAsWidget != null)
+                Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: imageAsWidget!,
+                ),
+              ...images
+                      ?.map((i) => Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Image.asset(i,
+                                width: iconSize, height: iconSize),
+                          ))
+                      .toList() ??
+                  [],
               if (lablePart1 != null)
                 Text(
                   lablePart1!,

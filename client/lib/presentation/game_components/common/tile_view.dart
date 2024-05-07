@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/TileType.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/hexagone_builder.dart';
 
 class TileView extends StatelessWidget {
   const TileView({

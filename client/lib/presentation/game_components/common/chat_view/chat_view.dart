@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:mars_flutter/domain/chat_cubit.dart';
 import 'package:mars_flutter/domain/chat_state.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/chat_event.dart';
@@ -9,7 +8,6 @@ import 'package:mars_flutter/presentation/game_components/common/chat_view/kit/e
 import 'package:mars_flutter/presentation/game_components/common/chat_view/kit/message_input_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
 import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
-import 'package:tab_container/tab_container.dart';
 
 class ChatView extends StatelessWidget {
   final double width;

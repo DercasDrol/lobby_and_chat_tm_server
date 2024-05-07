@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class RedBorderedImage extends StatelessWidget {
   final String imagePath;
-  const RedBorderedImage({super.key, required this.imagePath});
+  final Widget? child;
+  const RedBorderedImage({super.key, required this.imagePath, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,10 @@ class RedBorderedImage extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.all(2),
-          child: Image(
-            image: AssetImage(imagePath),
-          ),
+          child: child ??
+              Image(
+                image: AssetImage(imagePath),
+              ),
         )
       ],
     );

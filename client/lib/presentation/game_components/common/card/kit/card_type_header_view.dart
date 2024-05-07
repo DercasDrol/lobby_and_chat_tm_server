@@ -3,26 +3,59 @@ import 'package:mars_flutter/domain/model/card/CardType.dart';
 
 class CardTypeHeaderView extends StatelessWidget {
   final CardType type;
-  final double topPadding;
-  final double width;
-  final double height;
-  const CardTypeHeaderView(
-      {super.key,
-      required this.width,
-      required this.height,
-      required this.type,
-      required this.topPadding});
+  final double cardWidth;
+  final double cardHeight;
+  final double cardBodyTopPadding;
+  const CardTypeHeaderView({
+    super.key,
+    required this.cardWidth,
+    required this.cardHeight,
+    required this.type,
+    required this.cardBodyTopPadding,
+  });
 
   @override
   Widget build(BuildContext context) {
+    getLeftTopView() => Container(
+          alignment: Alignment.center,
+          margin:
+              EdgeInsets.only(top: cardHeight * 0.04, left: cardWidth * 0.06),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color.fromARGB(255, 0, 0, 0),
+              width: 0.2,
+            ),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0)),
+            color: type.toColor(),
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(255, 0, 0, 0),
+                offset: Offset(0.0, 0.0),
+                blurRadius: 0.2,
+                spreadRadius: 0.2,
+              )
+            ],
+          ),
+          width: cardWidth * 0.3,
+          height: cardHeight * 0.075,
+          child: Text(
+            type.toString().toUpperCase(),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: cardHeight * 0.04,
+              fontWeight: FontWeight.w900,
+              height: 1.2,
+            ),
+          ),
+        );
     switch (type) {
       case CardType.CORPORATION:
+        final double topPadding = cardBodyTopPadding - cardHeight * 0.045;
         return Padding(
           padding: EdgeInsets.only(top: topPadding),
           child: Align(
             alignment: Alignment.topCenter,
             child: Container(
-              //margin: EdgeInsets.only(right: width * 0.25),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Color.fromARGB(255, 0, 0, 0),
@@ -54,14 +87,14 @@ class CardTypeHeaderView extends StatelessWidget {
                   )
                 ],
               ),
-              width: width,
-              height: height,
+              width: cardWidth * 0.5,
+              height: cardHeight * 0.04,
               child: Center(
                 child: Text(
                   'CORPORATION',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: height,
+                    fontSize: cardHeight * 0.03,
                     fontWeight: FontWeight.w900,
                     height: 1.0,
                   ),
@@ -70,6 +103,10 @@ class CardTypeHeaderView extends StatelessWidget {
             ),
           ),
         );
+      case CardType.PRELUDE:
+        return getLeftTopView();
+      case CardType.CEO:
+        return getLeftTopView();
       default:
         return SizedBox.shrink();
     }

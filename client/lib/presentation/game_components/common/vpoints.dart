@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/data/asset_paths_gen/fonts.gen.dart';
+import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:mars_flutter/domain/model/card/render/ICardRenderVictoryPoints.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/red_bordered_Image.dart';
 
@@ -91,7 +93,7 @@ class VpointsView extends StatelessWidget {
                                   .target
                                   .toString()),
                       style: TextStyle(
-                        fontSize: height * 0.64,
+                        fontSize: height * 0.60,
                         fontFamily: FontFamily.prototype,
                         color: Colors.black,
                       ),
@@ -99,7 +101,37 @@ class VpointsView extends StatelessWidget {
                   ],
                   ...((points as ICardRenderDynamicVictoryPoints).item == null
                       ? []
-                      : [getImageView()])
+                      : [
+                          [CardRenderItemType.UNDERGROUND_SHELTERS].contains(
+                                  (points as ICardRenderDynamicVictoryPoints)
+                                      .item
+                                      ?.type)
+                              ? Stack(
+                                  children: [
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Image(
+                                        image:
+                                            AssetImage(Assets.tiles.city.path),
+                                        width: itemWidth * 0.8,
+                                        height: itemWidth * 0.8,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: 3.0, right: 3.0),
+                                      child: Image(
+                                        image: AssetImage(
+                                            Assets.underworld.excavate.path),
+                                        width: itemWidth * 1.1,
+                                        height: itemWidth * 1.2,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : getImageView()
+                        ])
                 ]);
           break;
         default:

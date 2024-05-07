@@ -63,7 +63,9 @@ class CardView extends StatelessWidget {
           ? SizedBox.shrink()
           : Padding(
               padding: EdgeInsets.only(
-                  top: card_height * 0.033, left: card_height * 0.16),
+                  top: card_height * 0.033,
+                  left: card_height *
+                      ([CardType.PRELUDE].contains(card.type) ? 0.32 : 0.16)),
               child: CardResources(
                 resourceCount: resourcesCount ?? 0,
                 resourceType: card.resourceType!,
@@ -82,7 +84,12 @@ class CardView extends StatelessWidget {
         ),
       );
       final cardCost = card.cost == null ||
-              [CardType.CORPORATION, CardType.PRELUDE].contains(card.type)
+              [
+                CardType.CORPORATION,
+                CardType.PRELUDE,
+                CardType.CEO,
+                CardType.STANDARD_PROJECT,
+              ].contains(card.type)
           ? SizedBox.shrink()
           : CostView(
               height: card_height * 0.15,
@@ -164,18 +171,20 @@ class CardView extends StatelessWidget {
                     module: card.module,
                   )));
 
+      final cardTypeHeader = CardTypeHeaderView(
+        cardWidth: cadr_width,
+        cardHeight: card_height,
+        type: card.type,
+        cardBodyTopPadding: cardBodyTopPadding,
+      );
+
       return Stack(
         children: [
           background,
           cardResources,
           cardName,
           cardCost,
-          CardTypeHeaderView(
-            width: cadr_width * 0.5,
-            height: card_height * 0.04,
-            type: card.type,
-            topPadding: cardBodyTopPadding - card_height * 0.045,
-          ),
+          cardTypeHeader,
           cardTags,
           cardRequirements,
           cardModuleIcon,

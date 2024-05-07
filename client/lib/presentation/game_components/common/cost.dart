@@ -16,6 +16,7 @@ class CostView extends StatelessWidget {
   final int? discount;
   final bool? useShadow;
   final bool? showRedBoarder;
+
   const CostView({
     required this.cost,
     required this.width,
