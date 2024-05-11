@@ -24,15 +24,11 @@ class CreateGameModel extends Equatable {
   final bool randomFirstPlayer;
   final bool showOtherPlayersVP;
 
-  final bool showColoniesList;
-  final bool showCorporationList;
-  final bool showPreludesList;
-  final bool showBannedCards;
-
   final List<ColonyName> customColonies;
   final List<CardName> customCorporations;
   final List<CardName> customPreludes;
   final List<CardName> bannedCards;
+  final List<CardName> includedCards;
   final BoardNameType board;
   static const List<BoardNameType> boards = const [
     BoardName.THARSIS,
@@ -75,6 +71,7 @@ class CreateGameModel extends Equatable {
   final bool twoCorpsVariant;
   final List<CardName> customCeos;
   final int startingCeos;
+  final bool? preludeDraftVariant;
 
   CreateGameModel({
     this.firstIndex = 0,
@@ -85,14 +82,11 @@ class CreateGameModel extends Equatable {
     this.randomMA = RandomMAOptionType.NONE,
     this.randomFirstPlayer = true,
     this.showOtherPlayersVP = false,
-    this.showColoniesList = false,
-    this.showCorporationList = false,
-    this.showPreludesList = false,
-    this.showBannedCards = false,
     this.customColonies = const [],
     this.customCorporations = const [],
     this.customPreludes = const [],
     this.bannedCards = const [],
+    this.includedCards = const [],
     this.board = BoardName.THARSIS,
     this.seed = 0.0,
     this.seededGame = false,
@@ -121,6 +115,7 @@ class CreateGameModel extends Equatable {
     this.customCeos = const [],
     this.startingCeos = 3,
     this.selectedExpansions = const [ExpansionType.CORPORATE_ERA],
+    this.preludeDraftVariant = null,
   });
 
   factory CreateGameModel.fromGameConfig(NewGameConfig gameConfig) {
@@ -136,14 +131,11 @@ class CreateGameModel extends Equatable {
       randomMA: gameConfig.randomMA,
       randomFirstPlayer: gameConfig.randomFirstPlayer,
       showOtherPlayersVP: gameConfig.showOtherPlayersVP,
-      showColoniesList: gameConfig.customColoniesList.isNotEmpty,
-      showCorporationList: gameConfig.customCorporationsList.isNotEmpty,
-      showPreludesList: gameConfig.customPreludes.isNotEmpty,
-      showBannedCards: gameConfig.bannedCards.isNotEmpty,
       customColonies: gameConfig.customColoniesList,
       customCorporations: gameConfig.customCorporationsList,
       customPreludes: gameConfig.customPreludes,
       bannedCards: gameConfig.bannedCards,
+      includedCards: gameConfig.includedCards,
       board: gameConfig.board,
       seed: gameConfig.seed,
       seededGame: gameConfig.clonedGamedId != null,
@@ -192,6 +184,7 @@ class CreateGameModel extends Equatable {
         if (gameConfig.starWarsExpansion) ExpansionType.STARWARS,
         if (gameConfig.underworldExpansion) ExpansionType.UNDERWORLD,
       ],
+      preludeDraftVariant: gameConfig.preludeDraftVariant,
     );
   }
 
@@ -286,14 +279,11 @@ class CreateGameModel extends Equatable {
     RandomMAOptionType? randomMA,
     bool? randomFirstPlayer,
     bool? showOtherPlayersVP,
-    bool? showColoniesList,
-    bool? showCorporationList,
-    bool? showPreludesList,
-    bool? showBannedCards,
     List<ColonyName>? customColonies,
     List<CardName>? customCorporations,
     List<CardName>? customPreludes,
     List<CardName>? bannedCards,
+    List<CardName>? includedCards,
     BoardNameType? board,
     double? seed,
     bool? seededGame,
@@ -322,6 +312,7 @@ class CreateGameModel extends Equatable {
     bool? twoCorpsVariant,
     List<CardName>? customCeos,
     int? startingCeos,
+    bool? preludeDraftVariant,
   }) {
     return CreateGameModel(
       firstIndex: firstIndex ?? this.firstIndex,
@@ -332,14 +323,11 @@ class CreateGameModel extends Equatable {
       randomMA: randomMA ?? this.randomMA,
       randomFirstPlayer: randomFirstPlayer ?? this.randomFirstPlayer,
       showOtherPlayersVP: showOtherPlayersVP ?? this.showOtherPlayersVP,
-      showColoniesList: showColoniesList ?? this.showColoniesList,
-      showCorporationList: showCorporationList ?? this.showCorporationList,
-      showPreludesList: showPreludesList ?? this.showPreludesList,
-      showBannedCards: showBannedCards ?? this.showBannedCards,
       customColonies: customColonies ?? this.customColonies,
       customCorporations: customCorporations ?? this.customCorporations,
       customPreludes: customPreludes ?? this.customPreludes,
       bannedCards: bannedCards ?? this.bannedCards,
+      includedCards: includedCards ?? this.includedCards,
       board: board ?? this.board,
       seed: seed ?? this.seed,
       seededGame: seededGame ?? this.seededGame,
@@ -376,6 +364,7 @@ class CreateGameModel extends Equatable {
       twoCorpsVariant: twoCorpsVariant ?? this.twoCorpsVariant,
       customCeos: customCeos ?? this.customCeos,
       startingCeos: startingCeos ?? this.startingCeos,
+      preludeDraftVariant: preludeDraftVariant ?? this.preludeDraftVariant,
     );
   }
 
@@ -390,14 +379,11 @@ class CreateGameModel extends Equatable {
         randomMA,
         randomFirstPlayer,
         showOtherPlayersVP,
-        showColoniesList,
-        showCorporationList,
-        showPreludesList,
-        showBannedCards,
         customColonies,
         customCorporations,
         customPreludes,
         bannedCards,
+        includedCards,
         board,
         seed,
         seededGame,

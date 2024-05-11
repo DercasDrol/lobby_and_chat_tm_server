@@ -11,6 +11,7 @@ class LobbyGame extends Equatable {
   final GameModel? gameModel;
   final CreateGameModel createGameModel;
   final DateTime createdAt;
+  final DateTime? deathAt;
   final DateTime? sharedAt;
   final DateTime? startedAt;
   final DateTime? finishedAt;
@@ -23,6 +24,7 @@ class LobbyGame extends Equatable {
     required this.gameModel,
     required this.createGameModel,
     required this.createdAt,
+    this.deathAt,
     this.sharedAt,
     this.startedAt,
     this.finishedAt,
@@ -41,6 +43,9 @@ class LobbyGame extends Equatable {
           : GameModel.fromJson(e['gameModel'] as Map<String, dynamic>),
       createGameModel: CreateGameModel.fromGameConfig(gameConfig),
       createdAt: DateTime.parse(e['createdAt'] as String),
+      deathAt: e['deathDay'] == null
+          ? null
+          : DateTime.parse(e['deathDay'] as String),
       sharedAt: e['sharedAt'] == null
           ? null
           : DateTime.parse(e['sharedAt'] as String),
@@ -66,6 +71,13 @@ class LobbyGame extends Equatable {
 
   bool get isPlayerCanJoin {
     return createGameModel.players.length < createGameModel.maxPlayers;
+  }
+
+  bool get isDead {
+    return deathAt != null
+        ? deathAt!.millisecondsSinceEpoch <
+            DateTime.now().millisecondsSinceEpoch
+        : false;
   }
 
   bool isPlayerJoined(String? userId) {

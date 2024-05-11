@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/expansion_type.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/lobby_game.dart';
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
@@ -68,6 +69,33 @@ class MultiplayerOptionsView extends StatelessWidget {
           )
         ],
       ),
+      if (lobbyGame.createGameModel.initialDraft &&
+          lobbyGame.createGameModel.selectedExpansions
+              .contains(ExpansionType.PRELUDE)) ...[
+        SizedBox(height: GAME_OPTIONS_CONSTANTS.spaceBetweenOptions),
+        GameOptionContainer(
+          padding:
+              EdgeInsets.all(GAME_OPTIONS_CONSTANTS.internalOptionsPadding),
+          child: GameOptionView(
+            lablePart1: "Prelude Draft variant",
+            type: GameOptionType.TOGGLE_BUTTON,
+            descriptionUrl: INITIAL_DRAFT_VARIANTS_DESCRIPTION_URL,
+            isSelected: lobbyGame.createGameModel.preludeDraftVariant ?? false,
+            onDropdownOptionChangedOrOptionToggled: prepareOnChangeFn((__) {
+              lobbyCubit.saveChangedOptions(
+                lobbyGame.copyWith(
+                  createGameModel: lobbyGame.createGameModel.copyWith(
+                    preludeDraftVariant:
+                        lobbyGame.createGameModel.preludeDraftVariant != null
+                            ? !lobbyGame.createGameModel.preludeDraftVariant!
+                            : true,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
       SizedBox(height: GAME_OPTIONS_CONSTANTS.spaceBetweenOptions),
       GameOptionContainer(
         padding: EdgeInsets.all(GAME_OPTIONS_CONSTANTS.internalOptionsPadding),

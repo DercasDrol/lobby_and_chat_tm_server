@@ -105,28 +105,33 @@ class GameRow extends StatelessWidget {
                 ),
                 SizedBox(
                     width: 79.0,
-                    child: game.isPlayerCanJoin || game.isStarted
-                        ? BottomButton(
-                            text: !game.isStarted
-                                ? 'Join'
-                                : game.isPlayerJoined(lobbyCubit.userId) &&
-                                        !game.isFinished
-                                    ? "Continue"
-                                    : 'Watch',
-                            onPressed: () {
-                              if (!game.isStarted && game.isPlayerCanJoin) {
-                                lobbyCubit.joinNewGame(game.lobbyGameId);
-                              } else if (game
-                                      .isPlayerJoined(lobbyCubit.userId) &&
-                                  !game.isFinished) {
-                                lobbyCubit.continueGame(game.lobbyGameId);
-                              } else if (game.spectatorId != null) {
-                                lobbyCubit.setGameActionType(
-                                    GameActionType.SHOW_SPECTATOR_GAME,
-                                    game.lobbyGameId);
-                              }
-                            })
-                        : SizedBox.shrink()),
+                    child: game.isDead
+                        ? Flexible(
+                            child: Text('Game is Dead',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.red)))
+                        : game.isPlayerCanJoin || game.isStarted
+                            ? BottomButton(
+                                text: !game.isStarted
+                                    ? 'Join'
+                                    : game.isPlayerJoined(lobbyCubit.userId) &&
+                                            !game.isFinished
+                                        ? "Continue"
+                                        : 'Watch',
+                                onPressed: () {
+                                  if (!game.isStarted && game.isPlayerCanJoin) {
+                                    lobbyCubit.joinNewGame(game.lobbyGameId);
+                                  } else if (game
+                                          .isPlayerJoined(lobbyCubit.userId) &&
+                                      !game.isFinished) {
+                                    lobbyCubit.continueGame(game.lobbyGameId);
+                                  } else if (game.spectatorId != null) {
+                                    lobbyCubit.setGameActionType(
+                                        GameActionType.SHOW_SPECTATOR_GAME,
+                                        game.lobbyGameId);
+                                  }
+                                })
+                            : SizedBox.shrink()),
               ],
             ),
           ],

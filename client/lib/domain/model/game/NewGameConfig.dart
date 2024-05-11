@@ -120,6 +120,7 @@ class NewGameConfig extends Equatable {
   final bool soloTR; // Solo victory by getting TR 63 by game end
   final List<CardName> customCorporationsList;
   final List<CardName> bannedCards;
+  final List<CardName> includedCards;
   final List<ColonyName> customColoniesList;
   final List<CardName> customPreludes;
   final bool
@@ -135,6 +136,7 @@ class NewGameConfig extends Equatable {
   final int? escapeVelocityPenalty;
   final bool twoCorpsVariant;
   final List<CardName> customCeos;
+  final bool? preludeDraftVariant;
   final int startingCeos;
 
   final bool starWarsExpansion;
@@ -176,6 +178,7 @@ class NewGameConfig extends Equatable {
     required this.soloTR,
     required this.customCorporationsList,
     required this.bannedCards,
+    required this.includedCards,
     required this.customColoniesList,
     required this.customPreludes,
     required this.requiresMoonTrackCompletion,
@@ -189,6 +192,7 @@ class NewGameConfig extends Equatable {
     this.escapeVelocityPenalty,
     required this.twoCorpsVariant,
     required this.customCeos,
+    this.preludeDraftVariant,
     required this.startingCeos,
     required this.starWarsExpansion,
     required this.underworldExpansion,
@@ -244,6 +248,7 @@ class NewGameConfig extends Equatable {
       soloTR: createGameModel.soloTR,
       customCorporationsList: createGameModel.customCorporations,
       bannedCards: createGameModel.bannedCards,
+      includedCards: createGameModel.includedCards,
       customColoniesList: createGameModel.customColonies,
       customPreludes: createGameModel.customPreludes,
       requiresMoonTrackCompletion: createGameModel.requiresMoonTrackCompletion,
@@ -258,6 +263,7 @@ class NewGameConfig extends Equatable {
       escapeVelocityPenalty: createGameModel.escapeVelocityPenalty,
       twoCorpsVariant: createGameModel.twoCorpsVariant,
       customCeos: createGameModel.customCeos,
+      preludeDraftVariant: createGameModel.preludeDraftVariant,
       startingCeos: createGameModel.startingCeos,
       starWarsExpansion:
           createGameModel.selectedExpansions.contains(ExpansionType.STARWARS),
@@ -324,6 +330,12 @@ class NewGameConfig extends Equatable {
           .map((e) => CardName.fromString(e as String))
           .cast<CardName>()
           .toList(),
+      includedCards: e['includedCards'] == null
+          ? []
+          : (e['includedCards'] as List<dynamic>)
+              .map((e) => CardName.fromString(e as String))
+              .cast<CardName>()
+              .toList(),
       customColoniesList: (e['customColoniesList'] as List<dynamic>)
           .map((e) => ColonyName.fromString(e as String))
           .cast<ColonyName>()
@@ -346,6 +358,7 @@ class NewGameConfig extends Equatable {
           .map((e) => CardName.fromString(e as String))
           .cast<CardName>()
           .toList(),
+      preludeDraftVariant: e['preludeDraftVariant'] as bool?,
       startingCeos: e['startingCeos'] as int,
       starWarsExpansion: e['starWarsExpansion'] as bool,
       underworldExpansion: e['underworldExpansion'] as bool,
@@ -390,6 +403,7 @@ class NewGameConfig extends Equatable {
       'customCorporationsList':
           customCorporationsList.map((e) => e.toString()).toList(),
       'bannedCards': bannedCards.map((e) => e.toString()).toList(),
+      'includedCards': includedCards.map((e) => e.toString()).toList(),
       'customColoniesList':
           customColoniesList.map((e) => e.toString()).toList(),
       'customPreludes': customPreludes.map((e) => e.toString()).toList(),
@@ -404,6 +418,8 @@ class NewGameConfig extends Equatable {
       'escapeVelocityPenalty': escapeVelocityPenalty,
       'twoCorpsVariant': twoCorpsVariant,
       'customCeos': customCeos.map((e) => e.toString()).toList(),
+      if (preludeDraftVariant != null)
+        'preludeDraftVariant': preludeDraftVariant,
       'startingCeos': startingCeos,
       'starWarsExpansion': starWarsExpansion,
       'underworldExpansion': underworldExpansion,
@@ -447,6 +463,7 @@ class NewGameConfig extends Equatable {
         soloTR,
         customCorporationsList,
         bannedCards,
+        includedCards,
         customColoniesList,
         customPreludes,
         requiresMoonTrackCompletion,

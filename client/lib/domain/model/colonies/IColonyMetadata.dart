@@ -1,40 +1,11 @@
+import 'dart:async';
+
 import 'package:mars_flutter/domain/model/CardResouce.dart';
 import 'package:mars_flutter/domain/model/Resource.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
 import 'package:mars_flutter/domain/model/colonies/ColonyBenefit.dart';
 import 'package:mars_flutter/domain/model/colonies/ColonyName.dart';
 
-/**
-export interface IColonyMetadata {
-  module?: GameModule; // TODO(kberg): attach gameModule to the server colonies themselves.
-  readonly name: ColonyName;
-  readonly buildType: ColonyBenefit;
-  readonly buildQuantity: Array<number>; // Default is [1,1,1]
-  readonly buildResource?: Resource;
-  readonly cardResource?: CardResource;
-  readonly tradeType: ColonyBenefit;
-  readonly tradeQuantity: Array<number>; // Default is [1,1,1,1,1,1,1]
-  readonly tradeResource?: Resource | Array<Resource>;
-  readonly colonyBonusType: ColonyBenefit;
-  readonly colonyBonusQuantity: number; // Default is 1
-  readonly colonyBonusResource?: Resource;
-  readonly shouldIncreaseTrack: 'yes' | 'no' | 'ask' // Default is 'yes';
-}
-
-export type IInputColonyMetadata = Omit<IColonyMetadata, 'buildQuantity' |'tradeQuantity' | 'colonyBonusQuantity' | 'shouldIncreaseTrack'> & Partial<IColonyMetadata>;
-
-const DEFAULT_BUILD_QUANTITY = [1, 1, 1];
-const DEFAULT_TRADE_QUANTITY = [1, 1, 1, 1, 1, 1, 1];
-
-export function colonyMetadata(partial: IInputColonyMetadata): IColonyMetadata {
-  return {
-    buildQuantity: DEFAULT_BUILD_QUANTITY,
-    tradeQuantity: DEFAULT_TRADE_QUANTITY,
-    colonyBonusQuantity: 1,
-    shouldIncreaseTrack: 'yes',
-    ...partial,
-  };
-} */
 enum ShouldIncreaseTrack {
   YES,
   NO,
@@ -54,34 +25,99 @@ enum ShouldIncreaseTrack {
   static fromString(String? value) => _TO_ENUM_MAP[value];
 }
 
-abstract class IColonyMetadata {
-  final GameModule? module;
+class IColonyMetadata {
+  final GameModule module;
   final ColonyName name;
+  final List<String> description;
   final ColonyBenefit buildType;
   final List<int> buildQuantity;
   final Resource? buildResource;
   final CardResource? cardResource;
   final ColonyBenefit tradeType;
   final List<int> tradeQuantity;
-  final Resource? tradeResource;
+  final List<Resource>? tradeResource;
   final ColonyBenefit colonyBonusType;
   final int colonyBonusQuantity;
   final Resource? colonyBonusResource;
   final ShouldIncreaseTrack shouldIncreaseTrack;
+  static const _DEFAULT_BUILD_QUANTITY = [1, 1, 1];
+  static const _DEFAULT_TRADE_QUANTITY = [1, 1, 1, 1, 1, 1, 1];
 
   IColonyMetadata({
-    this.module,
+    required this.module,
     required this.name,
+    required this.description,
     required this.buildType,
-    required this.buildQuantity,
+    this.buildQuantity = _DEFAULT_BUILD_QUANTITY,
     this.buildResource,
     this.cardResource,
     required this.tradeType,
-    required this.tradeQuantity,
+    this.tradeQuantity = _DEFAULT_TRADE_QUANTITY,
     this.tradeResource,
     required this.colonyBonusType,
     required this.colonyBonusQuantity,
     this.colonyBonusResource,
-    required this.shouldIncreaseTrack,
+    this.shouldIncreaseTrack = ShouldIncreaseTrack.YES,
   });
+
+  factory IColonyMetadata.fromJson(Map<String, dynamic> json) {
+    try {
+      return IColonyMetadata(
+        module: GameModule.fromJson(json['module']),
+        name: ColonyName.fromString(json['name']),
+        description: List<String>.from(json['description']),
+        buildType: ColonyBenefit.values[json['buildType']],
+        buildQuantity:
+            List<int>.from(json['buildQuantity'] ?? _DEFAULT_BUILD_QUANTITY),
+        buildResource: json['buildResource'] != null
+            ? Resource.fromString(json['buildResource'])
+            : null,
+        cardResource: json['cardResource'] != null
+            ? CardResource.fromString(json['cardResource'])
+            : null,
+        tradeType: ColonyBenefit.values[json['tradeType']],
+        tradeQuantity:
+            List<int>.from(json['tradeQuantity'] ?? _DEFAULT_TRADE_QUANTITY),
+        tradeResource: json['tradeResource'] != null
+            ? (json['tradeResource'].runtimeType == String)
+                ? [Resource.fromString(json['tradeResource'])]
+                : List<Resource>.from(
+                    json['tradeResource']
+                        .map((resource) => Resource.fromString(resource)),
+                  )
+            : null,
+        colonyBonusType: ColonyBenefit.values[json['colonyBonusType']],
+        colonyBonusQuantity: json['colonyBonusQuantity'],
+        colonyBonusResource: json['colonyBonusResource'] != null
+            ? Resource.fromString(json['colonyBonusResource'])
+            : null,
+        shouldIncreaseTrack: ShouldIncreaseTrack.fromString(
+            json['shouldIncreaseTrack'] ?? 'yes'),
+      );
+    } catch (e) {
+      throw ('IColonyMetadata.fromJson: $json', e);
+    }
+  }
+
+  static final Completer<Map<ColonyName, IColonyMetadata>> _completer =
+      new Completer();
+  static Map<ColonyName, IColonyMetadata> _coloniesMetadata = Map();
+  static Future<Map<ColonyName, IColonyMetadata>> get allColoniesMetadata =>
+      _completer.future;
+  static setAllColoniesMetadata(List<IColonyMetadata> value) {
+    _coloniesMetadata = Map.fromIterable(
+      value,
+      key: (colony) => (colony as IColonyMetadata).name,
+      value: (colony) => colony,
+    );
+    _completer.complete(_coloniesMetadata);
+  }
+
+  factory IColonyMetadata.fromCardName(ColonyName colonyName) {
+    try {
+      return _coloniesMetadata[colonyName]!;
+    } catch (e) {
+      throw ('IColonyMetadata.fromCardName: $colonyName', e);
+    }
+  }
 }

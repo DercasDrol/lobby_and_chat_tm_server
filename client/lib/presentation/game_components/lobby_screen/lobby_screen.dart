@@ -29,6 +29,17 @@ class MainLobbyScreen extends StatelessWidget {
     final leftPartHeight = 600.0;
     final leftPartWidth = 580.0;
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(top: 15.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            context.go(MAIN_MENU_ROUTE);
+          },
+          child: Icon(Icons.arrow_back),
+          mini: true,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Stack(
         children: [
           StarsBackground(),

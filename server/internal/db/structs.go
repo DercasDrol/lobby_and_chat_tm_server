@@ -66,6 +66,7 @@ type NewGameConfig struct {
 	SoloTR                           bool             `json:"soloTR"`
 	CustomCorporationsList           []string         `json:"customCorporationsList"`
 	BannedCards                      []string         `json:"bannedCards"`
+	IncludedCards                    []string         `json:"includedCards"`
 	CustomColoniesList               []string         `json:"customColoniesList"`
 	CustomPreludes                   []string         `json:"customPreludes"`
 	RequiresMoonTrackCompletion      bool             `json:"requiresMoonTrackCompletion"`
@@ -79,6 +80,7 @@ type NewGameConfig struct {
 	EscapeVelocityPenalty            *int             `json:"escapeVelocityPenalty,omitempty"`
 	TwoCorpsVariant                  bool             `json:"twoCorpsVariant"`
 	CustomCeos                       []string         `json:"customCeos"`
+	PreludeDraftVariant              *bool            `json:"preludeDraftVariant,omitempty"`
 	StartingCeos                     int              `json:"startingCeos"`
 	StarWarsExpansion                bool             `json:"starWarsExpansion"`
 	UnderworldExpansion              bool             `json:"underworldExpansion"`
@@ -126,6 +128,7 @@ type GameOptionsModel struct {
 	AltVenusBoard                    bool     `json:"altVenusBoard"`
 	Board                            string   `json:"board"`
 	BannedCards                      []string `json:"bannedCards"`
+	IncludedCards                    []string `json:"includedCards"`
 	CeoExtension                     bool     `json:"ceoExtension"`
 	Colonies                         bool     `json:"colonies"`
 	CommunityCardsOption             bool     `json:"communityCardsOption"`
@@ -139,6 +142,7 @@ type GameOptionsModel struct {
 	IncludeFanMA                     bool     `json:"includeFanMA"`
 	IncludeVenusMA                   bool     `json:"includeVenusMA"`
 	InitialDraft                     bool     `json:"initialDraft"`
+	PreludeDraftVariant              *bool    `json:"preludeDraftVariant,omitempty"`
 	MoonExpansion                    bool     `json:"moonExpansion"`
 	PathfindersExpansion             bool     `json:"pathfindersExpansion"`
 	Prelude                          bool     `json:"prelude"`

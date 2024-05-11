@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
@@ -7,7 +6,7 @@ import 'package:mars_flutter/domain/model/game_models/ActionLabel.dart';
 import 'package:mars_flutter/domain/model/game_models/CardModel.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_player_panel_info.dart';
-import 'package:mars_flutter/presentation/game_components/common/card/card_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/card_tooltip.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/panel_button.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/player_resource_box.dart';
@@ -140,6 +139,22 @@ class PlayerPanelView extends StatelessWidget {
 
   _prepareNameBlock() {
     CardModel? corp = _getCorporation();
+    final corpView = FittedBox(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          minimumSize: Size.zero,
+          padding: EdgeInsets.zero,
+        ),
+        onPressed: onNameClick,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6.0),
+          child: Text(
+            _getCorporation()?.name.toString() ?? ' ',
+            style: MAIN_TEXT_STYLE,
+          ),
+        ),
+      ),
+    );
     return Container(
       width: _nameBoxWidth,
       height: height,
@@ -161,40 +176,13 @@ class PlayerPanelView extends StatelessWidget {
           ),
           Expanded(
             flex: 10,
-            child: JustTheTooltip(
-              enableFeedback: true,
-              backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-              waitDuration: Duration(milliseconds: 400),
-              content: corp == null
-                  ? SizedBox.shrink()
-                  : SizedBox(
-                      width: CARD_WIDTH * 1.1,
-                      height: CARD_HEIGHT * 1.1,
-                      child: CardView(
-                        sizeRatio: 1.1,
-                        card: ClientCard.fromCardName(corp.name),
-                        resourcesCount: corp.resources,
-                        isDeactivated: false,
-                        isSelected: false,
-                      ),
-                    ),
-              child: FittedBox(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: Size.zero,
-                    padding: EdgeInsets.zero,
+            child: corp == null
+                ? corpView
+                : CardTooltip(
+                    cardName: corp.name,
+                    cardResourceCount: corp.resources,
+                    child: corpView,
                   ),
-                  onPressed: onNameClick,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6.0),
-                    child: Text(
-                      _getCorporation()?.name.toString() ?? ' ',
-                      style: MAIN_TEXT_STYLE,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),

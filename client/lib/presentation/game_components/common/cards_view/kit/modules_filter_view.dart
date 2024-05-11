@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
-import 'package:mars_flutter/presentation/game_components/cards_screen/kit/cards_view/kit/chip_box.dart';
-import 'package:mars_flutter/presentation/game_components/cards_screen/kit/cards_view/kit/invert_button.dart';
+import 'package:mars_flutter/presentation/game_components/common/cards_view/kit/chip_box.dart';
+import 'package:mars_flutter/presentation/game_components/common/cards_view/kit/invert_button.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
 
 class ModulesFilterView extends StatelessWidget {

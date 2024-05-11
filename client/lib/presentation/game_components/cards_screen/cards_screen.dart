@@ -5,7 +5,7 @@ import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
-import 'package:mars_flutter/presentation/game_components/cards_screen/kit/cards_view/cards_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/cards_view/cards_view.dart';
 import 'package:mars_flutter/presentation/game_components/cards_screen/kit/iframe_cards_view.dart';
 import 'package:mars_flutter/presentation/game_components/cards_screen/kit/top_buttons_block.dart';
 
@@ -80,7 +80,7 @@ class CardsScreen extends StatelessWidget {
                   );
                 },
                 child: CardsView(
-                  targetTypes: [CardType.CORPORATION],
+                  targetTypes: CardType.values,
                   cardsF: ClientCard.allCards,
                 ),
               ),
