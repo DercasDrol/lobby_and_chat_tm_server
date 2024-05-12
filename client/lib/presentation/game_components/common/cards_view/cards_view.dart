@@ -31,21 +31,23 @@ class CardsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scrollContriller = ScrollController();
+    final useSavedFilters = selectedCardsN == null;
 
     final ValueNotifier<List<Tag>> selectedTagsN = ValueNotifier(
-      localStorage.getItem('selectedTags') == null
+      localStorage.getItem('selectedTags') == null || !useSavedFilters
           ? Tag.values
           : jsonDecode(localStorage.getItem('selectedTags') ?? '[]')
               .map((e) => Tag.fromString(e))
               .cast<Tag>()
               .toList(),
     );
-    selectedTagsN.addListener(() {
-      localStorage.setItem('selectedTags', json.encode(selectedTagsN.value));
-    });
+    if (useSavedFilters)
+      selectedTagsN.addListener(() {
+        localStorage.setItem('selectedTags', json.encode(selectedTagsN.value));
+      });
     logger.d(" selectedTypes: ${localStorage.getItem('selectedTypes')}");
     final ValueNotifier<List<CardType>> selectedTypesN = ValueNotifier(
-      localStorage.getItem('selectedTypes') == null
+      localStorage.getItem('selectedTypes') == null || !useSavedFilters
           ? targetTypes
           : json
               .decode(localStorage.getItem('selectedTypes') ?? '[]')
@@ -53,30 +55,33 @@ class CardsView extends StatelessWidget {
               .cast<CardType>()
               .toList(),
     );
-    selectedTypesN.addListener(() {
-      final res = selectedTypesN.value;
-      logger.d("selectedTypesN.value: ${res}");
-      localStorage.setItem('selectedTypes', json.encode(res));
-    });
+    if (useSavedFilters)
+      selectedTypesN.addListener(() {
+        final res = selectedTypesN.value;
+        logger.d("selectedTypesN.value: ${res}");
+        localStorage.setItem('selectedTypes', json.encode(res));
+      });
 
     final ValueNotifier<List<GameModule>> selectedModulesN = ValueNotifier(
-      localStorage.getItem('selectedModules') == null
+      localStorage.getItem('selectedModules') == null || !useSavedFilters
           ? GameModule.values
           : jsonDecode(localStorage.getItem('selectedModules') ?? '[]')
               .map((e) => GameModule.fromString(e))
               .cast<GameModule>()
               .toList(),
     );
-    selectedModulesN.addListener(() {
-      localStorage.setItem(
-          'selectedModules', json.encode(selectedModulesN.value));
-    });
+    if (useSavedFilters)
+      selectedModulesN.addListener(() {
+        localStorage.setItem(
+            'selectedModules', json.encode(selectedModulesN.value));
+      });
 
-    final ValueNotifier<String?> textFilterN =
-        ValueNotifier(localStorage.getItem('textFilter'));
-    textFilterN.addListener(() {
-      localStorage.setItem('textFilter', textFilterN.value.toString());
-    });
+    final ValueNotifier<String?> textFilterN = ValueNotifier(
+        useSavedFilters ? localStorage.getItem('textFilter') : null);
+    if (useSavedFilters)
+      textFilterN.addListener(() {
+        localStorage.setItem('textFilter', textFilterN.value.toString());
+      });
 
     final ValueNotifier<double> headerHeightN = ValueNotifier(2300.0);
 
