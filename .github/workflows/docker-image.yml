@@ -30,4 +30,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: dercasdrol/new-tm-web-client:$(date +%s)
+          tags: dercasdrol/new-tm-web-client:latest
