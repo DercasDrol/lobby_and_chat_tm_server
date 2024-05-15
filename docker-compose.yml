@@ -28,7 +28,7 @@ services:
 
   tm-auth-lobby-chat:
     build: .
-    image: tm-auth-lobby-chat
+    image: dercasdrol/new-tm-web-client:latest
     networks:
       - intranet
     ports:
