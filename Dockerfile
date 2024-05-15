@@ -7,7 +7,7 @@ RUN go vet -v
 
 RUN CGO_ENABLED=0 go build -o /go/bin/app
 
-FROM fischerscode/flutter:latest AS flutter-build
+FROM fischerscode/flutter:3.22.0-0.2.pre AS flutter-build
 WORKDIR /flutterapp
 COPY /client .
 RUN flutter clean
@@ -15,7 +15,7 @@ RUN flutter pub get
 RUN flutter build web
 
 FROM gcr.io/distroless/static-debian11
-
+WORKDIR /
 COPY --from=flutter-build /flutterapp/build/web /web
 COPY --from=go-build /go/bin/app /
 CMD ["/app"]
