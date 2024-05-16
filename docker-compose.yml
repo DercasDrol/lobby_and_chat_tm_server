@@ -34,9 +34,9 @@ services:
     ports:
       - 80:80
       - 443:443
-      - "${CHAT_PORT}:${CHAT_PORT}"
-      - "${LOBBY_PORT}:${LOBBY_PORT}"
-      - "${AUTH_PORT}:${AUTH_PORT}"
+      - ${CHAT_PORT}:${CHAT_PORT}
+      - ${LOBBY_PORT}:${LOBBY_PORT}
+      - ${AUTH_PORT}:${AUTH_PORT}
     environment:
       AUTH_CHAT_LOBBY_WS_HOST: ${AUTH_CHAT_LOBBY_WS_HOST}
       AUTH_CHAT_LOBBY_HTTP_HOST: ${AUTH_CHAT_LOBBY_HTTP_HOST}
