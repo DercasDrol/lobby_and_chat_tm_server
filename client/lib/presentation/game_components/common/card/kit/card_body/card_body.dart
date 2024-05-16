@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
+import 'package:collection/collection.dart';
 import 'package:mars_flutter/domain/model/card/render/ICardRenderDescription.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/card_body_item.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/card_body_symbol.dart';
@@ -52,7 +52,7 @@ class CardBody extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: cardComponents
-                        .mapIndexed((cardComponent0, i) => (cardComponent0
+                        .mapIndexed((i, cardComponent0) => (cardComponent0
                                             .runtimeType ==
                                         ICardRenderItem &&
                                     (cardComponent0 as ICardRenderItem).type ==
