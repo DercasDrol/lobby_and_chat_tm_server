@@ -16,6 +16,6 @@ RUN flutter build web --release
 
 FROM gcr.io/distroless/static-debian11
 WORKDIR /
-COPY --from=go-build /go/bin/app /
-COPY --from=flutter-build /flutterapp/build/web /web
+COPY --from=go-build /go/bin/app .
+COPY --from=flutter-build /flutterapp/build/web ./web
 CMD ["/app"]
