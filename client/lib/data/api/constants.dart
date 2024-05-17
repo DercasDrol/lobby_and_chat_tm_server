@@ -1,5 +1,5 @@
-const AUTH_CHAT_LOBBY_HOST = String.fromEnvironment('AUTH_CHAT_LOBBY_WS_HOST',
-    defaultValue: 'ws://localhost');
+const AUTH_CHAT_LOBBY_HOST = String.fromEnvironment('AUTH_CHAT_LOBBY_HTTP_HOST',
+    defaultValue: 'localhost');
 const LOGGING_LEVEL =
     String.fromEnvironment('CLIENT_LOGGING_LEVEL', defaultValue: 'all');
 const LOGGING_ENABLED =
