@@ -60,7 +60,7 @@ func main() {
 
 	go func() {
 		http.Handle("/", http.FileServer(http.Dir("./web")))
-		http.ListenAndServe(":80", nil)
+		http.ListenAndServe(":8080", nil)
 	}()
 
 	err = StartAuthService(conf, *pConf.Auth.JwtSecret, authConf)

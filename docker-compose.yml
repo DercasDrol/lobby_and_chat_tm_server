@@ -32,8 +32,7 @@ services:
     networks:
       - intranet
     ports:
-      - 80:80
-      - 443:443
+      - 8080:8080
       - ${CHAT_PORT}:${CHAT_PORT}
       - ${LOBBY_PORT}:${LOBBY_PORT}
       - ${AUTH_PORT}:${AUTH_PORT}
@@ -65,6 +64,7 @@ services:
       - "traefik.http.routers.tm-auth-lobby-chat.entrypoints=websecure"
       - "traefik.http.routers.tm-auth-lobby-chat.service=tm-auth-lobby-chat"
       - "traefik.http.routers.tm-auth-lobby-chat.tls.certresolver=letsencrypt"
+      - "traefik.http.services.tm-auth-lobby-chat.loadbalancer.server.port=8080"
     restart: unless-stopped
     depends_on:
       postgres:
