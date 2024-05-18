@@ -43,12 +43,12 @@ class ClientCard {
       final List<Tag> tags = value['tags'] == List.empty()
           ? <Tag>[]
           : value['tags'].map((e) => Tag.fromString(e)).cast<Tag>().toList();
-      ;
+
       final List<CardDiscount>? cardDiscount = value['cardDiscount'] == null
           ? null
           : value['cardDiscount'] == List.empty()
               ? <CardDiscount>[]
-              : value['cardDiscount'].runtimeType == List
+              : value['cardDiscount'].runtimeType == [].runtimeType
                   ? value['cardDiscount']
                       .map((e) => CardDiscount.fromJson(e))
                       .cast<CardDiscount>()

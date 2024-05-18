@@ -23,7 +23,6 @@ class GamesList extends StatelessWidget {
     return BlocBuilder<LobbyCubit, LobbyState>(
         bloc: lobbyCubit,
         builder: (context, lobbyState) {
-          print('lobbyState changed: ${lobbyState.gamesList}');
           final List<LobbyGame> games =
               (lobbyState.gamesList ?? {}).values.where((game) {
             if (lobbyCategory == LobbyCategory.GAMES_TO_JOIN) {
