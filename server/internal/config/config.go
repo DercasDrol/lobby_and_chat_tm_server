@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"mars-go-service/internal/logger"
 	"os"
 	"strconv"
@@ -162,7 +163,8 @@ func loadAppConfigFromEnvirement() {
 	}
 	AUTH_SERVER_HOST := os.Getenv("AUTH_CHAT_LOBBY_HTTP_HOST")
 	if AUTH_SERVER_HOST != "" {
-		config.AuthServerConfig.Host = &AUTH_SERVER_HOST
+		host := fmt.Sprintf("https://%v", AUTH_SERVER_HOST)
+		config.AuthServerConfig.Host = &host
 	}
 	AUTH_SERVER_PORT := os.Getenv("AUTH_PORT")
 	if AUTH_SERVER_PORT != "" {
