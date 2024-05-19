@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -209,7 +210,12 @@ func vSQL_1(dbpool *pgxpool.Pool) error {
 }
 
 func vSQL_2(dbpool *pgxpool.Pool) error {
-	_, err := dbpool.Exec(context.Background(), `INSERT INTO public.game_servers (url, name) VALUES ('https://terraforming-mars.herokuapp.com/', 'Main');`)
+	host := "https://terraforming-mars.herokuapp.com/"
+	GAME_SERVER_HOST := os.Getenv("GAME_SERVER_HOST")
+	if GAME_SERVER_HOST != "" {
+		host = GAME_SERVER_HOST
+	}
+	_, err := dbpool.Exec(context.Background(), `INSERT INTO public.game_servers (url, name) VALUES ($1, 'Main');`, host)
 	if err != nil {
 		return err
 	}
