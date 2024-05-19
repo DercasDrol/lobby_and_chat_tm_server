@@ -2,7 +2,6 @@ version: '2'
 networks:
   intranet:
     name: intranet
-    driver: bridge
 
 volumes:
   postgres:
@@ -29,13 +28,9 @@ services:
   tm-auth-lobby-chat:
     build: .
     image: dercasdrol/new-tm-web-client:latest
+    container_name: tm-auth-lobby-chat
     networks:
       - intranet
-    ports:
-      - 8080:8080
-      - ${CHAT_PORT}:${CHAT_PORT}
-      - ${LOBBY_PORT}:${LOBBY_PORT}
-      - ${AUTH_PORT}:${AUTH_PORT}
     environment:
       AUTH_CHAT_LOBBY_WS_HOST: ${AUTH_CHAT_LOBBY_WS_HOST}
       AUTH_CHAT_LOBBY_HTTP_HOST: ${AUTH_CHAT_LOBBY_HTTP_HOST}
@@ -43,6 +38,8 @@ services:
       LOBBY_PORT: ${LOBBY_PORT}
       AUTH_PORT: ${AUTH_PORT}
       GAME_SERVER_HOST: ${GAME_SERVER_HOST}
+      #Currently client have no access to the variables
+      #TODO: create json file with them on server side and serve it to client
       CLIENT_LOGGING_ENABLED: ${CLIENT_LOGGING_ENABLED}
       CLIENT_LOGGING_LEVEL: ${CLIENT_LOGGING_LEVEL}
       SERVER_LOGGING_ENABLED: ${SERVER_LOGGING_ENABLED}
@@ -62,9 +59,27 @@ services:
       - "traefik.docker.network=intranet"
       - "traefik.http.routers.tm-auth-lobby-chat.rule=Host(`${AUTH_CHAT_LOBBY_HTTP_HOST}`) || Host(`www.${AUTH_CHAT_LOBBY_HTTP_HOST}`)"
       - "traefik.http.routers.tm-auth-lobby-chat.entrypoints=websecure"
+      - "traefik.http.services.tm-auth-lobby-chat.loadbalancer.server.port=8080"
       - "traefik.http.routers.tm-auth-lobby-chat.service=tm-auth-lobby-chat"
       - "traefik.http.routers.tm-auth-lobby-chat.tls.certresolver=letsencrypt"
-      - "traefik.http.services.tm-auth-lobby-chat.loadbalancer.server.port=8080"
+
+      - "traefik.http.routers.tm-chat.rule=Host(`${AUTH_CHAT_LOBBY_HTTP_HOST}`) || Host(`www.${AUTH_CHAT_LOBBY_HTTP_HOST}`)"
+      - "traefik.http.routers.tm-chat.entrypoints=websecure_ws1"
+      - "traefik.http.services.tm-chat.loadbalancer.server.port=${CHAT_PORT}"
+      - "traefik.http.routers.tm-chat.service=tm-chat"
+      - "traefik.http.routers.tm-chat.tls.certresolver=letsencrypt"
+
+      - "traefik.http.routers.tm-lobby.rule=Host(`${AUTH_CHAT_LOBBY_HTTP_HOST}`) || Host(`www.${AUTH_CHAT_LOBBY_HTTP_HOST}`)"
+      - "traefik.http.routers.tm-lobby.entrypoints=websecure_ws2"
+      - "traefik.http.services.tm-lobby.loadbalancer.server.port=${LOBBY_PORT}"
+      - "traefik.http.routers.tm-lobby.service=tm-lobby"
+      - "traefik.http.routers.tm-lobby.tls.certresolver=letsencrypt"
+
+      - "traefik.http.routers.tm-auth.rule=Host(`${AUTH_CHAT_LOBBY_HTTP_HOST}`) || Host(`www.${AUTH_CHAT_LOBBY_HTTP_HOST}`)"
+      - "traefik.http.routers.tm-auth.entrypoints=websecure_ws3"
+      - "traefik.http.services.tm-auth.loadbalancer.server.port=${AUTH_PORT}"
+      - "traefik.http.routers.tm-auth.service=tm-auth"
+      - "traefik.http.routers.tm-auth.tls.certresolver=letsencrypt"
     restart: unless-stopped
     depends_on:
       postgres:
