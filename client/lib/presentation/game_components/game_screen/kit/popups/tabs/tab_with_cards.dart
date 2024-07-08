@@ -75,6 +75,8 @@ class TabWithCards extends StatelessWidget {
                     resourcesCount: cardModel.resources,
                     isSelected: false,
                     isDeactivated: true,
+                    allCardsDiscount: allCardsDiscount,
+                    tagsDiscounts: tagsDiscounts,
                   ),
                 )
                 .toList(),

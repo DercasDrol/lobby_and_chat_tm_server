@@ -107,10 +107,11 @@ enum Language {
 const APP_NAME = 'Terraforming Mars';
 const DISCORD_INVITE = 'https://discord.gg/afeyggbN6Y';
 const PRELUDE_CARDS_DEALT_PER_PLAYER = 4;
-
+const SELECTED_GAME_CLIENT = 'selected_game_client';
 //routes
 const LOBBY_ROUTE = '/lobby';
-const GAME_ROUTE = '/game';
+const GAME_CLIENT_ROUTE = '/game_client';
+const NEW_GAME_CLIENT_ROUTE = '/new_game_client';
 const CARDS_ROUTE = '/cards';
 const MAIN_MENU_ROUTE = '/';
 const AUTH_ROUTE = '/auth';

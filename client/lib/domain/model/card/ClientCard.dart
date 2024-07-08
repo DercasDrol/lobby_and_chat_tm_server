@@ -128,4 +128,6 @@ class ClientCard {
   factory ClientCard.fromCardName(CardName cardName) {
     return _clientCards[cardName]!;
   }
+
+  bool get isCorp => type == CardType.CORPORATION;
 }

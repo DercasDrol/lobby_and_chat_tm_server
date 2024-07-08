@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mars_flutter/domain/chat_cubit.dart';
+import 'package:mars_flutter/domain/chat_state.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/game_menu_buttons_block.dart';
+import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/connection_indicator.dart';
 import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/left_expanded_panel_view.dart';
 import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/iframe_game_view.dart';
@@ -53,12 +57,31 @@ class IframeGameScreen extends StatelessWidget {
           expandedVN.dispose();
         },
         child: LayoutBuilder(builder: (context, constraints) {
-          final chatView = ChatView(
-            gameChatCubit: gameChatCubit,
-            generalChatCubit: generalChatCubit,
-            width: chatWidth,
-            height: constraints.maxHeight - goToLobbyButtonHeight,
-            borderRadius: BorderRadius.zero,
+          final chatTabsView = BlocBuilder<ChatCubit, ChatState>(
+            bloc: gameChatCubit,
+            buildWhen: (previous, current) =>
+                previous.chatKey != current.chatKey &&
+                [previous.chatKey, current.chatKey].contains(null),
+            builder: (context, gameChatState) {
+              return LobbyElementsTabs(
+                width: chatWidth,
+                height: constraints.maxHeight - goToLobbyButtonHeight,
+                borderRadius: BorderRadius.zero,
+                children: [
+                  if (gameChatState.chatKey != null)
+                    ChatView(
+                      cubit: gameChatCubit,
+                    ),
+                  ChatView(
+                    cubit: generalChatCubit,
+                  ),
+                ],
+                tabsNames: [
+                  if (gameChatState.chatKey != null) "Game Chat",
+                  "General Chat",
+                ],
+              );
+            },
           );
           return ValueListenableBuilder(
             valueListenable: expandedVN,
@@ -77,22 +100,24 @@ class IframeGameScreen extends StatelessWidget {
                   child: ValueListenableBuilder(
                     valueListenable: newMessagesCountVN,
                     builder: (context, newMessagesCount, child) {
-                      return LeftExpandedPanelView(
+                      return LeftExpandedPanelForIframeGameClient(
                         width: chatWidth,
-                        child: chatView,
+                        child: chatTabsView,
                         height: constraints.maxHeight,
                         goToLobbyButtonHeight: goToLobbyButtonHeight,
                         onExpandClick: () =>
                             expandedVN.value = !expandedVN.value,
-                        onGoToLobbyClick: () {
-                          lobbyCubit.closeGameSession();
-                        },
                         buttonWidth: buttonWidth,
                         expanded: expanded,
                         counter: newMessagesCount,
                         connectionIndicator: ConnectionIndicator(
                           lobbyRepository: lobbyCubit.lobbyRepository,
                           chatRepository: gameChatCubit.chatRepository,
+                        ),
+                        menuButtonsBlock: GameMenuButtonsBlock(
+                          width: chatWidth,
+                          height: goToLobbyButtonHeight,
+                          lobbyCubit: lobbyCubit,
                         ),
                       );
                     },

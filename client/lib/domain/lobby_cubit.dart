@@ -14,6 +14,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/ch
 
 class LobbyCubit extends Cubit<LobbyState> {
   final LobbyAPIClient lobbyRepository;
+
   LobbyCubit(this.lobbyRepository) : super(const LobbyState.loading());
   String? get userId => lobbyRepository.userId;
   bool get needGoToGame {

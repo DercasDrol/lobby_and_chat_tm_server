@@ -259,7 +259,6 @@ class BodyItemView extends StatelessWidget {
             child: CostView(
               height: width * item.size.toMultiplier(),
               width: height * item.size.toMultiplier(),
-              fontSize: height * item.size.toMultiplier() * 0.56,
               cost: item.amount,
               text: item.clone == true ? "🪐" : item.innerText,
               multiplier: false,

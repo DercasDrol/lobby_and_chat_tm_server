@@ -97,21 +97,25 @@ void showPopupWithTabs({
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: tabsInfo.onlyOneTabWithOptions
-                  ? max(
-                      (tabsInfo.rightTabInfo?.options?.fold<int>(
-                                          0,
-                                          (acc, option) =>
-                                              max(acc, option.title.length)) ??
-                                      1)
-                                  .toDouble() *
-                              10 +
-                          100,
-                      400)
-                  : constraints.maxWidth * 0.8,
-              height: tabsInfo.onlyOneTabWithOptions
-                  ? (tabsInfo.rightTabInfo?.options?.length ?? 1) * 50 + 70
-                  : constraints.maxHeight - topPadding - bottomPadding,
+              width: tabsInfo.useEmptyTabView ?? false
+                  ? (tabsInfo.rightTabInfo?.tabTitle.length ?? 30) * 12 + 20
+                  : tabsInfo.onlyOneTabWithOptions
+                      ? max(
+                          (tabsInfo.rightTabInfo?.options?.fold<int>(
+                                              0,
+                                              (acc, option) => max(
+                                                  acc, option.title.length)) ??
+                                          1)
+                                      .toDouble() *
+                                  10 +
+                              100,
+                          400)
+                      : constraints.maxWidth * 0.8,
+              height: tabsInfo.useEmptyTabView ?? false
+                  ? 70
+                  : tabsInfo.onlyOneTabWithOptions
+                      ? (tabsInfo.rightTabInfo?.options?.length ?? 1) * 50 + 70
+                      : constraints.maxHeight - topPadding - bottomPadding,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color.fromARGB(96, 255, 255, 255),

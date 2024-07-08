@@ -51,6 +51,7 @@ class CheckboxesFilterView<T> extends StatelessWidget {
                             ? CardTooltip(
                                 cardName: (element as ClientCard).name,
                                 child: view,
+                                sizeMultiplier: 1.1,
                               )
                             : view;
                       },

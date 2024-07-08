@@ -136,7 +136,6 @@ class MainCardsButton extends StatelessWidget {
                           cost: -allCardsDiscount,
                           width: width * 0.28,
                           height: width * 0.28,
-                          fontSize: width * 0.23,
                           multiplier: false,
                           useGreyMode: false,
                         )

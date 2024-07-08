@@ -57,6 +57,18 @@ class SelectedPayment with ChangeNotifier {
     } else if (remainingSum < -1 && steel > 0) {
       steelDecrease();
       balance();
+    } else if (remainingSum < -2 && titanium > 0) {
+      titaniumDecrease();
+      balance();
+    } else if (remainingSum > 0 && megaCredits > 0) {
+      megaCreditsIncrease();
+      balance();
+    } else if (remainingSum > 0 && steel > 0) {
+      steelIncrease();
+      balance();
+    } else if (remainingSum > 0 && titanium > 0) {
+      titaniumIncrease();
+      balance();
     }
   }
 
@@ -84,22 +96,84 @@ class SelectedPayment with ChangeNotifier {
     notifyListeners();
   }
 
-  int megaCredits;
-
-  void megaCreditsDecrease() {
-    if (megaCredits > 0) {
-      megaCredits = megaCredits - 1;
-      notifyListeners();
+  int _getResorceById(int id) {
+    switch (id) {
+      case 0:
+        return megaCredits;
+      case 1:
+        return heat;
+      case 2:
+        return steel;
+      case 3:
+        return titanium;
+      case 4:
+        return microbes;
+      case 5:
+        return floaters;
+      case 6:
+        return science;
+      case 7:
+        return seeds;
+      case 8:
+        return auroraiData;
+      default:
+        return 0;
     }
   }
 
-  void megaCreditsIncrease() {
-    if (!correctSum &&
-        megaCredits < paymentInfo.availablePayment.megaCredits &&
-        megaCredits < paymentInfo.targetSum) {
-      megaCredits = megaCredits + 1;
-      notifyListeners();
+  void _setResorceById(int id, int value) {
+    if (value < 0) {
+      return;
     }
+    switch (id) {
+      case 0:
+        megaCredits = value;
+        break;
+      case 1:
+        heat = value;
+        break;
+      case 2:
+        steel = value;
+        break;
+      case 3:
+        titanium = value;
+        break;
+      case 4:
+        microbes = value;
+        break;
+      case 5:
+        floaters = value;
+        break;
+      case 6:
+        science = value;
+        break;
+      case 7:
+        seeds = value;
+        break;
+      case 8:
+        auroraiData = value;
+        break;
+      default:
+        break;
+    }
+    balance();
+    notifyListeners();
+  }
+
+  int megaCredits;
+  void increaseFn(int resourceId, int availableResourceCount, int cost) {
+    if (_getResorceById(resourceId) < availableResourceCount &&
+        _getResorceById(resourceId) * cost < paymentInfo.targetSum) {
+      _setResorceById(resourceId, _getResorceById(resourceId) + 1);
+    }
+  }
+
+  void megaCreditsDecrease() {
+    _setResorceById(0, megaCredits - 1);
+  }
+
+  void megaCreditsIncrease() {
+    increaseFn(0, paymentInfo.availablePayment.megaCredits, 1);
   }
 
   void megaCreditsMax() {
@@ -111,19 +185,11 @@ class SelectedPayment with ChangeNotifier {
   int heat;
 
   void heatDecrease() {
-    if (heat > 0) {
-      heat = heat - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, heat - 1);
   }
 
   void heatIncrease() {
-    if (!correctSum &&
-        heat < paymentInfo.availablePayment.heat &&
-        heat < paymentInfo.targetSum) {
-      heat = heat + 1;
-      notifyListeners();
-    }
+    increaseFn(1, paymentInfo.availablePayment.heat, PaymentInfo.heat);
   }
 
   void heatMax() {
@@ -139,20 +205,15 @@ class SelectedPayment with ChangeNotifier {
   int steel;
 
   void steelDecrease() {
-    if (steel > 0) {
-      steel = steel - 1;
-      notifyListeners();
-    }
+    _setResorceById(2, steel - 1);
   }
 
   void steelIncrease() {
-    if (!correctSum &&
-        steel < paymentInfo.availablePayment.steel &&
-        steel * paymentInfo.steelValue < paymentInfo.targetSum) {
-      steel = steel + 1;
-      balance();
-      notifyListeners();
-    }
+    increaseFn(
+      2,
+      paymentInfo.availablePayment.steel,
+      paymentInfo.steelValue,
+    );
   }
 
   void steelMax() {
@@ -172,20 +233,15 @@ class SelectedPayment with ChangeNotifier {
   int titanium;
 
   void titaniumDecrease() {
-    if (titanium > 0) {
-      titanium = titanium - 1;
-      notifyListeners();
-    }
+    _setResorceById(3, titanium - 1);
   }
 
   void titaniumIncrease() {
-    if (!correctSum &&
-        titanium < paymentInfo.availablePayment.titanium &&
-        titanium * paymentInfo.titaniumValue < paymentInfo.targetSum) {
-      titanium = titanium + 1;
-      balance();
-      notifyListeners();
-    }
+    increaseFn(
+      3,
+      paymentInfo.availablePayment.titanium,
+      paymentInfo.titaniumValue,
+    );
   }
 
   void titaniumMax() {
@@ -205,15 +261,11 @@ class SelectedPayment with ChangeNotifier {
   int microbes;
 
   void microbesDecrease() {
-    if (microbes > 0) {
-      microbes = microbes - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, microbes - 1);
   }
 
   void microbesIncrease() {
-    if (!correctSum &&
-        microbes < paymentInfo.availablePayment.microbes &&
+    if (microbes < paymentInfo.availablePayment.microbes &&
         microbes * PaymentInfo.microbesValue < paymentInfo.targetSum) {
       microbes = microbes + 1;
       notifyListeners();
@@ -235,10 +287,7 @@ class SelectedPayment with ChangeNotifier {
   int floaters;
 
   void floatersDecrease() {
-    if (floaters > 0) {
-      floaters = floaters - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, floaters - 1);
   }
 
   void floatersIncrease() {
@@ -265,10 +314,7 @@ class SelectedPayment with ChangeNotifier {
   int science;
 
   void scienceDecrease() {
-    if (science > 0) {
-      science = science - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, science - 1);
   }
 
   void scienceIncrease() {
@@ -299,10 +345,7 @@ class SelectedPayment with ChangeNotifier {
   int seeds;
 
   void seedsDecrease() {
-    if (seeds > 0) {
-      seeds = seeds - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, seeds - 1);
   }
 
   void seedsIncrease() {
@@ -329,10 +372,7 @@ class SelectedPayment with ChangeNotifier {
   int auroraiData;
 
   void auroraiDataDecrease() {
-    if (auroraiData > 0) {
-      auroraiData = auroraiData - 1;
-      notifyListeners();
-    }
+    _setResorceById(1, auroraiData - 1);
   }
 
   void auroraiDataIncrease() {
@@ -481,6 +521,8 @@ class SelectedPayment with ChangeNotifier {
       graphene: graphene,
       kuiperAsteroids: 0,
       spireScience: 0,
+      corruption: 0,
+      plants: 0,
     );
   }
 

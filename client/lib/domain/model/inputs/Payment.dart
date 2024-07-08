@@ -57,6 +57,9 @@ class Payment {
   // Asteroids is a Kuiper Cooperative resource that pays for aquifer and asteroid standard projects.
   final int kuiperAsteroids;
 
+  final int corruption;
+  final int plants;
+
   const Payment({
     required this.megaCredits,
     required this.heat,
@@ -70,6 +73,8 @@ class Payment {
     required this.graphene,
     required this.kuiperAsteroids,
     required this.spireScience,
+    required this.corruption,
+    required this.plants,
   });
   static const Payment EMPTY = Payment(
     megaCredits: 0,
@@ -84,6 +89,8 @@ class Payment {
     graphene: 0,
     kuiperAsteroids: 0,
     spireScience: 0,
+    corruption: 0,
+    plants: 0,
   );
 
   factory Payment.fromJson({required json}) {
@@ -100,6 +107,8 @@ class Payment {
       graphene: json['graphene'] ?? 0,
       kuiperAsteroids: json['kuiperAsteroids'] ?? 0,
       spireScience: json['spireScience'] ?? 0,
+      corruption: json['corruption'] ?? 0,
+      plants: json['plants'] ?? 0,
     );
   }
 
@@ -116,6 +125,8 @@ class Payment {
         'graphene': graphene,
         'kuiperAsteroids': kuiperAsteroids,
         'spireScience': spireScience,
+        'corruption': corruption,
+        'plants': plants,
       };
 }
 
@@ -155,11 +166,68 @@ class PaymentInfo {
 
   static const int seedsValue = 5;
   static const int auroraiData = 1;
+  static const int heat = 1;
   static const int graphene = 4;
+  static const int kuiperAsteroids = 1;
+  static const int corruption = 10;
+  static const int plants = 3;
+
   PaymentInfo({
     required this.targetSum,
     required this.steelValue,
     required this.titaniumValue,
     required this.availablePayment,
   });
+}
+
+class PaymentOptions {
+  final bool heat;
+  final bool steel;
+  final bool titanium;
+  final bool plants;
+  final bool microbes;
+  final bool floaters;
+  final bool lunaArchivesScience;
+  final bool spireScience;
+  final bool seeds;
+  final bool auroraiData;
+  final bool graphene;
+  final bool kuiperAsteroids;
+  final bool corruption;
+  final bool lunaTradeFederationTitanium;
+  const PaymentOptions({
+    required this.heat,
+    required this.steel,
+    required this.titanium,
+    required this.plants,
+    required this.microbes,
+    required this.floaters,
+    required this.lunaArchivesScience,
+    required this.spireScience,
+    required this.seeds,
+    required this.auroraiData,
+    required this.graphene,
+    required this.kuiperAsteroids,
+    required this.corruption,
+    required this.lunaTradeFederationTitanium,
+  });
+
+  factory PaymentOptions.fromJson(Map<String, dynamic> json) {
+    return PaymentOptions(
+      heat: json['heat'] ?? false,
+      steel: json['steel'] ?? false,
+      titanium: json['titanium'] ?? false,
+      plants: json['plants'] ?? false,
+      microbes: json['microbes'] ?? false,
+      floaters: json['floaters'] ?? false,
+      lunaArchivesScience: json['lunaArchivesScience'] ?? false,
+      spireScience: json['spireScience'] ?? false,
+      seeds: json['seeds'] ?? false,
+      auroraiData: json['auroraiData'] ?? false,
+      graphene: json['graphene'] ?? false,
+      kuiperAsteroids: json['kuiperAsteroids'] ?? false,
+      corruption: json['corruption'] ?? false,
+      lunaTradeFederationTitanium: json['lunaTradeFederationTitanium'] ?? false,
+    );
+  }
 }

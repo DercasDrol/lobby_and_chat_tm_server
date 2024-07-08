@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/domain/chat_cubit.dart';
+import 'package:mars_flutter/domain/chat_state.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/lobby_state.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/common/stars_background.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/game_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/lobby_view/lobby_view.dart';
@@ -52,7 +55,8 @@ class MainLobbyScreen extends StatelessWidget {
                     buildWhen: (pState, state) {
                       final needGoToGame = lobbyCubit.needGoToGame;
                       if (needGoToGame) {
-                        context.go(GAME_ROUTE);
+                        context.go(localStorage.getItem(SELECTED_GAME_CLIENT) ??
+                            GAME_CLIENT_ROUTE);
                       }
                       return !needGoToGame;
                     },
@@ -82,12 +86,32 @@ class MainLobbyScreen extends StatelessWidget {
                             );
                     }),
                 SizedBox.fromSize(size: Size(10, 10)),
-                ChatView(
-                  gameChatCubit: gameChatCubit,
-                  generalChatCubit: generalChatCubit,
-                  width: 300,
-                  height: leftPartHeight,
-                ),
+                BlocBuilder<ChatCubit, ChatState>(
+                  bloc: gameChatCubit,
+                  buildWhen: (previous, current) =>
+                      previous.chatKey != current.chatKey &&
+                      [previous.chatKey, current.chatKey].contains(null),
+                  builder: (context, gameChatState) {
+                    return LobbyElementsTabs(
+                      width: 300,
+                      height: leftPartHeight,
+                      borderRadius: BorderRadius.zero,
+                      children: [
+                        if (gameChatState.chatKey != null)
+                          ChatView(
+                            cubit: gameChatCubit,
+                          ),
+                        ChatView(
+                          cubit: generalChatCubit,
+                        ),
+                      ],
+                      tabsNames: [
+                        if (gameChatState.chatKey != null) "Game Chat",
+                        "General Chat",
+                      ],
+                    );
+                  },
+                )
               ]),
             ),
           ),

@@ -29,27 +29,27 @@ class TagRowView extends StatelessWidget {
             .map(
               (tagInfo) => Column(children: [
                 Flexible(
-                  flex: 9,
+                  flex: 10,
                   child: Tooltip(
                     message: tagInfo.tag.toString(),
                     textStyle: TextStyle(fontSize: 16, color: Colors.white),
                     waitDuration: Duration(milliseconds: 500),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 1.0, top: 1.0, right: 1.0),
+                      padding: EdgeInsets.only(left: 0.5, top: 0.5, right: 0.5),
                       child: Stack(
                         children: [
                           Image.asset(
                             opacity: tagInfo.count > 0
                                 ? null
                                 : AlwaysStoppedAnimation(.3),
+                            height: height * 0.50,
                             tagInfo.tag.toImagePath() ?? Assets.tags.wild.path,
                           ),
                           tagInfo.discont > 0
                               ? CostView(
                                   cost: -tagInfo.discont,
-                                  width: height * 0.3,
-                                  height: height * 0.3,
-                                  fontSize: height * 0.25,
+                                  width: height * 0.31,
+                                  height: height * 0.31,
                                   multiplier: false,
                                   useGreyMode: false,
                                   useShadow: true,
@@ -63,11 +63,13 @@ class TagRowView extends StatelessWidget {
                 Flexible(
                   flex: 6,
                   child: tagInfo.count > 0
-                      ? Text(
-                          tagInfo.count.toString(),
-                          textAlign: TextAlign.center,
-                          style: MAIN_TEXT_STYLE,
-                        )
+                      ? Padding(
+                          padding: EdgeInsets.only(bottom: 2.0),
+                          child: Text(
+                            tagInfo.count.toString(),
+                            textAlign: TextAlign.center,
+                            style: MAIN_TEXT_STYLE,
+                          ))
                       : SizedBox.shrink(),
                 ),
               ]),

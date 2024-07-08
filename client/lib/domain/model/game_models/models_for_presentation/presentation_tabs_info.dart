@@ -84,6 +84,7 @@ class PresentationTabsInfo extends Equatable {
   final PresentationTabInfo? leftTabInfo;
   final List<TagInfo>? tagsDiscounts;
   final int? allCardsDiscount;
+  final bool? useEmptyTabView;
 
   final void Function()? Function(UserActionInfo)? getOnConfirmButtonFn;
 
@@ -105,6 +106,7 @@ class PresentationTabsInfo extends Equatable {
     this.rightTabInfo,
     this.midleTabInfo,
     this.leftTabInfo,
+    this.useEmptyTabView,
   });
 
   bool get onlyOneTabWithOptions =>
@@ -126,5 +128,6 @@ class PresentationTabsInfo extends Equatable {
         leftTabInfo,
         tagsDiscounts,
         allCardsDiscount,
+        useEmptyTabView,
       ];
 }

@@ -220,7 +220,6 @@ class MaView extends StatelessWidget {
                                               _getCostForActedMa(e.playerColor),
                                           width: 30,
                                           height: 30,
-                                          fontSize: 30 * 0.65,
                                           multiplier: false,
                                           useGreyMode: false,
                                         ),

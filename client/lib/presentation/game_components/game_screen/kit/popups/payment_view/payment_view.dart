@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
@@ -52,11 +54,13 @@ class ButtonWithPayment extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 50 +
-                      buttonLabel.length * 9.5 +
-                      ((selectedPayment?.currentSum ?? counters) == null
-                          ? 0
-                          : 40),
+                  width: max(
+                      50 +
+                          buttonLabel.length * 9.5 +
+                          ((selectedPayment?.currentSum ?? counters) == null
+                              ? 0
+                              : 40),
+                      selectedPayment?.presentationInfos != null ? 160.0 : 0),
                   decoration: boxDecoration,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -85,7 +89,6 @@ class ButtonWithPayment extends StatelessWidget {
                                               cost: mkCounter.counter,
                                               width: 30.0,
                                               height: 30.0,
-                                              fontSize: 30.0 * 0.65,
                                               multiplier: false,
                                               useGreyMode: false,
                                             )

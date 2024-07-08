@@ -13,7 +13,7 @@ import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 
 class GameAPIClient {
   GameId _gameId = GameId.fromString("g6491874bdbcc"); //use for debug only
-  // static const String _lobbyServerPath = "http://localhost:3000/";
+
   static const String serverPath = "${GAME_SERVER_HOST}/";
 
   String _getPathWithId(RequestPath requestPath) =>
@@ -34,13 +34,6 @@ class GameAPIClient {
       RequestPath.API_GAME.toString() +
       "?id=" +
       (_gameId.id ?? "");
-  static const _headers = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-  };
 
   Future<ViewModel> downloadAndParseGameStateJson(
     ParticipantId participantId,
@@ -48,8 +41,7 @@ class GameAPIClient {
     final path =
         participantId.runtimeType == PlayerId ? _playerPath : _spectatorPath;
 
-    final response = await http.get(Uri.parse(path + (participantId.id ?? '')),
-        headers: _headers);
+    final response = await http.get(Uri.parse(path + (participantId.id ?? '')));
     if (response.statusCode == 200) {
       return ViewModel.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
@@ -59,16 +51,13 @@ class GameAPIClient {
   }
 
   //use for debug only
-  Future<SimpleGameModel> downloadAndParseAdminGameInfoJson() async {
-    final response = await http.get(
-      Uri.parse(this._gameInfoPath),
-      headers: _headers,
-    );
+  Future<SimpleGameModel?> downloadAndParseAdminGameInfoJson() async {
+    final response = await http.get(Uri.parse(this._gameInfoPath));
     if (response.statusCode == 200) {
       return SimpleGameModel.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } else {
-      throw Exception('Failed to load json');
+      return null;
     }
   }
 
@@ -83,7 +72,6 @@ class GameAPIClient {
         Uri.parse(
           this._playerInputPath + (participantId.id ?? ''),
         ),
-        headers: _headers,
         body: jsonEncode(inputResponse.toJson()));
     if (response.statusCode == 200) {
       return ViewModel.fromJson(
@@ -109,7 +97,6 @@ class GameAPIClient {
               "&undoCount=" +
               undoCount.toString(),
         ),
-        headers: _headers,
       );
 
       logger.d("debug: ${response.statusCode}");
@@ -140,7 +127,6 @@ class GameAPIClient {
               "&generation=" +
               generation.toString(),
         ),
-        headers: _headers,
       );
 
       logger.d("debug: ${response.statusCode}");

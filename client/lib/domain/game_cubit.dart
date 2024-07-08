@@ -28,10 +28,10 @@ class GameCubit extends Cubit<GameState> {
   Future<void> fetch() async {
     logger.d("debug: fetch()");
     try {
-      final SimpleGameModel gameModel =
-          await repository.downloadAndParseAdminGameInfoJson();
+      //final SimpleGameModel? gameModel =
+      //    await repository.downloadAndParseAdminGameInfoJson();
       emit(GameState.success(
-          this.state.viewModel, gameModel, this.state.participantId));
+          this.state.viewModel, null, this.state.participantId));
       if (this.state.participantId != null) {
         final ViewModel viewModel = await repository
             .downloadAndParseGameStateJson(this.state.participantId!);
@@ -48,7 +48,7 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  void setParticipant(ParticipantId participantId) {
+  void setParticipant(ParticipantId? participantId) {
     logger.d("debug: setParticipant(ParticipantId)");
     emit(GameState.success(
         this.state.viewModel, this.state.gameInfo, participantId));
@@ -82,7 +82,8 @@ class GameCubit extends Cubit<GameState> {
   ) async {
     logger.d("this.state.participantId");
     logger.d(this.state.participantId);
-    if (participantId != this.state.participantId) return;
+    if (participantId != this.state.participantId ||
+        this.state.participantId?.id == null) return;
     try {
       final WaitingForModelResult? waitingForModelResult =
           await repository.sendWaitingFor(gameAge, undoCount, participantId);

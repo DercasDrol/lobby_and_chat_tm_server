@@ -8,11 +8,13 @@ class CardTooltip extends StatelessWidget {
   final CardName cardName;
   final int? cardResourceCount;
   final Widget child;
+  final double sizeMultiplier;
   const CardTooltip({
     super.key,
     required this.cardName,
     this.cardResourceCount,
     required this.child,
+    required this.sizeMultiplier,
   });
 
   @override
@@ -22,10 +24,10 @@ class CardTooltip extends StatelessWidget {
       backgroundColor: const Color.fromARGB(0, 0, 0, 0),
       waitDuration: Duration(milliseconds: 400),
       content: SizedBox(
-        width: CARD_WIDTH * 1.1,
-        height: CARD_HEIGHT * 1.1,
+        width: CARD_WIDTH * sizeMultiplier,
+        height: CARD_HEIGHT * sizeMultiplier,
         child: CardView(
-          sizeRatio: 1.1,
+          sizeRatio: sizeMultiplier,
           card: ClientCard.fromCardName(cardName),
           resourcesCount: cardResourceCount,
           isDeactivated: false,

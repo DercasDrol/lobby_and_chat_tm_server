@@ -44,6 +44,7 @@ class CardNameView extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: FontFamily.prototype,
+                  fontSize: height * 0.8,
                 ),
               ),
             ),

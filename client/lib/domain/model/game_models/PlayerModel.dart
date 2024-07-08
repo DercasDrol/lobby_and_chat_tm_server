@@ -25,6 +25,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/pr
 
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
+import 'package:mars_flutter/domain/model/inputs/SelectInitialCards.dart';
 import 'package:mars_flutter/domain/model/ma/AwardName.dart';
 import 'package:mars_flutter/domain/model/ma/MilestoneName.dart';
 
@@ -51,18 +52,23 @@ class ViewModel extends Equatable {
       thisPlayer == null ? null : thisPlayer!.color;
 
   factory ViewModel.fromJson(Map<String, dynamic> json) {
-    return ParticipantId.fromString(json['id']).runtimeType == PlayerId
-        ? PlayerViewModel.fromJson(json)
-        : ViewModel(
-            game: GameModel.fromJson(json['game']),
-            players: (json['players'] as List)
-                .map((player) => PublicPlayerModel.fromJson(player))
-                .toList(),
-            id: ParticipantId.fromString(json['id']),
-            thisPlayer: json['thisPlayer'] != null
-                ? PublicPlayerModel.fromJson(json['thisPlayer'])
-                : null,
-          );
+    try {
+      return ParticipantId.fromString(json['id']).runtimeType == PlayerId
+          ? PlayerViewModel.fromJson(json)
+          : ViewModel(
+              game: GameModel.fromJson(json['game']),
+              players: (json['players'] as List)
+                  .map((player) => PublicPlayerModel.fromJson(player))
+                  .toList(),
+              id: ParticipantId.fromString(json['id']),
+              thisPlayer: json['thisPlayer'] != null
+                  ? PublicPlayerModel.fromJson(json['thisPlayer'])
+                  : null,
+            );
+    } catch (e) {
+      logger.d("ViewModel.fromJson: $e");
+      rethrow;
+    }
   }
 
   ActionLabel _getActionLabel(PublicPlayerModel player) {
@@ -451,6 +457,9 @@ final class PublicPlayerModel extends Equatable {
         victoryPointsBreakdown,
         victoryPointsByGeneration,
       ];
+  List<CardModel> get corps => tableau
+      .where((card) => ClientCard.fromCardName(card.name).isCorp)
+      .toList();
 }
 /** A player's view of the game, including their secret information. */
 
@@ -516,7 +525,7 @@ class PlayerViewModel extends ViewModel {
           .map((e) => CardModel.fromJson(e as Map<String, dynamic>))
           .cast<CardModel>()
           .toList(),
-      draftedCorporations: (json['draftedCorporations'])
+      draftedCorporations: (json['draftedCorporations'] ?? [])
           .map((e) => CardModel.fromJson(e as Map<String, dynamic>))
           .cast<CardModel>()
           .toList(),
@@ -568,7 +577,8 @@ class PlayerViewModel extends ViewModel {
         ? this.waitingFor!.inputModelCardsToSelect()
         : null;
     if (!this._isInitialGameStage && inputModelCardsToSelect != null ||
-        (this.game.phase == Phase.DRAFTING && this.draftedCards.isNotEmpty)) {
+        (this.game.phase == Phase.DRAFTING && this.draftedCards.isNotEmpty) ||
+        this.game.phase == Phase.PRELUDES && inputModelCardsToSelect != null) {
       final int minCards = inputModelCardsToSelect?.min ?? 1;
       final int maxCards = inputModelCardsToSelect?.max ?? 1;
       return PresentationTabsInfo(
@@ -772,25 +782,29 @@ class PlayerViewModel extends ViewModel {
   PresentationTabsInfo? _getInitialChoiceTabsInfo(
       Future<void> Function(InputResponse) sendPlayerAction) {
     if (this._isInitialGameStage) {
+      final bool isPreludeAvailable =
+          (this._availableInitialPreludeCards ?? []).isNotEmpty;
       return PresentationTabsInfo(
         rightTabInfo: PresentationTabInfo(
-          tabTitle: 'Select initial cards to buy',
+          tabTitle: SelectInitialCards.SELECT_PROJECTS_TITLE.toString(),
           cards: this._availableInitialCards ?? [],
           minCards: 0,
           maxCards: (this._availableInitialCards ?? []).length,
         ),
         leftTabInfo: PresentationTabInfo(
-          tabTitle: 'Select corporation',
+          tabTitle: SelectInitialCards.SELECT_CORPORATION_TITLE.toString(),
           cards: this._availableInitialCorpCards ?? [],
           minCards: 1,
           maxCards: 1,
         ),
-        midleTabInfo: PresentationTabInfo(
-          tabTitle: 'Select 2 Prelude cards',
-          cards: this._availableInitialPreludeCards ?? [],
-          minCards: 2,
-          maxCards: 2,
-        ),
+        midleTabInfo: isPreludeAvailable
+            ? PresentationTabInfo(
+                tabTitle: SelectInitialCards.SELECT_PRELUDE_TITLE.toString(),
+                cards: this._availableInitialPreludeCards ?? [],
+                minCards: 2,
+                maxCards: 2,
+              )
+            : null,
         playerColor: this.thisPlayer.color,
         getMegacreditsCounters: (actionInfo) {
           final ClientCard? corp = actionInfo.leftTabCards.length > 0
@@ -823,7 +837,8 @@ class PlayerViewModel extends ViewModel {
         },
         getOnConfirmButtonFn: (actionInfo) {
           if (actionInfo.leftTabCards.length > 0 &&
-              (actionInfo.midleTabCards?.length ?? 2) == 2) {
+              (!isPreludeAvailable ||
+                  (actionInfo.midleTabCards?.length ?? 2) == 2)) {
             return () {
               final InputResponse? resp = this
                   .waitingFor!
@@ -836,12 +851,14 @@ class PlayerViewModel extends ViewModel {
             return null;
           }
         },
-        getConfirmButtonText: (actionInfo) => actionInfo.tabIndex ==
-                    (actionInfo.midleTabCards == null ? 1 : 2) &&
-                actionInfo.leftTabCards.length > 0 &&
-                (actionInfo.midleTabCards?.length ?? 2) == 2
-            ? "Start Game with ${actionInfo.rightTabCards.length.toString()} project cards"
-            : null,
+        getConfirmButtonText: (actionInfo) {
+          return actionInfo.tabIndex == (!isPreludeAvailable ? 1 : 2) &&
+                  actionInfo.leftTabCards.length > 0 &&
+                  (!isPreludeAvailable ||
+                      (actionInfo.midleTabCards?.length ?? 2) == 2)
+              ? "Start Game with ${actionInfo.rightTabCards.length.toString()} project cards"
+              : null;
+        },
       );
     } else {
       return null;
@@ -953,14 +970,15 @@ class PlayerViewModel extends ViewModel {
   PaymentInfo _getPaymentModelByCard(
       CardModel card, PlayerInputModel inputModelProjectCardsToPlay) {
     final List<Tag> tags = ClientCard.fromCardName(card.name).tags;
-    final bool canUseHeat = inputModelProjectCardsToPlay.canUseHeat ?? false;
+    final bool canUseHeat = this.waitingFor?.paymentOptions?.heat ?? false;
     final bool canUseSteel = tags.contains(Tag.BUILDING) ||
         this.thisPlayer.lastCardPlayed == CardName.LAST_RESORT_INGENUITY;
     final bool canUseTitanium = tags.contains(Tag.SPACE) ||
         this.thisPlayer.lastCardPlayed == CardName.LAST_RESORT_INGENUITY;
 
-    final bool canUseLunaTradeFederationTitanium =
-        inputModelProjectCardsToPlay.canUseLunaTradeFederationTitanium ?? false;
+    final bool canUseLunaTradeFederationTitanium = inputModelProjectCardsToPlay
+            .paymentOptions?.lunaTradeFederationTitanium ??
+        false;
     final int? microbes = inputModelProjectCardsToPlay.microbes;
     final bool canUseMicrobes = microbes != null && tags.contains(Tag.PLANT);
     final int? floaters = inputModelProjectCardsToPlay.floaters;
@@ -1003,6 +1021,7 @@ class PlayerViewModel extends ViewModel {
         auroraiData: 0, //I'm not sure where it may be used
         graphene: canUseGraphene ? graphene : 0,
         kuiperAsteroids: canUseAsteroids ? kuiperAsteroids : 0,
+        corruption: 0, plants: 0,
       ),
     );
   }
@@ -1296,13 +1315,13 @@ class PlayerViewModel extends ViewModel {
                 titaniumValue: thisPlayer.titaniumValue,
                 availablePayment: Payment(
                   megaCredits: thisPlayer.megaCredits,
-                  heat: this.waitingFor?.canUseHeat ?? false
+                  heat: this.waitingFor?.paymentOptions?.heat ?? false
                       ? thisPlayer.heat
                       : 0,
-                  steel: this.waitingFor?.canUseSteel ?? false
+                  steel: this.waitingFor?.paymentOptions?.steel ?? false
                       ? thisPlayer.steel
                       : 0,
-                  titanium: this.waitingFor?.canUseTitanium ?? false
+                  titanium: this.waitingFor?.paymentOptions?.titanium ?? false
                       ? thisPlayer.titanium
                       : 0,
                   microbes: this.waitingFor?.microbes ?? 0,
@@ -1314,6 +1333,8 @@ class PlayerViewModel extends ViewModel {
                   graphene: this.waitingFor?.graphene ?? 0,
                   kuiperAsteroids: this.waitingFor?.kuiperAsteroids ?? 0,
                   spireScience: this.waitingFor?.spireScience ?? 0,
+                  corruption: 0,
+                  plants: 0,
                 ),
               ),
               getOnConfirmButtonFn: (actionInfo) {
@@ -1331,7 +1352,8 @@ class PlayerViewModel extends ViewModel {
               getConfirmButtonText: (actionInfo) =>
                   this.waitingFor?.buttonLabel ?? "Pay",
               rightTabInfo: PresentationTabInfo(
-                  tabTitle: this.waitingFor?.title?.message ?? "Pay"),
+                  tabTitle: this.waitingFor?.title?.toString() ?? "Pay"),
               playerColor: thisPlayer.color,
+              useEmptyTabView: true,
             );
 }

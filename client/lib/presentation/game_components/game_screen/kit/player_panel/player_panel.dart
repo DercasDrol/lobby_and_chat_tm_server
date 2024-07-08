@@ -24,6 +24,7 @@ class PlayerPanelView extends StatelessWidget {
   final double topPopupPadding;
   final double bottomPopupPadding;
   final PresentationPlayerPanelInfo playerPanelInfo;
+  //onNameClick used for switching between players for dev purposes. With auth system it is not working anymore
   final void Function() onNameClick;
 
   const PlayerPanelView({
@@ -130,31 +131,8 @@ class PlayerPanelView extends StatelessWidget {
     );
   }
 
-  CardModel? _getCorporation() {
-    final cards = playerPanelInfo.playerState.tableau;
-    return cards.length > 0
-        ? cards.first
-        : null; //We expect that corporation card is the first card in the tableau, because it is the first card that is played
-  }
-
   _prepareNameBlock() {
-    CardModel? corp = _getCorporation();
-    final corpView = FittedBox(
-      child: TextButton(
-        style: TextButton.styleFrom(
-          minimumSize: Size.zero,
-          padding: EdgeInsets.zero,
-        ),
-        onPressed: onNameClick,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.0),
-          child: Text(
-            _getCorporation()?.name.toString() ?? ' ',
-            style: MAIN_TEXT_STYLE,
-          ),
-        ),
-      ),
-    );
+    List<CardModel> corps = playerPanelInfo.playerState.corps;
     return Container(
       width: _nameBoxWidth,
       height: height,
@@ -162,7 +140,7 @@ class PlayerPanelView extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            flex: 12,
+            flex: 12 ~/ (corps.length > 0 ? corps.length : 1),
             child: Padding(
               padding: EdgeInsets.only(
                   left: playerPanelInfo.showFirstMark ? height * 0.5 : 0.0),
@@ -176,13 +154,24 @@ class PlayerPanelView extends StatelessWidget {
           ),
           Expanded(
             flex: 10,
-            child: corp == null
-                ? corpView
-                : CardTooltip(
-                    cardName: corp.name,
-                    cardResourceCount: corp.resources,
-                    child: corpView,
-                  ),
+            child: FittedBox(
+              child: Column(
+                children: corps
+                    .map((corp) => CardTooltip(
+                          cardName: corp.name,
+                          cardResourceCount: corp.resources,
+                          sizeMultiplier: corps.length > 1 ? 1.5 : 1.1,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 6.0),
+                            child: Text(
+                              corp.name.toString(),
+                              style: MAIN_TEXT_STYLE,
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
           ),
         ],
       ),

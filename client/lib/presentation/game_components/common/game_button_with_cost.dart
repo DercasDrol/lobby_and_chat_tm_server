@@ -25,7 +25,6 @@ class GameButtonWithCost extends StatelessWidget {
                   cost: counter!,
                   width: iconSize,
                   height: iconSize,
-                  fontSize: iconSize * 0.65,
                   multiplier: false,
                   useGreyMode: false,
                 ),

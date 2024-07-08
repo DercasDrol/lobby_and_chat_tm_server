@@ -21,18 +21,11 @@ import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
 //This is a info about what can to do player in current game state
 class PlayerInputModel {
   int? amount;
-  List<SpaceId>? availableSpaces;
-  bool? canUseHeat;
-  bool? canUseGraphene;
-  bool? canUseAsteroids;
-  bool? canUseSteel;
-  bool? canUseTitanium;
-  bool? canUseSeeds;
-  bool? canUseData;
-  bool? canUseLunaTradeFederationTitanium;
+  List<SpaceId>? spaces;
   List<CardModel>? cards;
   PlayerInputType type;
   List<PlayerInputModel>? options;
+  PaymentOptions? paymentOptions;
   int? min;
   int? max;
   bool? maxByDefault;
@@ -60,14 +53,8 @@ class PlayerInputModel {
 
   PlayerInputModel({
     this.amount,
-    this.availableSpaces,
-    this.canUseHeat,
-    this.canUseGraphene,
-    this.canUseSteel,
-    this.canUseTitanium,
-    this.canUseSeeds,
-    this.canUseData,
-    this.canUseLunaTradeFederationTitanium,
+    this.spaces,
+    this.paymentOptions,
     this.cards,
     required this.type,
     this.options,
@@ -101,20 +88,16 @@ class PlayerInputModel {
   static fromJson(Map<String, dynamic> json) {
     return PlayerInputModel(
       amount: json['amount'] as int?,
-      availableSpaces: json['availableSpaces'] == null
+      spaces: json['spaces'] == null
           ? null
-          : json['availableSpaces']
+          : json['spaces']
               .map((e) => SpaceId.fromString(e as String))
               .cast<SpaceId>()
               .toList(),
-      canUseHeat: json['canUseHeat'] as bool?,
-      canUseGraphene: json['canUseGraphene'] as bool?,
-      canUseSteel: json['canUseSteel'] as bool?,
-      canUseTitanium: json['canUseTitanium'] as bool?,
-      canUseSeeds: json['canUseSeeds'] as bool?,
-      canUseData: json['canUseData'] as bool?,
-      canUseLunaTradeFederationTitanium:
-          json['canUseLunaTradeFederationTitanium'] as bool?,
+      paymentOptions: json['paymentOptions'] == null
+          ? null
+          : PaymentOptions.fromJson(
+              json['paymentOptions'] as Map<String, dynamic>),
       cards: json['cards'] == null
           ? null
           : json['cards']
@@ -568,15 +551,24 @@ class PlayerInputModel {
 
 /*end StandartProjects block */
 
-  PlayerInputModel? inputModelCardsToSelect() =>
-      _findInputModelByInputType(this, PlayerInputType.CARD, false, "Select");
+  PlayerInputModel? inputModelCardsToSelect() {
+    final regularCards =
+        _findInputModelByInputType(this, PlayerInputType.CARD, false, "Select");
+    final preludeMergerCorporationCards = _findInputModelByInputType(
+        this, PlayerInputType.CARD, false, "Choose corporation card to play");
+    return regularCards ?? preludeMergerCorporationCards;
+  }
 
   InputResponse? getInputResponseSelectedCards(List<CardName> cards) =>
       _inputResponseByPlayerInputModel(
         inputModel: this,
         cards: cards,
-        isTargetInputModelFn:
-            _getCheckModelFn(this, PlayerInputType.CARD, false, "Select"),
+        isTargetInputModelFn: (PlayerInputModel inputModel) =>
+            _getCheckModelFn(this, PlayerInputType.CARD, false, "Select")
+                .call(inputModel) ||
+            _getCheckModelFn(this, PlayerInputType.CARD, false,
+                    "Choose corporation card to play")
+                .call(inputModel),
       );
 
   PlayerInputModel? getInputModelActions() =>
@@ -619,7 +611,7 @@ class PlayerInputModel {
 
   List<SpaceId>? getAvailableSpaces(String? title) =>
       _findInputModelByInputType(this, PlayerInputType.SPACE, false, title)
-          ?.availableSpaces;
+          ?.spaces;
 
   InputResponse? getInputResponseSpace(SpaceId spaceId, String? title) =>
       _inputResponseByPlayerInputModel(

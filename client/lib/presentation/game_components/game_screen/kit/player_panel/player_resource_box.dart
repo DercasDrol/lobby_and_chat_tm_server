@@ -69,7 +69,6 @@ class PlayerResourceView extends StatelessWidget {
             cost: cost!,
             width: height * 0.3,
             height: height * 0.3,
-            fontSize: height * 0.25,
             multiplier: false,
             useGreyMode: false,
             useShadow: true,

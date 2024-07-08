@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mars_flutter/common/log.dart';
-import 'package:mars_flutter/data/api/chat/chat_api_client.dart';
-import 'package:mars_flutter/data/api/game/game_api_client.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
+import 'package:mars_flutter/domain/chat_cubit.dart';
+import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/logs_cubit.dart';
 import 'package:mars_flutter/domain/logs_state.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
@@ -16,37 +16,31 @@ import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 import 'package:mars_flutter/presentation/game_components/common/stars_background.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/generation.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/global_parameter_scale.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/logs_panel/logs_panel.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/left_expanded_panel/left_expanded_panel.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_tabs/ma_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/planet_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/player_panel.dart';
 import 'package:mars_flutter/presentation/game_components/common/show_popup_with_error.dart';
 
 class GameScreen extends StatelessWidget {
-  final GameAPIClient marsRepository;
-  final ParticipantId participantId;
+  final LobbyCubit lobbyCubit;
+  final ChatCubit gameChatCubit;
+  final ChatCubit generalChatCubit;
+  final LogsCubit logsCubit;
+  final GameCubit gameCubit;
+
   const GameScreen({
     super.key,
-    required this.marsRepository,
-    required ChatAPIClient chatRepository,
-    required this.participantId,
+    required this.lobbyCubit,
+    required this.gameChatCubit,
+    required this.generalChatCubit,
+    required this.logsCubit,
+    required this.gameCubit,
   });
 
   @override
   Widget build(BuildContext context) {
-    final LogsCubit logsCubit = LogsCubit(
-      repository: marsRepository,
-    );
-    final GameCubit gameCubit = GameCubit(
-      repository: marsRepository,
-      additionalOnChangeFn: (
-        List<PublicPlayerModel>? players,
-        int generation,
-        ParticipantId participantId,
-      ) =>
-          logsCubit.getGameLogs(players, generation, participantId),
-    )..setParticipant(participantId);
-
+    gameCubit.setParticipant(lobbyCubit.participantId);
     final PresentationPlanetInfoCN planetInfo =
         PresentationPlanetInfoCN(spaceModels: []);
     return Scaffold(
@@ -57,7 +51,10 @@ class GameScreen extends StatelessWidget {
                   context: context,
                   planetInfoCN: planetInfo,
                   state: gameState,
+                  lobbyCubit: lobbyCubit,
                   logsCubit: logsCubit,
+                  gameChatCubit: gameChatCubit,
+                  generalChatCubit: generalChatCubit,
                   sendPlayerAction: gameCubit.sendPlayerAction,
                   tryChangeActiveParticipant:
                       gameCubit.tryChangeActiveParticipant,
@@ -72,6 +69,9 @@ class ScreenBuilder extends StatelessWidget {
   final BuildContext context;
   final PresentationPlanetInfoCN planetInfoCN;
   final LogsCubit logsCubit;
+  final ChatCubit gameChatCubit;
+  final ChatCubit generalChatCubit;
+  final LobbyCubit lobbyCubit;
   final GameState state;
   final Future<void> Function(InputResponse) sendPlayerAction;
 
@@ -86,12 +86,15 @@ class ScreenBuilder extends StatelessWidget {
     required this.sendPlayerAction,
     required this.tryChangeActiveParticipant,
     required this.fetch,
+    required this.gameChatCubit,
+    required this.generalChatCubit,
+    required this.lobbyCubit,
   });
   static const double _globalParameterScaleWidth = 35.0;
   static const double _globalParameterScaleHeight = 500.0;
   static const double _topPanelMaxHeight = 135.0;
 
-  static const double _playerBoardHeight = 50;
+  static const double _playerBoardHeight = 51;
 
   Widget _preparePlayerBoards(
     BuildContext context,
@@ -321,11 +324,14 @@ class ScreenBuilder extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: LogsPanel(
+                    child: LeftExpandedPanel(
                       logsCubit: logsCubit,
                       topPadding: _topPanelMaxHeight,
                       bottomPadding: _playerBoardHeight *
                           (state.viewModel!.players.length + 1),
+                      gameChatCubit: gameChatCubit,
+                      generalChatCubit: generalChatCubit,
+                      lobbyCubit: lobbyCubit,
                     ),
                   ),
                 ],

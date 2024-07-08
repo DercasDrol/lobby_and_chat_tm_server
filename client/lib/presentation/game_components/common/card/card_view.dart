@@ -46,9 +46,6 @@ class CardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (card.name == CardName.ANUBIS_SECURITIES) {
-      logger.d('Advanced Ecosystems');
-    }
     final double cadr_width = CARD_WIDTH * (sizeRatio ?? 1);
     final double card_height = CARD_HEIGHT * (sizeRatio ?? 1);
     final double _kCardPadding = 6 * (sizeRatio ?? 1);
@@ -94,7 +91,6 @@ class CardView extends StatelessWidget {
           : CostView(
               height: card_height * 0.15,
               width: card_height * 0.15,
-              fontSize: _kCardPadding * 3.9,
               cost: card.cost!,
               multiplier: false,
               useGreyMode: isDeactivated,
@@ -165,9 +161,9 @@ class CardView extends StatelessWidget {
           : Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(cadr_width * 0.048),
                   child: ModuleIconView(
-                    iconRadius: 14.0,
+                    iconRadius: cadr_width * 0.07,
                     module: card.module,
                   )));
 
