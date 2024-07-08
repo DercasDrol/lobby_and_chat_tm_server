@@ -1,5 +1,10 @@
 package utils
 
+import (
+	"net/http"
+	"time"
+)
+
 func DeleteSliceStringElement(s []string, element string) []string {
 	index := -1
 	for k, v := range s {
@@ -46,4 +51,9 @@ func ContainsString(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func ListenAndServe(addr string, handler http.Handler) error {
+	server := &http.Server{Addr: addr, Handler: handler, ReadTimeout: time.Minute, WriteTimeout: time.Minute}
+	return server.ListenAndServe()
 }

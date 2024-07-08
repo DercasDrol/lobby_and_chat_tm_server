@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mars-go-service/internal/config"
 	"mars-go-service/internal/db"
+	"mars-go-service/internal/utils"
 
 	"mars-go-service/internal/logger"
 	"net/http"
@@ -172,7 +173,7 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 	httpServeMux.HandleFunc(*conf.AuthServerConfig.OAuthCallbackEndpoint, httpOAuthEndpointHandler)
 
 	log.I("Serving at %v", *conf.AuthServerConfig.Port)
-	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", *conf.AuthServerConfig.Port), session.SessionManager.LoadAndSave(httpServeMux)))
+	log.E("%v", utils.ListenAndServe(fmt.Sprintf(":%v", *conf.AuthServerConfig.Port), session.SessionManager.LoadAndSave(httpServeMux)))
 
 	return nil
 }

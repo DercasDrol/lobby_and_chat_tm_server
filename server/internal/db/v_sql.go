@@ -12,6 +12,7 @@ var (
 	sql_version_updaters = []func(*pgxpool.Pool) error{
 		vSQL_1,
 		vSQL_2,
+		vSQLAfterUpdate,
 	}
 )
 
@@ -206,6 +207,9 @@ func vSQL_1(dbpool *pgxpool.Pool) error {
 		return err
 	}
 	_, err = dbpool.Exec(context.Background(), "UPDATE db_version SET version = 1")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -218,6 +222,21 @@ func vSQL_2(dbpool *pgxpool.Pool) error {
 	_, err := dbpool.Exec(context.Background(), `INSERT INTO public.game_servers (url, name) VALUES ($1, 'Main');`, host)
 	if err != nil {
 		return err
+	}
+	_, err = dbpool.Exec(context.Background(), "UPDATE db_version SET version = 2")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func vSQLAfterUpdate(dbpool *pgxpool.Pool) error {
+	GAME_SERVER_HOST := os.Getenv("GAME_SERVER_HOST")
+	if GAME_SERVER_HOST != "" {
+		_, err := dbpool.Exec(context.Background(), `update public.game_servers set url = $1 where name = 'Main');`, GAME_SERVER_HOST)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

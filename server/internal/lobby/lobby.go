@@ -6,6 +6,7 @@ import (
 	"mars-go-service/internal/config"
 	"mars-go-service/internal/db"
 	"mars-go-service/internal/logger"
+	"mars-go-service/internal/utils"
 	"net/http"
 	"runtime/debug"
 	"sync"
@@ -358,6 +359,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	}()
 	defer socketServer.Close()
 	httpServeMux := http.NewServeMux()
+
 	httpServeMux.HandleFunc("/socket.io/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*") //*conf.AuthServerConfig.Host)
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -367,7 +369,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	})
 
 	log.I("Serving at %v", *conf.LobbyServerConfig.Port)
-	log.E("%v", http.ListenAndServe(fmt.Sprintf(":%v", *conf.LobbyServerConfig.Port), httpServeMux))
+	log.E("%v", utils.ListenAndServe(fmt.Sprintf(":%v", *conf.LobbyServerConfig.Port), httpServeMux))
 
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 	"mars-go-service/internal/db"
 	lobby "mars-go-service/internal/lobby"
 	"mars-go-service/internal/logger"
+	utils "mars-go-service/internal/utils"
 	"net/http"
 	"os"
 	"os/signal"
@@ -60,7 +61,7 @@ func main() {
 
 	go func() {
 		http.Handle("/", http.FileServer(http.Dir("./web")))
-		http.ListenAndServe(":8080", nil)
+		utils.ListenAndServe(":8080", nil)
 	}()
 
 	err = StartAuthService(conf, *pConf.Auth.JwtSecret, authConf)
