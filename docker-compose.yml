@@ -5,6 +5,7 @@ networks:
 
 volumes:
   postgres:
+  tm-db:
 
 services:
   postgres:
@@ -12,7 +13,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_MULTIPLE_DATABASES: ${DB_NAME}, ${GAME_DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
@@ -24,6 +25,27 @@ services:
       retries: 3
       start_period: 60s
     restart: unless-stopped
+
+  terraforming-mars:
+    container_name: dercasdrol/tm-web-game-server:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${GAME_DB_NAME}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=intranet"
+      - "traefik.http.routers.tm-auth-lobby-chat.rule=Host(`${GAME_SERVER_HOST}`) || Host(`www.${GAME_SERVER_HOST}`)"
+      - "traefik.http.routers.tm-auth-lobby-chat.entrypoints=websecure"
+      - "traefik.http.services.tm-auth-lobby-chat.loadbalancer.server.port=8081"
+      - "traefik.http.routers.tm-auth-lobby-chat.service=tm-auth-lobby-chat"
+      - "traefik.http.routers.tm-auth-lobby-chat.tls.certresolver=letsencrypt"
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - tm-db:/usr/src/app/db
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   tm-auth-lobby-chat:
     build: .
@@ -49,8 +71,8 @@ services:
       DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
       AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT: ${AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT}
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}

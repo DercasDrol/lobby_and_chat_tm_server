@@ -8,6 +8,7 @@ import (
 	"mars-go-service/internal/utils"
 	"math/rand"
 	"net/http"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -123,9 +124,12 @@ func getChangedGameFromRow(row pgx.Row) (*LobbyGame, error) {
 	return lobbyGame, nil
 }
 
-func getSimpleGameModel(serverUrl string, lobbyGame *LobbyGame) (*SimpleGameModel, error) {
-
-	requestURL := fmt.Sprintf("%vgame", serverUrl)
+func getSimpleGameModel(host string, lobbyGame *LobbyGame) (*SimpleGameModel, error) {
+	protocol := "https://"
+	if strings.HasPrefix(host, "localhost:") {
+		protocol = "http://"
+	}
+	requestURL := fmt.Sprintf("%vgame", protocol+host+"/")
 
 	newGameCongigJson, err := json.Marshal(lobbyGame.NewGameConfig)
 	if err != nil {

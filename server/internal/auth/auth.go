@@ -68,6 +68,16 @@ func onLoginSocketHandler(so socketio.Conn) {
 	so.Emit("auth_url", link)
 }
 
+func onGameServerSocketHandler(so socketio.Conn) {
+	log.D("game_server")
+	host, err := db.GetMainGameServer()
+	if err != nil {
+		log.E("Error getting main game server: %v", err)
+		return
+	}
+	so.Emit("game_server", host)
+}
+
 func onDisconnectSocketHandler(so socketio.Conn, reason string) {
 	delete(connsState.ConnIdToRequestMap, so.ID())
 	delete(connsState.ConnIdToConnMap, so.ID())
@@ -151,6 +161,7 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 
 	socketServer.OnConnect("/", onConnectSocketHandler)
 	socketServer.OnEvent("/", "login", onLoginSocketHandler)
+	socketServer.OnEvent("/", "game_server", onGameServerSocketHandler)
 	socketServer.OnDisconnect("/", onDisconnectSocketHandler)
 	socketServer.OnError("/", onErrorSocketHandler)
 

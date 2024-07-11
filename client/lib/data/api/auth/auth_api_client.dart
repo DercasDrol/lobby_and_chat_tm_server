@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:mars_flutter/common/log.dart';
@@ -6,6 +8,8 @@ import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/data/storage.dart';
 
 class AuthAPIClient {
+  static final Completer<String> _gameServerFutureCompleter = new Completer();
+  final Future<String> gameServer = _gameServerFutureCompleter.future;
   final ValueNotifier<String?> jwt = ValueNotifier(null);
   final ValueNotifier<String?> authUrl = ValueNotifier(null);
   final _socket = getNewSocketInstance(AUTH_PORT);
@@ -17,6 +21,12 @@ class AuthAPIClient {
     _socket.on('connect', (_) {
       logger.d('trying to login');
       _socket.emit('login');
+      loadGameServer();
+    });
+
+    _socket.on('game_server', (gameServer) {
+      logger.d('LobbyAPIClient game_server: $gameServer');
+      _gameServerFutureCompleter.complete(gameServer);
     });
 
     _socket.on('error', (err) {
@@ -49,6 +59,11 @@ class AuthAPIClient {
     _socket.dispose();
     jwt.dispose();
     authUrl.dispose();
+  }
+
+  void loadGameServer() {
+    logger.d("loadGameServer");
+    _socket.emit('game_server');
   }
 
   void checkJwtInStorage() async {

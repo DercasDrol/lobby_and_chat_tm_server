@@ -4,6 +4,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
+import 'package:mars_flutter/domain/repositories.dart';
+import 'package:mars_flutter/presentation/core/common_future_widget.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/cards_view/cards_view.dart';
 import 'package:mars_flutter/presentation/game_components/cards_screen/kit/iframe_cards_view.dart';
@@ -76,7 +78,10 @@ class CardsScreen extends StatelessWidget {
                         ),
                       ]);
                     },
-                    child: IframeCardsView(),
+                    child: CommonFutureWidget<String>(
+                      future: Repositories.game.host,
+                      getContentView: (host) => IframeCardsView(host: host),
+                    ),
                   );
                 },
                 child: CardsView(

@@ -5,6 +5,8 @@ import 'package:mars_flutter/domain/chat_cubit.dart';
 import 'package:mars_flutter/domain/chat_state.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
+import 'package:mars_flutter/domain/repositories.dart';
+import 'package:mars_flutter/presentation/core/common_future_widget.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_menu_buttons_block.dart';
@@ -84,68 +86,71 @@ class IframeGameScreen extends StatelessWidget {
             },
           );
           return ValueListenableBuilder(
-            valueListenable: expandedVN,
-            builder: (context, expanded, child) {
-              if (expanded) {
-                newMessagesCountVN.value = 0;
-              }
-              return Stack(children: [
-                AnimatedSlide(
-                  offset: Offset(
-                      expanded
-                          ? 0.0
-                          : -(chatWidth - buttonWidth + 1) / chatWidth,
-                      0),
-                  duration: delay,
-                  child: ValueListenableBuilder(
-                    valueListenable: newMessagesCountVN,
-                    builder: (context, newMessagesCount, child) {
-                      return LeftExpandedPanelForIframeGameClient(
-                        width: chatWidth,
-                        child: chatTabsView,
-                        height: constraints.maxHeight,
-                        goToLobbyButtonHeight: goToLobbyButtonHeight,
-                        onExpandClick: () =>
-                            expandedVN.value = !expandedVN.value,
-                        buttonWidth: buttonWidth,
-                        expanded: expanded,
-                        counter: newMessagesCount,
-                        connectionIndicator: ConnectionIndicator(
-                          lobbyRepository: lobbyCubit.lobbyRepository,
-                          chatRepository: gameChatCubit.chatRepository,
-                        ),
-                        menuButtonsBlock: GameMenuButtonsBlock(
+              valueListenable: expandedVN,
+              builder: (context, expanded, child) {
+                if (expanded) {
+                  newMessagesCountVN.value = 0;
+                }
+                return Stack(children: [
+                  AnimatedSlide(
+                    offset: Offset(
+                        expanded
+                            ? 0.0
+                            : -(chatWidth - buttonWidth + 1) / chatWidth,
+                        0),
+                    duration: delay,
+                    child: ValueListenableBuilder(
+                      valueListenable: newMessagesCountVN,
+                      builder: (context, newMessagesCount, child) {
+                        return LeftExpandedPanelForIframeGameClient(
                           width: chatWidth,
-                          height: goToLobbyButtonHeight,
-                          lobbyCubit: lobbyCubit,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Row(children: [
-                  AnimatedSize(
-                    duration: delay,
-                    child: Container(
-                      width: expanded ? chatWidth + buttonWidth : buttonWidth,
-                      height: constraints.maxHeight,
+                          child: chatTabsView,
+                          height: constraints.maxHeight,
+                          goToLobbyButtonHeight: goToLobbyButtonHeight,
+                          onExpandClick: () =>
+                              expandedVN.value = !expandedVN.value,
+                          buttonWidth: buttonWidth,
+                          expanded: expanded,
+                          counter: newMessagesCount,
+                          connectionIndicator: ConnectionIndicator(
+                            lobbyRepository: lobbyCubit.lobbyRepository,
+                            chatRepository: gameChatCubit.chatRepository,
+                          ),
+                          menuButtonsBlock: GameMenuButtonsBlock(
+                            width: chatWidth,
+                            height: goToLobbyButtonHeight,
+                            lobbyCubit: lobbyCubit,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  AnimatedSize(
-                    duration: delay,
-                    child: Container(
-                      child: child,
-                      width: expanded
-                          ? constraints.maxWidth - chatWidth - buttonWidth
-                          : constraints.maxWidth - buttonWidth,
-                      height: constraints.maxHeight,
+                  Row(children: [
+                    AnimatedSize(
+                      duration: delay,
+                      child: Container(
+                        width: expanded ? chatWidth + buttonWidth : buttonWidth,
+                        height: constraints.maxHeight,
+                      ),
                     ),
-                  ),
-                ])
-              ]);
-            },
-            child: IframeGameView(participantId: participantId),
-          );
+                    AnimatedSize(
+                      duration: delay,
+                      child: Container(
+                        child: child,
+                        width: expanded
+                            ? constraints.maxWidth - chatWidth - buttonWidth
+                            : constraints.maxWidth - buttonWidth,
+                        height: constraints.maxHeight,
+                      ),
+                    ),
+                  ])
+                ]);
+              },
+              child: CommonFutureWidget<String>(
+                future: Repositories.game.host,
+                getContentView: (gameServer) => IframeGameView(
+                    participantId: participantId, targetServerUrl: gameServer),
+              ));
         }),
       ),
     );

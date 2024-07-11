@@ -145,6 +145,23 @@ func InsertNewGameSettings(userId string, newGameConfig string) (*LobbyGame, err
 	return joinGame(userId, lobbyGameId, dbpool)
 }
 
+func GetMainGameServer() (*string, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `SELECT url FROM game_servers WHERE name = 'Main' LIMIT 1;`
+	var url string
+	err = dbpool.QueryRow(context.Background(), query).Scan(&url)
+	if err != nil {
+		log.E("SELECT FROM game_servers failed: %v\n", err)
+		return nil, err
+	}
+	return &url, nil
+}
+
 func updateNewGameSettings(userId string, lobbyGameToUpdate LobbyGame, dbpool *pgxpool.Pool) (*LobbyGame, error) {
 	query := `
 		UPDATE games
@@ -315,7 +332,7 @@ func StartGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		log.E("startGameHandler userId %v != lobbyGame.UserIdCreatedBy %v", userId, lobbyGame.UserIdCreatedBy)
 		return nil, fmt.Errorf("startGameHandler userId %v != lobbyGame.UserIdCreatedBy %v", userId, lobbyGame.UserIdCreatedBy)
 	}
-	serverUrl, err := getServerUrl(lobbyGameId, dbpool)
+	serverUrl, err := getGameServerUrl(lobbyGameId, dbpool)
 	if err != nil {
 		log.E("startGameHandler db.getServerUrl error: %v", err)
 		return nil, err
@@ -468,7 +485,7 @@ func ChangePlayerColor(lobbyGame *LobbyGame, userId string) (*LobbyGame, error) 
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
-func getServerUrl(lobbyGameId string, dbpool *pgxpool.Pool) (string, error) {
+func getGameServerUrl(lobbyGameId string, dbpool *pgxpool.Pool) (string, error) {
 
 	query := `
 		SELECT game_servers.url

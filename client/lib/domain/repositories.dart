@@ -7,5 +7,5 @@ class Repositories {
   static final AuthAPIClient auth = AuthAPIClient();
   static final ChatAPIClient chat = ChatAPIClient(auth.jwt);
   static final LobbyAPIClient lobby = LobbyAPIClient(auth.jwt);
-  static final GameAPIClient game = GameAPIClient();
+  static final GameAPIClient game = GameAPIClient(host: auth.gameServer);
 }

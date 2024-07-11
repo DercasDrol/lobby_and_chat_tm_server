@@ -9,7 +9,6 @@ import 'package:mars_flutter/domain/game_state.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
 import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
-import 'package:mars_flutter/domain/model/game_models/SimpleGameModel.dart';
 import 'package:mars_flutter/domain/model/game_models/WaitingForModel.dart';
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 

@@ -15,6 +15,7 @@ class LobbyAPIClient {
   String? _userId = null;
   String? get userId => _userId;
   final ValueNotifier<String?> jwt;
+
   final ValueNotifier<bool> isLobbyConnectionOk = ValueNotifier(false);
   void Function(Map<int, LobbyGame>)? _onNewGamesSubscriber = null;
   void Function(int)? _onDeleteGameSubscriber = null;
