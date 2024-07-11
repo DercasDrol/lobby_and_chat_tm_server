@@ -5,6 +5,7 @@ networks:
 
 volumes:
   postgres:
+  postgres-tm:
   tm-db:
 
 services:
@@ -13,7 +14,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_MULTIPLE_DATABASES: ${DB_NAME}, ${GAME_DB_NAME}
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
@@ -26,27 +27,52 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  postgres-tm:
+    image: postgres:15.6
+    volumes:
+      - postgres-tm:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${GAME_DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - intranet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${GAME_DB_NAME}", "-U", "${DB_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
   terraforming-mars:
     image:  dercasdrol/tm-web-game-server:latest
     container_name: terraforming-mars
     restart: unless-stopped
     environment:
-      POSTGRES_HOST: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${GAME_DB_NAME}
+      POSTGRES_HOST: postgres://${DB_USER}:${DB_PASSWORD}@postgres-tm:${DB_PORT}/${GAME_DB_NAME}
+      NODE_ENV: production
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=intranet"
-      - "traefik.http.routers.tm-auth-lobby-chat.rule=Host(`${GAME_SERVER_HOST}`) || Host(`www.${GAME_SERVER_HOST}`)"
-      - "traefik.http.routers.tm-auth-lobby-chat.entrypoints=websecure"
-      - "traefik.http.services.tm-auth-lobby-chat.loadbalancer.server.port=8081"
-      - "traefik.http.routers.tm-auth-lobby-chat.service=tm-auth-lobby-chat"
-      - "traefik.http.routers.tm-auth-lobby-chat.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.terraforming-mars.rule=Host(`${GAME_SERVER_HOST}`) || Host(`www.${GAME_SERVER_HOST}`)"
+      - "traefik.http.routers.terraforming-mars.entrypoints=websecure"
+      - "traefik.http.services.terraforming-mars.loadbalancer.server.port=8081"
+      - "traefik.http.routers.terraforming-mars.service=terraforming-mars"
+      - "traefik.http.routers.terraforming-mars.tls.certresolver=letsencrypt"
+      - "traefik.http.services.terraforming-mars.loadbalancer.server.scheme=http"
     security_opt:
       - no-new-privileges:true
+    networks:
+      - intranet
     volumes:
       - tm-db:/usr/src/app/db
     depends_on:
-      postgres:
+      postgres-tm:
         condition: service_healthy
+    logging:
+      options:
+        max-size: 10m
 
   tm-auth-lobby-chat:
     build: .
@@ -72,7 +98,7 @@ services:
       DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
       AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT: ${AUTH_SERVER_OAUTH_CALLBACK_ENDPOINT}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: postgres
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}

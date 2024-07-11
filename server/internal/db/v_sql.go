@@ -214,7 +214,7 @@ func vSQL_1(dbpool *pgxpool.Pool) error {
 }
 
 func vSQL_2(dbpool *pgxpool.Pool) error {
-	host := "terraforming-mars.herokuapp.com"
+	host := "tm.fan-side-of-mars.ovh"
 	GAME_SERVER_HOST := os.Getenv("GAME_SERVER_HOST")
 	if GAME_SERVER_HOST != "" {
 		host = GAME_SERVER_HOST
@@ -238,6 +238,7 @@ func vSQLAfterUpdate(dbpool *pgxpool.Pool) error {
 		if err != nil {
 			return err
 		}
+		log.D("GameServer updated on %v", GAME_SERVER_HOST)
 	}
 	return nil
 }
