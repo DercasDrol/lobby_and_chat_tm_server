@@ -17,17 +17,16 @@ class AuthAPIClient {
   AuthAPIClient() {
     logger.d('AuthApiClient init');
     checkJwtInStorage();
-
     _socket.on('connect', (_) {
       logger.d('trying to login');
       _socket.emit('login');
-      loadGameServer();
     });
 
     _socket.on('game_server', (gameServer) {
       logger.d('LobbyAPIClient game_server: $gameServer');
       _gameServerFutureCompleter.complete(gameServer);
     });
+    loadGameServer();
 
     _socket.on('error', (err) {
       logger.d('AuthAPIClient onError:$err');
