@@ -27,7 +27,8 @@ services:
     restart: unless-stopped
 
   terraforming-mars:
-    container_name: dercasdrol/tm-web-game-server:latest
+    image:  dercasdrol/tm-web-game-server:latest
+    container_name: terraforming-mars
     restart: unless-stopped
     environment:
       POSTGRES_HOST: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${GAME_DB_NAME}

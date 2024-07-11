@@ -234,7 +234,7 @@ func vSQLAfterUpdate(dbpool *pgxpool.Pool) error {
 	//initialy I wanted use several game servers, but now I use only one, so I need to update it each time when it is changed
 	GAME_SERVER_HOST := os.Getenv("GAME_SERVER_HOST")
 	if GAME_SERVER_HOST != "" {
-		_, err := dbpool.Exec(context.Background(), `update public.game_servers set url = $1 where name = 'Main');`, GAME_SERVER_HOST)
+		_, err := dbpool.Exec(context.Background(), `update public.game_servers set url = $1 where name = 'Main';`, GAME_SERVER_HOST)
 		if err != nil {
 			return err
 		}
