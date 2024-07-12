@@ -181,6 +181,20 @@ func InitServer(conf *config.AppConfig, jwtSec string, authConf *oauth2.Config) 
 
 		socketServer.ServeHTTP(w, r)
 	})
+	httpServeMux.HandleFunc("/game_server/", func(w http.ResponseWriter, r *http.Request) {
+		log.D("game_server requested")
+		// origin to excape Cross-Origin Resource Sharing (CORS)
+		w.Header().Set("Access-Control-Allow-Origin", "*") //*conf.AuthServerConfig.Host)
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Authorization, Content-Type, Content-Length, X-CSRF-Token, Token, session, Origin, Host, Connection, Accept-Encoding, Accept-Language, X-Requested-With")
+		host, err := db.GetMainGameServer()
+		if err != nil {
+			log.E("Error getting main game server: %v", err)
+			return
+		}
+		w.Write([]byte(*host))
+	})
 	httpServeMux.HandleFunc(*conf.AuthServerConfig.OAuthCallbackEndpoint, httpOAuthEndpointHandler)
 
 	log.I("Serving at %v", *conf.AuthServerConfig.Port)

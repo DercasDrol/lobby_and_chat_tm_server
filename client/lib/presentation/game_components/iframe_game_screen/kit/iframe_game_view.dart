@@ -22,7 +22,7 @@ class IframeGameView extends StatelessWidget {
     )..loadRequest(
         LoadRequestParams(
           uri: Uri.parse(
-              '$targetServerUrl$serverHandler?id=${participantId.toString()}'),
+              '$targetServerUrl/$serverHandler?id=${participantId.toString()}'),
         ),
       );
     return PlatformWebViewWidget(

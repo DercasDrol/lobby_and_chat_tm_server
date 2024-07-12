@@ -148,8 +148,14 @@ class IframeGameScreen extends StatelessWidget {
               },
               child: CommonFutureWidget<String>(
                 future: Repositories.game.host,
-                getContentView: (gameServer) => IframeGameView(
-                    participantId: participantId, targetServerUrl: gameServer),
+                getContentView: (gameServer) {
+                  final protocol = gameServer.startsWith("localhost")
+                      ? "http://"
+                      : "https://";
+                  return IframeGameView(
+                      participantId: participantId,
+                      targetServerUrl: protocol + gameServer);
+                },
               ));
         }),
       ),
