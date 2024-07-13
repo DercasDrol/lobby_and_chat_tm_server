@@ -62,7 +62,7 @@ class PanelButton extends StatelessWidget {
   Widget build(BuildContext context) {
     //without this timer popup will crash app. Looks like it happen because context is not ready yet
     if ((callOnClickAutomatically ?? false) && onClick != null) {
-      Timer(Duration(milliseconds: 30), () {
+      Timer(Duration(milliseconds: 100), () {
         onClick!();
       });
     }

@@ -44,7 +44,7 @@ class _BorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class _MarsViewState extends State<MarsView> {
@@ -191,6 +191,83 @@ class _MarsViewState extends State<MarsView> {
     }).toList();
   }
 
+  late final Widget _marsView;
+  @override
+  void initState() {
+    _marsView = Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+            maxWidth: MarsView._marsSize,
+            maxHeight: MarsView._marsSize,
+          ),
+          child: Image.asset(
+            Assets.board.marsHd.path,
+          ),
+        ),
+        ListenableBuilder(
+            listenable: widget.planetInfoCN,
+            builder: (context, child) {
+              final List<SpaceModel> spaceModels =
+                  widget.planetInfoCN.spaceModels;
+              final List<SpaceId>? availableSpaces =
+                  widget.planetInfoCN.availableSpaces;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  Stack(
+                    children: [..._prepareTilesOutsidePlanet(spaceModels)],
+                  ),
+                  HexagonGrid.pointy(
+                    depth: 4,
+                    width: MarsView._marsSize * 0.98,
+                    buildTile: (coordinates) {
+                      final int serverCoordinateR = coordinates.r + 4;
+                      final int serverCoordinateQ = coordinates.q +
+                          4 +
+                          (serverCoordinateR > 4 ? serverCoordinateR - 4 : 0);
+                      final SpaceModel spaceModel = spaceModels.firstWhere(
+                        (element) =>
+                            element.x == serverCoordinateQ &&
+                            element.y == serverCoordinateR,
+                      );
+                      final bool useAnimation = availableSpaces?.any((e) =>
+                              e.id == spaceModel.id.id && e.id != null) ??
+                          false;
+                      return HexagonWidgetBuilder(
+                        padding: 1.0,
+                        color: Color.fromARGB(0, 255, 213, 0),
+                        child: HexagonWidget(
+                          height: MarsView._tileHeightSize,
+                          inBounds: false,
+                          color: Color.fromARGB(0, 255, 213, 0),
+                          type: HexagonType.POINTY,
+                          child: HexagonBuilder(
+                            children: [
+                              _prepareTileColorDecorator(
+                                  spaceModel, useAnimation),
+                              _prepareBonusView(spaceModel),
+                              _preparePlayedTileView(spaceModel),
+                            ],
+                            useAnimation: useAnimation,
+                            onClick: () => widget.planetInfoCN.onConfirm
+                                ?.call(spaceModel.id),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            })
+      ],
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double delay = 200.0;
@@ -245,87 +322,7 @@ class _MarsViewState extends State<MarsView> {
                   width: MarsView._marsSize * _sizeMultiplier,
                   height: MarsView._marsSize * _sizeMultiplier,
                   duration: Duration(milliseconds: 3000),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                          minWidth: 0,
-                          minHeight: 0,
-                          maxWidth: MarsView._marsSize,
-                          maxHeight: MarsView._marsSize,
-                        ),
-                        child: Image.asset(
-                          Assets.board.marsHd.path,
-                        ),
-                      ),
-                      ListenableBuilder(
-                          listenable: widget.planetInfoCN,
-                          builder: (context, child) {
-                            final List<SpaceModel> spaceModels =
-                                widget.planetInfoCN.spaceModels;
-                            final List<SpaceId>? availableSpaces =
-                                widget.planetInfoCN.availableSpaces;
-                            return Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Stack(
-                                  children: [
-                                    ..._prepareTilesOutsidePlanet(spaceModels)
-                                  ],
-                                ),
-                                HexagonGrid.pointy(
-                                  depth: 4,
-                                  width: MarsView._marsSize * 0.98,
-                                  buildTile: (coordinates) {
-                                    final int serverCoordinateR =
-                                        coordinates.r + 4;
-                                    final int serverCoordinateQ =
-                                        coordinates.q +
-                                            4 +
-                                            (serverCoordinateR > 4
-                                                ? serverCoordinateR - 4
-                                                : 0);
-                                    final SpaceModel spaceModel =
-                                        spaceModels.firstWhere(
-                                      (element) =>
-                                          element.x == serverCoordinateQ &&
-                                          element.y == serverCoordinateR,
-                                    );
-                                    final bool useAnimation =
-                                        availableSpaces?.any((e) =>
-                                                e.id == spaceModel.id.id &&
-                                                e.id != null) ??
-                                            false;
-                                    return HexagonWidgetBuilder(
-                                      padding: 1.0,
-                                      color: Color.fromARGB(0, 255, 213, 0),
-                                      child: HexagonWidget(
-                                        height: MarsView._tileHeightSize,
-                                        inBounds: false,
-                                        color: Color.fromARGB(0, 255, 213, 0),
-                                        type: HexagonType.POINTY,
-                                        child: HexagonBuilder(
-                                          children: [
-                                            _prepareTileColorDecorator(
-                                                spaceModel, useAnimation),
-                                            _prepareBonusView(spaceModel),
-                                            _preparePlayedTileView(spaceModel),
-                                          ],
-                                          useAnimation: useAnimation,
-                                          onClick: () => widget
-                                              .planetInfoCN.onConfirm
-                                              ?.call(spaceModel.id),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          })
-                    ],
-                  ),
+                  child: _marsView,
                 )
               ],
             );
