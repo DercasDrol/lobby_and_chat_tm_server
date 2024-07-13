@@ -34,6 +34,11 @@ class GameMenuButtonsBlock extends StatelessWidget {
           text: 'Change client',
           onPressed: () {
             final cClient = localStorage.getItem(SELECTED_GAME_CLIENT);
+            localStorage.setItem(
+                SELECTED_GAME_CLIENT,
+                cClient == GAME_CLIENT_ROUTE
+                    ? NEW_GAME_CLIENT_ROUTE
+                    : GAME_CLIENT_ROUTE);
             context.go(cClient == GAME_CLIENT_ROUTE
                 ? NEW_GAME_CLIENT_ROUTE
                 : GAME_CLIENT_ROUTE);

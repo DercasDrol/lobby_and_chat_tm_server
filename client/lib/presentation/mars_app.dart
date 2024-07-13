@@ -69,7 +69,6 @@ class MarsApp extends StatelessWidget {
             GoRoute(
                 path: 'game_client',
                 builder: (BuildContext context, GoRouterState state) {
-                  localStorage.setItem(SELECTED_GAME_CLIENT, GAME_CLIENT_ROUTE);
                   return BlocBuilder<LobbyCubit, LobbyState>(
                     bloc: lobbyCubit,
                     builder: (context, state) {
@@ -89,10 +88,15 @@ class MarsApp extends StatelessWidget {
             GoRoute(
                 path: 'new_game_client',
                 builder: (BuildContext context, GoRouterState state) {
-                  localStorage.setItem(
-                      SELECTED_GAME_CLIENT, NEW_GAME_CLIENT_ROUTE);
                   return BlocBuilder<LobbyCubit, LobbyState>(
                     bloc: lobbyCubit,
+                    buildWhen: (previous, current) {
+                      return current.gameIdToAction != null &&
+                          current.playersList != null &&
+                          current.gamesList != null &&
+                          (current.gameActionType?.isGoToGame ?? false) &&
+                          current.hashCode != previous.hashCode;
+                    },
                     builder: (context, state) {
                       if (lobbyCubit.needGoToGame) {
                         return GameScreen(

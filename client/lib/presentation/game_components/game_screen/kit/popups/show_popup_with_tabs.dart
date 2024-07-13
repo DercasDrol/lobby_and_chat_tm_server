@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
+import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/payment_view/payment_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/selected_cards_model.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/container_with_tabs.dart';
@@ -75,7 +77,7 @@ void showPopupWithTabs({
                       ));
                       if (onConfirmFn != null) onConfirmFn();
                     }
-                    Navigator.of(context).pop();
+                    PopupsRegistr.closePopup("showPopupWithTabs");
                   },
                   counters:
                       tabsInfo.getMegacreditsCounters?.call(UserActionInfo(
@@ -138,6 +140,8 @@ void showPopupWithTabs({
       barrierColor: Colors.black54,
       context: context,
       builder: (BuildContext context) {
+        PopupsRegistr.registerPopupDisposer(
+            "showPopupWithTabs", () => Navigator.of(context).pop());
         return Disposer(
           dispose: () {
             rightTabSelectedCards.dispose();

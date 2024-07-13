@@ -13,6 +13,7 @@ import 'package:mars_flutter/domain/game_cubit.dart';
 import 'package:mars_flutter/domain/game_state.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_planet_info.dart';
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
+import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
 import 'package:mars_flutter/presentation/game_components/common/stars_background.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/generation.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/global_parameter_scale.dart';
@@ -47,6 +48,9 @@ class GameScreen extends StatelessWidget {
       body: Container(
         child: BlocBuilder<GameCubit, GameState>(
             bloc: gameCubit,
+            buildWhen: (previous, current) =>
+                previous.status != current.status ||
+                previous.viewModel != current.viewModel,
             builder: (context, gameState) => ScreenBuilder(
                   context: context,
                   planetInfoCN: planetInfo,
@@ -265,7 +269,7 @@ class ScreenBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logger.d("Debug: game screen build");
-    Navigator.of(this.context).popUntil((route) => route.isActive);
+    PopupsRegistr.closeAllPopups();
     final getGameView = (
       bool isApiOk,
       PresentationPlanetInfoCN? planetInfoCN,
