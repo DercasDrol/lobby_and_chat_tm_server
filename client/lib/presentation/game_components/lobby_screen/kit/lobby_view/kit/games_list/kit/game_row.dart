@@ -106,10 +106,9 @@ class GameRow extends StatelessWidget {
                 SizedBox(
                     width: 79.0,
                     child: game.isDead
-                        ? Flexible(
-                            child: Text('Game is Dead',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.red)))
+                        ? Text('Game is Dead',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.red))
                         : game.isPlayerCanJoin || game.isStarted
                             ? BottomButton(
                                 text: !game.isStarted

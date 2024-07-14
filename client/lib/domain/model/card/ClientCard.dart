@@ -58,7 +58,7 @@ class ClientCard {
                     ];
       final List<CardRequirementDescriptor> requirements =
           value['requirements'] == null ||
-                  value['requirements'].runtimeType != List
+                  value['requirements'].runtimeType != [].runtimeType
               ? []
               : value['requirements']
                   .map((e) => CardRequirementDescriptor.fromJson(e))
