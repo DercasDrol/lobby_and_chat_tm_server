@@ -9,6 +9,7 @@ import 'package:mars_flutter/data/colony_metadata_parser.dart';
 import 'package:mars_flutter/data/ma_parser.dart';
 
 import 'package:mars_flutter/presentation/core/bloc_observer.dart';
+import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
 
 import 'package:mars_flutter/presentation/mars_app.dart';
 
@@ -20,5 +21,6 @@ void main() async {
   ClientCardsParser.parse();
   ColonyMetadataParser.parse();
   MilestoneAwardParser.parse();
+  PopupsRegistr.runPopupRegistr();
   runApp(MarsApp());
 }

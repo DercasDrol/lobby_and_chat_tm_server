@@ -136,25 +136,28 @@ void showPopupWithTabs({
     );
   }
 
-  showDialog(
-      barrierColor: Colors.black54,
-      context: context,
-      builder: (BuildContext context) {
-        PopupsRegistr.registerPopupDisposer(
-            "showPopupWithTabs", () => Navigator.of(context).pop());
-        return Disposer(
-          dispose: () {
-            rightTabSelectedCards.dispose();
-            leftTabSelectedCards.dispose();
-            midleTabSelectedCards.dispose();
-            selectedTab.dispose();
-            rightTabSelectedOption.dispose();
-          },
-          child: LayoutBuilder(
-            builder: (context, BoxConstraints constraints) {
-              return _getContainerWithTabs(constraints);
+  PopupsRegistr.registerPopupToShow("showPopupWithTabs", () {
+    showDialog(
+        barrierColor: Colors.black54,
+        context: context,
+        builder: (BuildContext context) {
+          PopupsRegistr.registerPopupDisposer(
+              "showPopupWithTabs", () => Navigator.of(context).pop());
+          return Disposer(
+            dispose: () {
+              rightTabSelectedCards.dispose();
+              leftTabSelectedCards.dispose();
+              midleTabSelectedCards.dispose();
+              selectedTab.dispose();
+              rightTabSelectedOption.dispose();
+              PopupsRegistr.unregisterPopupDisposer("showPopupWithTabs");
             },
-          ),
-        );
-      });
+            child: LayoutBuilder(
+              builder: (context, BoxConstraints constraints) {
+                return _getContainerWithTabs(constraints);
+              },
+            ),
+          );
+        });
+  });
 }
