@@ -28,7 +28,10 @@ class GameMenuButtonsBlock extends StatelessWidget {
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         BottomButton(
           text: 'Go to lobby',
-          onPressed: lobbyCubit.closeGameSession,
+          onPressed: () {
+            lobbyCubit.closeGameSession();
+            context.go(LOBBY_ROUTE);
+          },
         ),
         BottomButton(
           text: 'Change client',
