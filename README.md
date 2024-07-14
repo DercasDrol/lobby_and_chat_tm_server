@@ -1,6 +1,6 @@
 # <a name="README"> Lobby and Chat for the Terraforming Mars Open-source.
 
-This is extension for this application  - https://github.com/terraforming-mars/terraforming-mars, which allow you to find opponents to play with and communicate with them. (Perhaps an alternative game client will appear later.)
+This is extension for this application  - https://github.com/terraforming-mars/terraforming-mars, which allow you to find opponents to play with and communicate with them and use alternative game client (it is in development stage and doesn't allow to use some extensions).
 
 ## How it works.
 Main menu of this app repeat design and functionality of the main app (https://github.com/terraforming-mars/terraforming-mars) except of the couple of moments:
@@ -13,8 +13,7 @@ Main menu of this app repeat design and functionality of the main app (https://g
 
 ## How to try it.
 
-1) There's a instance available at https://fan-side-of-mars.ovh/. It uses  https://terraforming-mars.herokuapp.com/ as game server and game client.
-NOTE: this repo uses cached cards.json, colonies.json files to show cards\colonies in the filter section. If anything related change on the main app side you will see outdated info there. It is also possible that the API for the game creation would be changed on the main app side, this may lead to problems on this app side.
+1) There's a instance available at https://fan-side-of-mars.ovh/. It uses  https://tm.fan-side-of-mars.ovh/ (it uses forked repository from https://github.com/terraforming-mars/terraforming-mars to avoid API changes) as game server and one of the game client.
 
 2) Using a docker image. This repository is automatically compiled into docker image - [dercasdrol/new-tm-web-client](https://hub.docker.com/repository/docker/dercasdrol/new-tm-web-client/general).
 If you have installed Docker app and "docker compose" extension you need to pull this repo, create file .env (see example.env) according to your target config, and call "docker compose up" from a folder with this repo.
