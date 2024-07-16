@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/card/CardName.dart';
 import 'package:mars_flutter/domain/model/card/CardType.dart';
@@ -150,7 +149,8 @@ class CardView extends StatelessWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: CardBody(
-            card: card,
+            elementsSizeMultiplicator: card.name.elementsSizeMultiplicator,
+            metadata: card.metadata,
             height: card_height - (card_height * 0.35),
             width: cadr_width - 24,
           ),

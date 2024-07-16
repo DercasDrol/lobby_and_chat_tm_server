@@ -9,6 +9,8 @@ import 'package:mars_flutter/domain/model/card/CardType.dart';
 import 'package:mars_flutter/domain/model/card/ClientCard.dart';
 import 'package:mars_flutter/domain/model/card/GameModule.dart';
 import 'package:mars_flutter/domain/model/card/Tag.dart';
+import 'package:mars_flutter/domain/model/turmoil/globalEvents/ClientGlobalEvent.dart';
+import 'package:mars_flutter/domain/model/turmoil/globalEvents/GlobalEventName.dart';
 import 'package:mars_flutter/presentation/core/common_future_widget.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/core/widget_size.dart';
@@ -16,6 +18,7 @@ import 'package:mars_flutter/presentation/game_components/common/cards_view/kit/
 import 'package:mars_flutter/presentation/game_components/common/cards_view/kit/modules_filter_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/cards_view/kit/tags_filter_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/card_view.dart';
+import 'package:mars_flutter/presentation/game_components/common/global_event/event_view.dart';
 
 class CardsView extends StatelessWidget {
   final Future<Map<CardName, ClientCard>> cardsF;
@@ -217,6 +220,30 @@ class CardsView extends StatelessWidget {
             (a, b) => a.name.toString().compareTo(b.name.toString()),
           );
 
+    Widget getEventsGrid(constraints) {
+      const double cardWidth = EVENT_WIDTH * 1.05;
+      final int crossAxisCount0 = (constraints.maxWidth - 40) / cardWidth ~/ 1;
+      final int crossAxisCount = crossAxisCount0 < 1 ? 1 : crossAxisCount0;
+      final List<GlobalEventName> eventNames = GlobalEventName.values.toList()
+        ..sort((a, b) => a.toString().compareTo(b.toString()));
+      return SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent: EVENT_HEIGHT + 20,
+          crossAxisCount: crossAxisCount,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final event = ClientGlobalEvent.fromEventName(eventNames[index]);
+
+            return EventView(
+              event: event,
+            );
+          },
+          childCount: eventNames.length,
+        ),
+      );
+    }
+
     Widget getContentView(Map<CardName, ClientCard> allCards) {
       return LayoutBuilder(builder: (context, constraints) {
         headerHeightN.value = 2300.0;
@@ -240,32 +267,34 @@ class CardsView extends StatelessWidget {
                 ),
               ),
               ValueListenableBuilder<List<Tag>>(
-                  valueListenable: selectedTagsN,
-                  builder: (context, selectedTags, child) {
-                    return ValueListenableBuilder<List<CardType>>(
-                        valueListenable: selectedTypesN,
-                        builder: (context, selectedTypes, child) {
-                          return ValueListenableBuilder<List<GameModule>>(
-                              valueListenable: selectedModulesN,
-                              builder: (context, selectedModules, child) {
-                                return ValueListenableBuilder<String?>(
-                                    valueListenable: textFilterN,
-                                    builder: (context, textFilter, child) {
-                                      final filteredCards = filterCards(
-                                        allCards,
-                                        selectedTypes,
-                                        selectedModules,
-                                        selectedTags,
-                                        textFilter,
-                                      );
-                                      return getCardsGrid(
-                                        filteredCards,
-                                        constraints,
-                                      );
-                                    });
-                              });
-                        });
-                  })
+                valueListenable: selectedTagsN,
+                builder: (context, selectedTags, child) {
+                  return ValueListenableBuilder<List<CardType>>(
+                      valueListenable: selectedTypesN,
+                      builder: (context, selectedTypes, child) {
+                        return ValueListenableBuilder<List<GameModule>>(
+                            valueListenable: selectedModulesN,
+                            builder: (context, selectedModules, child) {
+                              return ValueListenableBuilder<String?>(
+                                  valueListenable: textFilterN,
+                                  builder: (context, textFilter, child) {
+                                    final filteredCards = filterCards(
+                                      allCards,
+                                      selectedTypes,
+                                      selectedModules,
+                                      selectedTags,
+                                      textFilter,
+                                    );
+                                    return getCardsGrid(
+                                      filteredCards,
+                                      constraints,
+                                    );
+                                  });
+                            });
+                      });
+                },
+              ),
+              getEventsGrid(constraints),
             ]),
           ),
         );

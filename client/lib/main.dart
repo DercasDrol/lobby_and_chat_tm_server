@@ -5,6 +5,7 @@ import 'package:localstorage/localstorage.dart';
 
 import 'package:mars_flutter/data/client_cards_parser.dart';
 import 'package:mars_flutter/data/colony_metadata_parser.dart';
+import 'package:mars_flutter/data/global_events_parser.dart';
 
 import 'package:mars_flutter/data/ma_parser.dart';
 
@@ -19,6 +20,7 @@ void main() async {
   Bloc.observer = AppBlocObserver();
 
   ClientCardsParser.parse();
+  GlobalEventsParser.parse();
   ColonyMetadataParser.parse();
   MilestoneAwardParser.parse();
   PopupsRegistr.runPopupRegistr();

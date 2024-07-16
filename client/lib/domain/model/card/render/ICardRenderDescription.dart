@@ -18,15 +18,20 @@ enum DescriptionAlign {
 }
 
 class ICardRenderDescription {
-  String text;
-  DescriptionAlign align;
+  final String text;
+  final DescriptionAlign align;
+  final double sizeMultiplicator;
 
-  ICardRenderDescription(this.text, this.align);
+  ICardRenderDescription({
+    required this.text,
+    required this.align,
+    this.sizeMultiplicator = 1.0,
+  });
 
   factory ICardRenderDescription.fromJson(Map<String, dynamic> json) {
     return ICardRenderDescription(
-      json['text'],
-      DescriptionAlign.fromString(json['align']),
+      text: json['text'],
+      align: DescriptionAlign.fromString(json['align']),
     );
   }
 }

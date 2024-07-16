@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mars_flutter/domain/model/card/ClientCard.dart';
+import 'package:mars_flutter/domain/model/card/ICardMetadata.dart';
 import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
 import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
 import 'package:collection/collection.dart';
@@ -14,14 +14,21 @@ import 'package:mars_flutter/presentation/game_components/common/tile_view.dart'
 import 'package:mars_flutter/presentation/game_components/common/production_box.dart';
 
 class CardBody extends StatelessWidget {
-  final ClientCard card;
+  final double elementsSizeMultiplicator;
+  final ICardMetadata? metadata;
+  final CardComponent? renderData;
+  final ICardRenderDescription? description;
   final double width;
   final double height;
-  get _calculatedSizeHeight => height * card.name.elementsSizeMultiplicator;
+  get _calculatedSizeHeight => height * elementsSizeMultiplicator;
+  get _description => description ?? metadata?.description;
   const CardBody({
-    required this.card,
     required this.width,
     required this.height,
+    this.elementsSizeMultiplicator = 1.0,
+    this.metadata,
+    this.renderData,
+    this.description,
   });
 
   Widget _getCardComponentView(CardComponent cardComponent,
@@ -46,9 +53,7 @@ class CardBody extends StatelessWidget {
               .map(
                 (cardComponents) => Padding(
                   padding: EdgeInsets.only(
-                      bottom: card.name.elementsSizeMultiplicator < 1.0
-                          ? 0.0
-                          : 3.0),
+                      bottom: elementsSizeMultiplicator < 1.0 ? 0.0 : 3.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: cardComponents
@@ -209,7 +214,7 @@ class CardBody extends StatelessWidget {
         "(" + description.text + ")",
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: width * 0.05,
+          fontSize: width * 0.05 * description.sizeMultiplicator,
           height: 1.0,
         ),
       ),
@@ -220,15 +225,15 @@ class CardBody extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ...(card.metadata.renderData != null)
-            ? [_getCardComponentView(card.metadata.renderData!)]
+        ...((renderData ?? metadata?.renderData) != null)
+            ? [_getCardComponentView(renderData ?? metadata!.renderData!)]
             : [],
-        ...(card.metadata.description != null &&
-                card.metadata.description!.align == DescriptionAlign.CENTER
+        ...(_description != null &&
+                _description!.align == DescriptionAlign.CENTER
             ? [
                 Padding(
                     padding: EdgeInsets.only(top: 2.0),
-                    child: _getCardDescription(card.metadata.description!))
+                    child: _getCardDescription(_description!))
               ]
             : [])
       ],
@@ -237,7 +242,7 @@ class CardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return card.metadata.victoryPoints == null
+    return metadata?.victoryPoints == null
         ? _getMainBodyView()
         : Padding(
             padding: EdgeInsets.only(bottom: _calculatedSizeHeight * 0.06),
@@ -245,9 +250,8 @@ class CardBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ...[_getMainBodyView()],
-                ...(card.metadata.description != null &&
-                        card.metadata.description!.align ==
-                            DescriptionAlign.LEFT
+                ...(_description != null &&
+                        _description!.align == DescriptionAlign.LEFT
                     ? [
                         ConstrainedBox(
                             constraints: BoxConstraints(
@@ -261,12 +265,12 @@ class CardBody extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Flexible(
-                                      child: _getCardDescription(
-                                          card.metadata.description!)),
+                                      child:
+                                          _getCardDescription(_description!)),
                                   VpointsView(
                                     width: width * 0.35,
                                     height: _calculatedSizeHeight * 0.2,
-                                    points: card.metadata.victoryPoints!,
+                                    points: metadata?.victoryPoints!,
                                     isCardPoints: true,
                                   )
                                 ]))
@@ -279,7 +283,7 @@ class CardBody extends StatelessWidget {
                               child: VpointsView(
                                 width: width * 0.35,
                                 height: _calculatedSizeHeight * 0.2,
-                                points: card.metadata.victoryPoints!,
+                                points: metadata?.victoryPoints!,
                                 isCardPoints: true,
                               ),
                             ))

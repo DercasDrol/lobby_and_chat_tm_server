@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_ma_info.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_tabs/ma.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/ma.dart';
 import 'package:tab_container/tab_container.dart';
 
-class MaTabs extends StatelessWidget {
+class MaAndPartiesTabs extends StatelessWidget {
   final PresentationMaInfo awardsInfo;
   final PresentationMaInfo milestonesInfo;
   final Color playerColor;
   final double maxHeight;
-  const MaTabs({
+  const MaAndPartiesTabs({
     required this.awardsInfo,
     required this.milestonesInfo,
     required this.playerColor,

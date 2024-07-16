@@ -7,7 +7,6 @@ import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/logs_cubit.dart';
 import 'package:mars_flutter/domain/logs_state.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
-import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
 import 'package:mars_flutter/domain/game_cubit.dart';
 import 'package:mars_flutter/domain/game_state.dart';
@@ -18,7 +17,7 @@ import 'package:mars_flutter/presentation/game_components/common/stars_backgroun
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/generation.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/global_parameter_scale.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/left_expanded_panel/left_expanded_panel.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_tabs/ma_tabs.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/ma_and_parties_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/planet_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/player_panel.dart';
 import 'package:mars_flutter/presentation/game_components/common/show_popup_with_error.dart';
@@ -249,7 +248,7 @@ class ScreenBuilder extends StatelessWidget {
     return FittedBox(
         child: Row(
       children: [
-        MaTabs(
+        MaAndPartiesTabs(
           maxHeight: _topPanelMaxHeight,
           awardsInfo: viewModel.getAwardsInfo(
               sendPlayerAction: sendPlayerAction, logs: logs),

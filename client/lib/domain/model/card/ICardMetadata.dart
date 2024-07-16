@@ -22,7 +22,7 @@ class ICardMetadata {
           ? null
           : json['description'].runtimeType == String
               ? ICardRenderDescription(
-                  json['description'], DescriptionAlign.CENTER)
+                  text: json['description'], align: DescriptionAlign.CENTER)
               : ICardRenderDescription.fromJson(json['description']),
       hasExternalHelp: json['hasExternalHelp'],
       renderData: json['renderData'] == null
