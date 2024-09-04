@@ -27,7 +27,7 @@ class TagRowView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: tagsInfo
             .map(
-              (tagInfo) => Column(children: [
+              (tagInfo) => Column(mainAxisSize: MainAxisSize.min, children: [
                 Flexible(
                   flex: 10,
                   child: Tooltip(

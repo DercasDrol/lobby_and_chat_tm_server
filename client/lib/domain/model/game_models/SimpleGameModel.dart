@@ -26,7 +26,8 @@ class SimpleGameModel {
 
   @override
   SimpleGameModel.fromJson(Map<String, dynamic> json)
-      : activePlayer = PlayerColor.fromString(json['activePlayer'] as String),
+      : activePlayer = PlayerColor.fromString(json['activePlayer'] as String) ??
+            PlayerColor.NEUTRAL,
         id = GameId.fromString(json['id'] as String),
         phase = Phase.fromString(json['phase'] as String),
         players = (json['players'] as List<dynamic>)
@@ -53,7 +54,8 @@ class SimplePlayerModel {
   });
 
   SimplePlayerModel.fromJson(Map<String, dynamic> e)
-      : color = PlayerColor.fromString(e['color'] as String),
+      : color =
+            PlayerColor.fromString(e['color'] as String) ?? PlayerColor.NEUTRAL,
         id = PlayerId.fromString(e['id'] as String),
         name = e['name'] as String;
 }

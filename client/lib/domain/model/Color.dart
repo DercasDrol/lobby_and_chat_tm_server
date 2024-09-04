@@ -65,5 +65,5 @@ enum PlayerColor {
   Color toColor(bool useOpacity) => useOpacity
       ? (_TO_VIEW_COLOR_WITH_OPACITY_MAP[this] ?? Colors.white)
       : (_TO_VIEW_COLOR_MAP[this] ?? Colors.white);
-  static fromString(String? value) => _TO_ENUM_MAP[value];
+  static PlayerColor? fromString(String? value) => _TO_ENUM_MAP[value];
 }

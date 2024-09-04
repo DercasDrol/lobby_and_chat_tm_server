@@ -13,7 +13,7 @@ class ChatAndLogsTabsView extends StatelessWidget {
   final LogsCubit logsCubit;
   final double width;
   final double height;
-  final ScrollController scrollController;
+  // final ScrollController scrollController;
 
   const ChatAndLogsTabsView({
     super.key,
@@ -22,7 +22,7 @@ class ChatAndLogsTabsView extends StatelessWidget {
     required this.width,
     required this.height,
     required this.logsCubit,
-    required this.scrollController,
+    //required this.scrollController,
   });
 
   @override
@@ -40,7 +40,7 @@ class ChatAndLogsTabsView extends StatelessWidget {
           children: [
             LogsView(
               logsCubit: logsCubit,
-              scrollController: scrollController,
+              //scrollController: scrollController,
             ),
             if (gameChatState.chatKey != null)
               ChatView(

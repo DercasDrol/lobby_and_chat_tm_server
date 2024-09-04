@@ -53,7 +53,8 @@ class NewPlayerModel extends Equatable {
       index: e['index'] as int,
       userId: e['userId'] as String,
       name: e['name'] as String,
-      color: PlayerColor.fromString(e['color'] as String),
+      color:
+          PlayerColor.fromString(e['color'] as String) ?? PlayerColor.NEUTRAL,
       beginner: e['beginner'] as bool,
       handicap: e['handicap'] as int,
       first: e['first'] as bool,
@@ -279,7 +280,8 @@ class NewGameConfig extends Equatable {
                 index: e['index'] as int,
                 userId: e['userId'] as String,
                 name: e['name'] as String,
-                color: PlayerColor.fromString(e['color'] as String),
+                color: PlayerColor.fromString(e['color'] as String) ??
+                    PlayerColor.NEUTRAL,
                 beginner: e['beginner'] as bool,
                 handicap: e['handicap'] as int,
                 first: e['first'] as bool,

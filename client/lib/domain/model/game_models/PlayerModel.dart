@@ -18,6 +18,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/pr
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_ma_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_button_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_option_info.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_parties_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_planet_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_player_panel_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
@@ -28,6 +29,7 @@ import 'package:mars_flutter/domain/model/inputs/Payment.dart';
 import 'package:mars_flutter/domain/model/inputs/SelectInitialCards.dart';
 import 'package:mars_flutter/domain/model/ma/AwardName.dart';
 import 'package:mars_flutter/domain/model/ma/MilestoneName.dart';
+import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
 
 class ViewModel extends Equatable {
   final GameModel game;
@@ -227,6 +229,15 @@ class ViewModel extends Equatable {
         ma: this.game.milestones,
         availableMa: this._availableMilestones,
       );
+  PresentationTurmoilInfo? getPartiesInfo(
+          {required Future<void> Function(InputResponse inputResponse)
+              sendPlayerAction}) =>
+      this.game.turmoil == null
+          ? null
+          : PresentationTurmoilInfo(
+              onConfirm: null,
+              turmoilModel: this.game.turmoil!,
+            );
 }
 
 // 'off': Resources (or production) are unprotected.
@@ -355,7 +366,7 @@ final class PublicPlayerModel extends Equatable {
       cardsInHandNbr: json['cardsInHandNbr'] as int,
       citiesCount: json['citiesCount'] as int,
       coloniesCount: json['coloniesCount'] as int,
-      color: PlayerColor.fromString(json['color']),
+      color: PlayerColor.fromString(json['color']) ?? PlayerColor.NEUTRAL,
       energy: json['energy'] as int,
       energyProduction: json['energyProduction'] as int,
       fleetSize: json['fleetSize'] as int,
@@ -1253,7 +1264,20 @@ class PlayerViewModel extends ViewModel {
           response == null ? null : sendPlayerAction(response);
         },
       );
-
+  @override
+  PresentationTurmoilInfo? getPartiesInfo(
+          {required Future<void> Function(InputResponse inputResponse)
+              sendPlayerAction}) =>
+      this.game.turmoil == null
+          ? null
+          : PresentationTurmoilInfo(
+              onConfirm: (PartyName party) {
+                final InputResponse? response =
+                    this.waitingFor?.getInputResponseSelectedParty(party);
+                response == null ? null : sendPlayerAction(response);
+              },
+              turmoilModel: this.game.turmoil!,
+            );
 /**Planet block */
   PresentationPlanetInfoCN getPlanetInfo(
       {required Future<void> Function(InputResponse inputResponse)

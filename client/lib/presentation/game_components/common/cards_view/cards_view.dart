@@ -244,6 +244,31 @@ class CardsView extends StatelessWidget {
       );
     }
 
+    Widget getMiniEventsGrid(constraints) {
+      const double cardWidth = EVENT_WIDTH_MINI * 1.05;
+      final int crossAxisCount0 = (constraints.maxWidth - 40) / cardWidth ~/ 1;
+      final int crossAxisCount = crossAxisCount0 < 1 ? 1 : crossAxisCount0;
+      final List<GlobalEventName> eventNames = GlobalEventName.values.toList()
+        ..sort((a, b) => a.toString().compareTo(b.toString()));
+      return SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent: EVENT_HEIGHT_MINI + 20,
+          crossAxisCount: crossAxisCount,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            final event = ClientGlobalEvent.fromEventName(eventNames[index]);
+
+            return EventView(
+              event: event,
+              useMiniSize: true,
+            );
+          },
+          childCount: eventNames.length,
+        ),
+      );
+    }
+
     Widget getContentView(Map<CardName, ClientCard> allCards) {
       return LayoutBuilder(builder: (context, constraints) {
         headerHeightN.value = 2300.0;
@@ -295,6 +320,7 @@ class CardsView extends StatelessWidget {
                 },
               ),
               getEventsGrid(constraints),
+              getMiniEventsGrid(constraints),
             ]),
           ),
         );

@@ -46,7 +46,7 @@ class PlayerInputModel {
   bool? selectBlueCardAction;
   bool? showOnlyInLearnerMode;
   bool? showOwner;
-  List<PartyName>? availableParties;
+  List<PartyName>? parties;
   TurmoilModel? turmoil;
   List<TileType>? tiles;
   bool? showReset;
@@ -76,7 +76,7 @@ class PlayerInputModel {
     this.selectBlueCardAction,
     this.showOnlyInLearnerMode,
     this.showOwner,
-    this.availableParties,
+    this.parties,
     this.turmoil,
     this.tiles,
     this.showReset,
@@ -147,9 +147,9 @@ class PlayerInputModel {
       selectBlueCardAction: json['selectBlueCardAction'] as bool?,
       showOnlyInLearnerMode: json['showOnlyInLearnerMode'] as bool?,
       showOwner: json['showOwner'] as bool?,
-      availableParties: json['availableParties'] == null
+      parties: json['parties'] == null
           ? null
-          : json['availableParties']
+          : json['parties']
               .map((e) => PartyName.fromString(e as String))
               .cast<PartyName>()
               .toList(),
@@ -409,6 +409,14 @@ class PlayerInputModel {
             .cast<AwardName>()
             .toList();
   }
+
+  InputResponse? getInputResponseSelectedParty(PartyName party) =>
+      _inputResponseByPlayerInputModel(
+        inputModel: this,
+        partyName: party,
+        isTargetInputModelFn:
+            _getCheckModelFn(this, PlayerInputType.PARTY, false, null),
+      );
 
   InputResponse? getInputResponseSelectedMA(String ma) =>
       _inputResponseByPlayerInputModel(

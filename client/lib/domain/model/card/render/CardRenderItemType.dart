@@ -7,6 +7,7 @@ enum CardRenderItemType {
   VENUS,
   PLANTS,
   TR,
+  INFERIOR_TR,
   HEAT,
   ENERGY,
   TITANIUM,
@@ -103,6 +104,9 @@ enum CardRenderItemType {
   SUPPLY_CHAIN,
   GEOSCAN_ICON,
   UNDERGROUND_SHELTERS,
+  RED_ARROW_3X,
+  RED_ARROW,
+  RED_ARROW_INFINITY,
   UNKNOWN;
 
   static const _TO_STRING_MAP = {
@@ -211,6 +215,9 @@ enum CardRenderItemType {
     SUPPLY_CHAIN: 'supply-chain',
     GEOSCAN_ICON: 'geoscan-icon',
     UNDERGROUND_SHELTERS: 'underground-shelters',
+    RED_ARROW_3X: 'red-arrow-3x',
+    RED_ARROW: 'red-arrow',
+    RED_ARROW_INFINITY: 'red-arrow-infinity',
     UNKNOWN: "Unknown"
   };
 
@@ -298,6 +305,9 @@ enum CardRenderItemType {
     CLONE_TROOPER: Assets.resources.cloneTrooper.path,
     CATHEDRAL: Assets.promo.cathedral.path,
     NEUTRAL_DELEGATE: Assets.misc.delegate.path,
+    RED_ARROW_3X: Assets.misc.arrow3x.path,
+    RED_ARROW: Assets.misc.arrow.path,
+    RED_ARROW_INFINITY: Assets.misc.arrowInfinity.path,
   };
   static final _TO_PLAYED_IMAGE_PATH_MAP = {
     PLANTS: Assets.tags.plant.path,
@@ -367,6 +377,9 @@ enum CardRenderItemType {
     SPECIALIZED_ROBOT: ItemShape.square,
     DELEGATES: ItemShape.square,
     CORRUPTION: ItemShape.square,
+    RED_ARROW_3X: ItemShape.square,
+    RED_ARROW: ItemShape.square,
+    RED_ARROW_INFINITY: ItemShape.square,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

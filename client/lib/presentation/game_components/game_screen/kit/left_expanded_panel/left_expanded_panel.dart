@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/common/log.dart';
 import 'package:mars_flutter/domain/chat_cubit.dart';
@@ -40,16 +39,7 @@ class _LeftExpandedPanelState extends State<LeftExpandedPanel> {
     final double width = 450;
     final double buttonWidth = 20;
     const goToLobbyButtonHeight = 30.0;
-    final ScrollController _scrollController = new ScrollController();
 
-    Timer(
-      Duration(milliseconds: 500),
-      () => _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent + 1000,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.ease,
-      ),
-    );
     return Padding(
       padding: EdgeInsets.only(
         bottom: widget.bottomPadding,
@@ -93,7 +83,7 @@ class _LeftExpandedPanelState extends State<LeftExpandedPanel> {
                       width: width,
                       height: constrain.maxHeight - goToLobbyButtonHeight - 12,
                       logsCubit: widget.logsCubit,
-                      scrollController: _scrollController,
+                      //scrollController: _scrollController,
                     ),
                   ])),
             ),

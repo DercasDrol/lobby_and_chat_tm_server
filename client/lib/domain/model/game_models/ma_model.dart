@@ -40,8 +40,9 @@ class FundedAwardModel implements MaModel {
           : PlayerColor.fromString(json['playerColor'] as String),
       scores: (json['scores'] as List<dynamic>)
           .map((e) => MaScore(
-                playerColor: PlayerColor.fromString(e['playerColor'] as String),
-                playerScore: e['playerScore'] as int,
+                color: PlayerColor.fromString(e['playerColor'] as String) ??
+                    PlayerColor.NEUTRAL,
+                number: e['playerScore'] as int,
               ))
           .toList(),
     );
@@ -68,10 +69,9 @@ class ClaimedMilestoneModel implements MaModel {
       playerColor: PlayerColor.fromString(json['playerColor'] as String),
       scores: (json['scores'] as List<dynamic>)
           .map((e) => MaScore(
-                playerColor: e['playerColor'] == ''
-                    ? null
-                    : PlayerColor.fromString(e['playerColor'] as String),
-                playerScore: e['playerScore'] as int,
+                color: PlayerColor.fromString(e['playerColor'] as String) ??
+                    PlayerColor.NEUTRAL,
+                number: e['playerScore'] as int,
               ))
           .toList(),
     );

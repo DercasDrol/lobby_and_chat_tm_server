@@ -215,13 +215,15 @@ final class InputResponse {
         SpaceId spaceId = SpaceId.fromString(json['spaceId']);
         return SelectSpaceResponse(spaceId: spaceId);
       case ResponseType.PLAYER:
-        PlayerColor player = PlayerColor.fromString(json['player']);
+        PlayerColor player =
+            PlayerColor.fromString(json['player']) ?? PlayerColor.NEUTRAL;
         return SelectPlayerResponse(player: player);
       case ResponseType.PARTY:
         PartyName partyName = PartyName.fromString(json['partyName']);
         return SelectPartyResponse(partyName: partyName);
       case ResponseType.DELEGATE:
-        PlayerColor player = PlayerColor.fromString(json['player']);
+        PlayerColor player =
+            PlayerColor.fromString(json['player']) ?? PlayerColor.NEUTRAL;
         return SelectDelegateResponse(player: player);
       case ResponseType.AMOUNT:
         int amount = json['amount'];

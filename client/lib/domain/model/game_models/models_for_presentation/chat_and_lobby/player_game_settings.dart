@@ -10,7 +10,8 @@ class PlayerGameSettings extends Equatable {
 
   factory PlayerGameSettings.fromJson(Map<String, dynamic> e) {
     return PlayerGameSettings(
-      playerColor: PlayerColor.fromString(e['playerColor'] as String),
+      playerColor: PlayerColor.fromString(e['playerColor'] as String) ??
+          PlayerColor.NEUTRAL,
     );
   }
 

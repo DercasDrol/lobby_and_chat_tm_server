@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class OnHoverZoom extends StatefulWidget {
-  final Widget Function(bool isHovered) builder;
+  final Widget child;
   final double width;
   final double height;
   final double ratio;
 
   const OnHoverZoom(
       {Key? key,
-      required this.builder,
+      required this.child,
       required this.width,
       required this.height,
       required this.ratio})
@@ -18,7 +18,6 @@ class OnHoverZoom extends StatefulWidget {
 }
 
 class _OnHoverState extends State<OnHoverZoom> {
-  bool isHovered = false;
   double _scale = 1.0;
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,7 @@ class _OnHoverState extends State<OnHoverZoom> {
             filterQuality: FilterQuality.high,
             scale: _scale,
             duration: const Duration(milliseconds: 150),
-            child: widget.builder(isHovered),
+            child: widget.child,
           ),
         )));
   }

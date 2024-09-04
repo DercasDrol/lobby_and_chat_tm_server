@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tab_container/tab_container.dart';
 
-class LobbyElementsTabs extends StatelessWidget {
+class LobbyElementsTabs extends StatefulWidget {
   final double width;
   final double height;
   //final TabContainerController? controller;
@@ -20,22 +20,38 @@ class LobbyElementsTabs extends StatelessWidget {
   });
 
   @override
+  State<LobbyElementsTabs> createState() => _LobbyElementsTabsState();
+}
+
+class _LobbyElementsTabsState extends State<LobbyElementsTabs>
+    with TickerProviderStateMixin {
+  final selectedTab = ValueNotifier<int>(0);
+  @override
   Widget build(BuildContext context) {
+    final controller = TabController(
+      length: widget.children.length,
+      vsync: this,
+      initialIndex: selectedTab.value,
+    );
+    controller.addListener(() {
+      selectedTab.value = controller.index;
+    });
     return Container(
-      height: height,
-      width: width,
+      height: widget.height,
+      width: widget.width,
       decoration: BoxDecoration(
         color: Colors.grey[800],
-        borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(10)),
+        borderRadius:
+            widget.borderRadius ?? BorderRadius.all(Radius.circular(10)),
       ),
       child: TabContainer(
-        key: UniqueKey(),
-        //controller: controller,
+        //key: UniqueKey(),
+        controller: controller,
         color: Colors.grey[700],
         enabled: true,
         //childPadding: EdgeInsets.all(5.0),
-        children: children,
-        tabs: tabsNames.map((e) => Text(e)).toList(),
+        children: widget.children,
+        tabs: widget.tabsNames.map((e) => Text(e)).toList(),
         selectedTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 14,

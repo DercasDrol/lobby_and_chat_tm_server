@@ -79,7 +79,9 @@ class ClientCard {
         requirements: requirements,
         metadata: ICardMetadata.fromJson(value['metadata']),
         warning: value['warning'] != null
-            ? Message.fromJson(value['warning'])
+            ? value['warning'].runtimeType == String
+                ? Message(message: value['warning'])
+                : Message.fromJson(value['warning'])
             : null,
         productionBox: Units.fromJson(json: value['productionBox']),
         resourceType: value['resourceType'] != null

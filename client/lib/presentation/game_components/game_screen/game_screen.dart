@@ -17,7 +17,7 @@ import 'package:mars_flutter/presentation/game_components/common/stars_backgroun
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/generation.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/global_parameters/global_parameter_scale.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/left_expanded_panel/left_expanded_panel.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/ma_and_parties_tabs.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/top_panel.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/planet_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/player_panel.dart';
 import 'package:mars_flutter/presentation/game_components/common/show_popup_with_error.dart';
@@ -246,23 +246,17 @@ class ScreenBuilder extends StatelessWidget {
 
   Widget _prepareTopBoardPanel(ViewModel viewModel, sendPlayerAction, logs) {
     return FittedBox(
-        child: Row(
-      children: [
-        MaAndPartiesTabs(
-          maxHeight: _topPanelMaxHeight,
-          awardsInfo: viewModel.getAwardsInfo(
-              sendPlayerAction: sendPlayerAction, logs: logs),
-          milestonesInfo:
-              viewModel.getMilestonesInfo(sendPlayerAction: sendPlayerAction),
-          playerColor:
-              viewModel.thisPlayer?.color.toColor(false) ?? Colors.white,
-        ),
-        GenerationView(
-          generationValue: viewModel.game.generation,
-          size: _globalParameterScaleWidth * 2.5,
-        ),
-      ],
-    ));
+      child: TopPanel(
+        //maxHeight: _topPanelMaxHeight,
+        awardsInfo: viewModel.getAwardsInfo(
+            sendPlayerAction: sendPlayerAction, logs: logs),
+        milestonesInfo:
+            viewModel.getMilestonesInfo(sendPlayerAction: sendPlayerAction),
+        playerColor: viewModel.thisPlayer?.color ?? PlayerColor.NEUTRAL,
+        turmoilInfo:
+            viewModel.getPartiesInfo(sendPlayerAction: sendPlayerAction),
+      ),
+    );
   }
 
   @override
@@ -337,6 +331,13 @@ class ScreenBuilder extends StatelessWidget {
                       lobbyCubit: lobbyCubit,
                     ),
                   ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: GenerationView(
+                      generationValue: state.viewModel!.game.generation,
+                      size: _globalParameterScaleWidth * 2.5,
+                    ),
+                  )
                 ],
               )
             : const Center(child: CircularProgressIndicator());

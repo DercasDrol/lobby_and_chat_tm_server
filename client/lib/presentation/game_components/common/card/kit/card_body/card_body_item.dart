@@ -114,7 +114,7 @@ class BodyItemView extends StatelessWidget {
     double itemWidthMultiplyer;
     switch (item.type) {
       case CardRenderItemType.VENUS:
-        itemWidthMultiplyer = 1.5;
+        itemWidthMultiplyer = (item.isPlayed ?? false) ? 1.0 : 1.5;
         break;
       case CardRenderItemType.TR:
         itemWidthMultiplyer = 1.5;
@@ -315,8 +315,8 @@ class BodyItemView extends StatelessWidget {
         case CardRenderItemType.VENUS:
           return createGeneralTile(
             child: _prepareImageView(imagePath!),
-            widthMult: 1.35,
-            heightMult: 1.35,
+            widthMult: (item.isPlayed ?? false) ? 1.0 : 1.35,
+            heightMult: (item.isPlayed ?? false) ? 1.0 : 1.35,
           );
         case CardRenderItemType.TEXT:
           return item.text == null || item.text == ""
@@ -437,6 +437,39 @@ class BodyItemView extends StatelessWidget {
               ),
             ),
           );
+        case CardRenderItemType.INFERIOR_TR:
+          return Stack(alignment: AlignmentDirectional.center, children: [
+            Container(
+                width: width * 1.5 * item.size.toMultiplier(),
+                height: height * item.size.toMultiplier(),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.orange,
+                      Color.fromARGB(255, 255, 81, 0),
+                    ],
+                  ),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 0.5,
+                  ),
+                )),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: width * 0.2 * item.size.toMultiplier()),
+              child: Text(
+                ">",
+                style: TextStyle(
+                  fontSize: height * item.size.toMultiplier(),
+                  fontFamily: FontFamily.ubuntu,
+                  color: Colors.black,
+                  height: 1.0,
+                ),
+              ),
+            ),
+          ]);
         case CardRenderItemType.NO_TAGS:
           return createGeneralTile(
               child: Stack(alignment: Alignment.center, children: [

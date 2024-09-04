@@ -156,24 +156,23 @@ class PlayerPanelView extends StatelessWidget {
               ? SizedBox.shrink()
               : Expanded(
                   flex: 10,
-                  child: FittedBox(
-                    child: Column(
-                      children: corps
-                          .map((corp) => CardTooltip(
-                                cardName: corp.name,
-                                cardResourceCount: corp.resources,
-                                sizeMultiplier: corps.length > 1 ? 1.5 : 1.1,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 6.0),
+                  child: Column(
+                    children: corps
+                        .map((corp) => CardTooltip(
+                              cardName: corp.name,
+                              cardResourceCount: corp.resources,
+                              sizeMultiplier: corps.length > 1 ? 1.5 : 1.1,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 6.0),
+                                child: FittedBox(
                                   child: Text(
                                     corp.name.toString(),
                                     style: MAIN_TEXT_STYLE,
                                   ),
                                 ),
-                              ))
-                          .toList(),
-                    ),
+                              ),
+                            ))
+                        .toList(),
                   ),
                 ),
         ],

@@ -194,7 +194,7 @@ class CardView extends StatelessWidget {
             width: cadr_width,
             height: card_height,
             ratio: _zoomedCardSizeRatio,
-            builder: (isHovered) => GestureDetector(
+            child: GestureDetector(
               onTap: () {
                 if (onSelect != null) onSelect!(!isSelected);
               },

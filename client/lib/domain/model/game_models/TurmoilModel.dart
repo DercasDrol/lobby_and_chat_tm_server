@@ -1,4 +1,6 @@
 import 'package:mars_flutter/domain/model/Color.dart';
+import 'package:mars_flutter/domain/model/i_ma_and_party_model.dart';
+import 'package:mars_flutter/domain/model/i_ma_and_party_score.dart';
 import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
 import 'package:mars_flutter/domain/model/turmoil/Types.dart';
 import 'package:mars_flutter/domain/model/turmoil/globalEvents/GlobalEventName.dart';
@@ -10,9 +12,9 @@ class TurmoilModel {
   final List<PartyModel> parties;
   final List<PlayerColor> lobby;
   final List<DelegatesModel> reserve;
-  final GlobalEventModel? distant;
-  final GlobalEventModel? coming;
-  final GlobalEventModel? current;
+  final GlobalEventName? distant;
+  final GlobalEventName? coming;
+  final GlobalEventName? current;
   final PoliticalAgendasModel? politicalAgendas;
   final List<PolicyUser> policyActionUsers;
 
@@ -31,41 +33,56 @@ class TurmoilModel {
   });
 
   static TurmoilModel fromJson(Map<String, dynamic> json) {
+    final PartyName? dominant = json['dominant'] == null
+        ? null
+        : PartyName.fromString(json['dominant']);
+    final PartyName? ruling =
+        json['ruling'] == null ? null : PartyName.fromString(json['ruling']);
+    final PlayerColor? chairman = json['chairman'] == null
+        ? null
+        : PlayerColor.fromString(json['chairman']);
+    final List<PartyModel> parties = json['parties']
+        .map((e) => PartyModel.fromJson(e))
+        .cast<PartyModel>()
+        .toList();
+    final List<PlayerColor> lobby = json['lobby']
+        .map((e) => PlayerColor.fromString(e as String))
+        .cast<PlayerColor>()
+        .toList();
+    final List<DelegatesModel> reserve = (json['reserve'] as List<dynamic>)
+        .map((e) => DelegatesModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    final GlobalEventName? distant = json['distant'] == null
+        ? null
+        : GlobalEventName.fromString(json['distant']);
+    final GlobalEventName? coming = json['coming'] == null
+        ? null
+        : GlobalEventName.fromString(json['coming']);
+    final GlobalEventName? current = json['current'] == null
+        ? null
+        : GlobalEventName.fromString(json['current']);
+    final PoliticalAgendasModel? politicalAgendas =
+        json['politicalAgendas'] == null
+            ? null
+            : PoliticalAgendasModel.fromJson(
+                json['politicalAgendas'] as Map<String, dynamic>);
+    final List<PolicyUser> policyActionUsers =
+        (json['policyActionUsers'] as List<dynamic>)
+            .map((e) => PolicyUser.fromJson(e as Map<String, dynamic>))
+            .toList();
+
     return TurmoilModel(
-      dominant: json['dominant'] == null
-          ? null
-          : PartyName.fromString(json['dominant'] as String),
-      ruling: json['ruling'] == null
-          ? null
-          : PartyName.fromString(json['ruling'] as String),
-      chairman: json['chairman'] == null
-          ? null
-          : PlayerColor.fromString(json['chairman'] as String),
-      parties: (json['parties'] as List<dynamic>)
-          .map((e) => PartyModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      lobby: json['lobby']
-          .map((e) => PlayerColor.fromString(e as String))
-          .toList(),
-      reserve: (json['reserve'] as List<dynamic>)
-          .map((e) => DelegatesModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      distant: json['distant'] == null
-          ? null
-          : GlobalEventModel.fromJson(json['distant'] as Map<String, dynamic>),
-      coming: json['coming'] == null
-          ? null
-          : GlobalEventModel.fromJson(json['coming'] as Map<String, dynamic>),
-      current: json['current'] == null
-          ? null
-          : GlobalEventModel.fromJson(json['current'] as Map<String, dynamic>),
-      politicalAgendas: json['politicalAgendas'] == null
-          ? null
-          : PoliticalAgendasModel.fromJson(
-              json['politicalAgendas'] as Map<String, dynamic>),
-      policyActionUsers: (json['policyActionUsers'] as List<dynamic>)
-          .map((e) => PolicyUser.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      dominant: dominant,
+      ruling: ruling,
+      chairman: chairman,
+      parties: parties,
+      lobby: lobby,
+      reserve: reserve,
+      distant: distant,
+      coming: coming,
+      current: current,
+      politicalAgendas: politicalAgendas,
+      policyActionUsers: policyActionUsers,
     );
   }
 }
@@ -82,7 +99,8 @@ class PolicyUser {
   });
   static PolicyUser fromJson(Map<String, dynamic> json) {
     return PolicyUser(
-      color: PlayerColor.fromString(json['color'] as String),
+      color: PlayerColor.fromString(json['color'] as String) ??
+          PlayerColor.NEUTRAL,
       turmoilPolicyActionUsed: json['turmoilPolicyActionUsed'] as bool,
       politicalAgendasActionUsedCount:
           json['politicalAgendasActionUsedCount'] as int,
@@ -90,48 +108,46 @@ class PolicyUser {
   }
 }
 
-class PartyModel {
+class PartyModel extends IMaAndPartyModel {
   final PartyName name;
-  final String description;
   final PlayerColor? partyLeader;
   final List<DelegatesModel> delegates;
 
   PartyModel({
     required this.name,
-    required this.description,
     required this.partyLeader,
     required this.delegates,
-  });
+  }) : super(name: name);
 
-  static PartyModel fromJson(Map<String, dynamic> json) {
+  factory PartyModel.fromJson(Map<String, dynamic> json) {
     return PartyModel(
       name: PartyName.fromString(json['name'] as String),
-      description: json['description'] as String,
       partyLeader: json['partyLeader'] == null
           ? null
           : PlayerColor.fromString(json['partyLeader'] as String),
-      delegates: (json['delegates'] as List<dynamic>)
-          .map((e) => DelegatesModel(
-                color: PlayerColor.fromString(e['color'] as String),
-                number: e['number'] as int,
-              ))
-          .toList(),
+      delegates: json['delegates'] == []
+          ? []
+          : (json['delegates'] as List<dynamic>)
+              .map((e) => DelegatesModel(
+                    color: PlayerColor.fromString(e['color'] as String) ??
+                        PlayerColor.NEUTRAL,
+                    number: e['number'] as int,
+                  ))
+              .toList(),
     );
   }
 }
 
-class DelegatesModel {
+class DelegatesModel implements IMaAndPartyScore {
   final PlayerColor color;
   final int number;
 
-  DelegatesModel({
-    required this.color,
-    required this.number,
-  });
+  DelegatesModel({required this.color, required this.number});
 
   static DelegatesModel fromJson(Map<String, dynamic> json) {
     return DelegatesModel(
-      color: PlayerColor.fromString(json['color'] as String),
+      color: PlayerColor.fromString(json['color'] as String) ??
+          PlayerColor.NEUTRAL,
       number: json['number'] as int,
     );
   }
@@ -176,6 +192,25 @@ class PoliticalAgendasModel {
     required this.reds,
     required this.kelvinists,
   });
+
+  Agenda getAgenda(PartyName party) {
+    switch (party) {
+      case PartyName.MARS:
+        return marsFirst;
+      case PartyName.SCIENTISTS:
+        return scientists;
+      case PartyName.UNITY:
+        return unity;
+      case PartyName.GREENS:
+        return greens;
+      case PartyName.REDS:
+        return reds;
+      case PartyName.KELVINISTS:
+        return kelvinists;
+      default:
+        throw Exception('Unknown party $party');
+    }
+  }
 
   static PoliticalAgendasModel fromJson(Map<String, dynamic> json) {
     return PoliticalAgendasModel(

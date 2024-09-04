@@ -47,7 +47,9 @@ class CardModel extends Equatable {
           : null,
       isDisabled: json['isDisabled'] as bool?,
       warning: json['warning'] != null
-          ? Message.fromJson(json['warning'] as Map<String, dynamic>)
+          ? json['warning'].runtimeType == String
+              ? Message(message: json['warning'])
+              : Message.fromJson(json['warning'])
           : null,
       reserveUnits: json['reserveUnits'] == null
           ? null

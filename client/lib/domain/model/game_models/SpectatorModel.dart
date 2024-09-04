@@ -9,7 +9,7 @@ class SpectatorModel {
 
   factory SpectatorModel.fromJson(Map<String, dynamic> json) {
     return SpectatorModel(
-      color: PlayerColor.fromString(json['color']),
+      color: PlayerColor.fromString(json['color']) ?? PlayerColor.NEUTRAL,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 
 enum PartyName {
@@ -18,6 +19,16 @@ enum PartyName {
     GREENS: 'Greens',
     UNKNOWN: 'Unknown',
   };
+  static final _TO_COLOR_MAP = {
+    MARS: Color.fromARGB(246, 214, 97, 55),
+    SCIENTISTS: Colors.white,
+    UNITY: Colors.blue,
+    KELVINISTS: Colors.grey.shade800,
+    REDS: Colors.red,
+    GREENS: Colors.green,
+    UNKNOWN: null,
+  };
+  Color? toColor() => _TO_COLOR_MAP[this];
   static final _TO_IMAGE_PATH_MAP = {
     MARS: Assets.parties.marsFirst.path,
     SCIENTISTS: Assets.parties.scientists.path,
