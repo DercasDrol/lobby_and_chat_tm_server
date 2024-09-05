@@ -7,7 +7,7 @@ RUN go vet -v
 
 RUN CGO_ENABLED=0 go build -o /go/bin/app
 
-FROM fischerscode/flutter:3.22.0-0.2.pre AS flutter-build
+FROM fischerscode/flutter:3.24.2 AS flutter-build
 WORKDIR /flutterapp
 COPY /client .
 RUN flutter clean
