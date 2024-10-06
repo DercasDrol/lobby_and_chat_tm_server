@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/domain/model/Color.dart';
 import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
 import 'package:mars_flutter/domain/model/turmoil/Types.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/common/chairman_crown.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/turmoil/kit/party_body.dart';
 
 class PartyPolicyView extends StatelessWidget {
@@ -8,12 +10,16 @@ class PartyPolicyView extends StatelessWidget {
   final double height;
   final Agenda? agenda;
   final PartyName? partyName;
+  final PlayerColor? chairman;
+  final bool showBorder;
   const PartyPolicyView({
     super.key,
     required this.width,
     required this.height,
     this.agenda,
     required this.partyName,
+    this.chairman,
+    this.showBorder = false,
   });
 
   @override
@@ -31,13 +37,12 @@ class PartyPolicyView extends StatelessWidget {
               width: width * 1.2,
               height: height * 0.8,
               decoration: BoxDecoration(
-                boxShadow: List.filled(
-                  2,
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 2,
-                  ),
-                ),
+                border: showBorder
+                    ? Border.all(
+                        color: Colors.white,
+                        width: 3.5,
+                      )
+                    : null,
               ),
               child: PartyBodyView(
                 agenda: agenda,
@@ -71,6 +76,15 @@ class PartyPolicyView extends StatelessWidget {
                 ),
               ),
             ),
+          if (partyName != null && chairman != null)
+            Padding(
+              padding: EdgeInsets.only(right: width * 0.9),
+              child: ChairmanCrown(
+                width: width * 0.3,
+                height: height * 0.4,
+                color: chairman!.toColor(true),
+              ),
+            )
         ],
       ),
     );

@@ -120,8 +120,9 @@ class GameCubit extends Cubit<GameState> {
           await repository.sendActionAndDownloadAndParseGameStateJson(
         inputResponse,
         this.state.participantId!,
+        state.viewModel,
       );
-      if (!viewModel.isContainsWaitingFor)
+      if (viewModel != null && !viewModel.isContainsWaitingFor)
         _sendWaitingFor(
           viewModel.game.gameAge,
           viewModel.game.undoCount,

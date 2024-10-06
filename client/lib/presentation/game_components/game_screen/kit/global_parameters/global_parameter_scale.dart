@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_global_scales_info.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
 
 class GlobalParameterScaleView extends StatelessWidget {
@@ -16,6 +17,8 @@ class GlobalParameterScaleView extends StatelessWidget {
   final bool? showPlusForPositiveValues;
   final double? backgroundImageOpacity;
   final String? backgroundImage;
+  final ScaleAction? scaleAction;
+  final Function()? onApplyScaleAction;
   const GlobalParameterScaleView({
     required this.startValue,
     required this.endValue,
@@ -31,6 +34,8 @@ class GlobalParameterScaleView extends StatelessWidget {
     this.showPlusForPositiveValues,
     this.backgroundImage,
     this.backgroundImageOpacity,
+    this.scaleAction,
+    this.onApplyScaleAction,
   });
 
   @override
@@ -135,6 +140,28 @@ class GlobalParameterScaleView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             verticalDirection: VerticalDirection.up,
             children: [
+              if (scaleAction != null)
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  child: TextButton.icon(
+                    onPressed: onApplyScaleAction,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                        Colors.white.withOpacity(0.6),
+                      ),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                    label: Center(
+                        child: Text(
+                      scaleAction == ScaleAction.INCREASE ? "+" : "-",
+                      style: MAIN_TEXT_STYLE,
+                    )),
+                  ),
+                ),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 2.0),
                 width: width - maxPadding,
@@ -156,12 +183,11 @@ class GlobalParameterScaleView extends StatelessWidget {
                 itemsCount,
                 prepareItem,
               ),
-              header == null
-                  ? SizedBox.shrink()
-                  : Text(
-                      header!,
-                      style: MAIN_TEXT_STYLE,
-                    ),
+              if (header != null)
+                Text(
+                  header!,
+                  style: MAIN_TEXT_STYLE,
+                ),
             ],
           ),
         ),

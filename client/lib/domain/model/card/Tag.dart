@@ -16,6 +16,7 @@ enum Tag {
   MARS,
   WILD,
   EVENT,
+  INFLUENCE,
   CLONE;
 
   static const _TO_STRING_MAP = {
@@ -34,6 +35,7 @@ enum Tag {
     MARS: 'mars',
     WILD: 'wild',
     EVENT: 'event',
+    INFLUENCE: 'influence',
     CLONE: 'clone',
   };
   static final _TO_IMAGE_PATH_MAP = {
@@ -53,6 +55,7 @@ enum Tag {
     WILD: Assets.tags.wild.path,
     EVENT: Assets.tags.event.path,
     CLONE: Assets.tags.clone.path,
+    INFLUENCE: Assets.misc.influence.path,
   };
   static final _TO_ENUM_MAP =
       _TO_STRING_MAP.map((key, value) => MapEntry(value, key));

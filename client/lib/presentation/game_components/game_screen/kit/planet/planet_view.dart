@@ -7,15 +7,19 @@ import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/boards/SpaceBonus.dart';
 import 'package:mars_flutter/domain/model/boards/SpaceType.dart';
+import 'package:mars_flutter/domain/model/card/render/CardComponents.dart';
+import 'package:mars_flutter/domain/model/card/render/CardRenderItemType.dart';
+import 'package:mars_flutter/domain/model/card/render/Size.dart';
 import 'package:mars_flutter/domain/model/game_models/SpaceModel.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_planet_info.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/card_body_item.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
 import 'package:mars_flutter/presentation/game_components/common/tile_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/planet/hexagone_builder.dart';
 
 class MarsView extends StatefulWidget {
   final PresentationPlanetInfoCN planetInfoCN;
-  const MarsView({required this.planetInfoCN});
+  const MarsView({super.key, required this.planetInfoCN});
   static const _marsSize = 500.0;
   static const _tileHeightSize = _marsSize * 0.092;
 
@@ -87,21 +91,39 @@ class _MarsViewState extends State<MarsView> {
   }
 
   Widget _prepareBonusView(SpaceModel spaceModel) {
-    return Wrap(
-      spacing: MarsView._marsSize * 0.01,
-      children: spaceModel.bonus
-          .map((SpaceBonus b) => ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: 0,
-                minHeight: 0,
-                maxWidth: MarsView._marsSize * 0.03,
-                maxHeight: MarsView._marsSize * 0.05,
+    return Stack(children: [
+      Wrap(
+        spacing: MarsView._marsSize * 0.01,
+        children: spaceModel.bonus
+            .map((SpaceBonus b) => ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: 0,
+                  minHeight: 0,
+                  maxWidth: MarsView._marsSize * 0.03,
+                  maxHeight: MarsView._marsSize * 0.05,
+                ),
+                child: b.toImagePath() == null
+                    ? SizedBox.shrink()
+                    : Image.asset(b.toImagePath()!)))
+            .toList(),
+      ),
+      if (spaceModel.nomads ?? false)
+        Padding(
+            padding: EdgeInsets.only(
+              top: MarsView._marsSize * 0.02,
+              left: MarsView._marsSize * 0.02,
+            ),
+            child: BodyItemView(
+              item: ICardRenderItem(
+                type: CardRenderItemType.NOMADS,
+                amount: 1,
+                size: CardItemSize.SMALL,
               ),
-              child: b.toImagePath() == null
-                  ? SizedBox.shrink()
-                  : Image.asset(b.toImagePath()!)))
-          .toList(),
-    );
+              width: MarsView._marsSize * 0.04,
+              height: MarsView._marsSize * 0.04,
+              parentWidth: MarsView._marsSize * 0.04,
+            )),
+    ]);
   }
 
   Widget _preparePlayedTileView(SpaceModel spaceModel) {

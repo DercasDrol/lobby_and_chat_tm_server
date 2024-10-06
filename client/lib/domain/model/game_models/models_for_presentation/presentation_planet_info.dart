@@ -23,7 +23,13 @@ class PresentationPlanetInfoCN extends ChangeNotifier {
   List<SpaceId>? _availableSpaces;
   PlayerColor? _activePlayer;
   Function(SpaceId spaceId)? _onConfirm;
+  String? _actionTitle;
+  set actionTitle(String? value) {
+    _actionTitle = value;
+    notifyListeners();
+  }
 
+  String? get actionTitle => _actionTitle;
   PlayerColor? get activePlayer => _activePlayer;
   set activePlayer(PlayerColor? value) {
     _activePlayer = value;
@@ -53,8 +59,10 @@ class PresentationPlanetInfoCN extends ChangeNotifier {
     List<SpaceId>? availableSpaces,
     Function(SpaceId spaceId)? onConfirm,
     PlayerColor? activePlayer,
+    String? actionTitle,
   })  : _availableSpaces = availableSpaces,
         _onConfirm = onConfirm,
         _spaceModels = spaceModels,
-        _activePlayer = activePlayer;
+        _activePlayer = activePlayer,
+        _actionTitle = actionTitle;
 }

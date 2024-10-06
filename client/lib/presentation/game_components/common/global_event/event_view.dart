@@ -7,8 +7,8 @@ import 'package:mars_flutter/presentation/game_components/common/card/kit/card_b
 
 const double EVENT_WIDTH = 332;
 const double EVENT_HEIGHT = 186;
-const double EVENT_WIDTH_MINI = 166;
-const double EVENT_HEIGHT_MINI = 93;
+const double EVENT_WIDTH_MINI = EVENT_WIDTH * 0.55;
+const double EVENT_HEIGHT_MINI = EVENT_HEIGHT * 0.55;
 
 class EventView extends StatelessWidget {
   EventView({
@@ -28,7 +28,7 @@ class EventView extends StatelessWidget {
   Widget build(BuildContext context) {
     final double cadr_width = width * (sizeRatio ?? 1);
     final double card_height = height * (sizeRatio ?? 1);
-    final double partyIconWidth = width * 0.16 * (sizeRatio ?? 1);
+    final double partyIconWidth = width * 0.19 * (sizeRatio ?? 1);
     Widget _getEventView() {
       final background = Image.asset(Assets.parties.globalEvent2.path,
           width: cadr_width, height: card_height);
@@ -36,7 +36,7 @@ class EventView extends StatelessWidget {
         alignment: Alignment.bottomLeft,
         child: event.revealedDelegate.toImagePath() != null
             ? Padding(
-                padding: EdgeInsets.all(card_height * 0.03),
+                padding: EdgeInsets.all(card_height * 0.01),
                 child: Image.asset(
                   event.revealedDelegate.toImagePath()!,
                   width: partyIconWidth,
@@ -47,7 +47,7 @@ class EventView extends StatelessWidget {
         alignment: Alignment.bottomRight,
         child: event.currentDelegate.toImagePath() != null
             ? Padding(
-                padding: EdgeInsets.all(card_height * 0.03),
+                padding: EdgeInsets.all(card_height * 0.01),
                 child: Image.asset(event.currentDelegate.toImagePath()!,
                     width: partyIconWidth),
               )

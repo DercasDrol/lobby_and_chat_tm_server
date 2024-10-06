@@ -20,10 +20,13 @@ class PresentationPlayerPanelInfo {
   final PresentationTabsInfo? standartProjectsTabsInfo;
   final PresentationTabsInfo? paymentTabsInfo;
   final PresentationTabsInfo? optionsTabsInfo;
+  final PresentationTabsInfo? amountsTabsInfo;
   final PresentationTabsInfo? initialTabsInfo;
   final PresentationTabsInfo? cardsToSelectTabsInfo;
   final List<TagInfo> tagsInfo;
   final int allCardsDiscount;
+  final String? actionNotificationString;
+
   PresentationPlayerPanelInfo({
     this.standartProjectsTabsInfo,
     this.greeneryPlacementButtonInfo,
@@ -39,9 +42,11 @@ class PresentationPlayerPanelInfo {
     this.actionsOnCardsTabsInfo,
     this.paymentTabsInfo,
     this.optionsTabsInfo,
+    this.amountsTabsInfo,
     this.initialTabsInfo,
     required this.tagsInfo,
     required this.allCardsDiscount,
     this.cardsToSelectTabsInfo,
+    this.actionNotificationString,
   });
 }

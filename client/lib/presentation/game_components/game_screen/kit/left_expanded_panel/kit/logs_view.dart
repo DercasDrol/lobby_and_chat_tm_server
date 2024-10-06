@@ -13,6 +13,7 @@ import 'package:mars_flutter/domain/model/game_models/CardModel.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
 import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
 import 'package:mars_flutter/domain/model/logs/LogMessageDataType.dart';
+import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/kit/card_name.dart';
 import 'package:mars_flutter/presentation/game_components/common/card/card_view.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
@@ -152,7 +153,7 @@ class LogsView extends StatelessWidget {
     return BlocBuilder<LogsCubit, LogsState>(
         bloc: logsCubit,
         builder: (context, state) {
-          Timer(
+          final timer = Timer(
             Duration(milliseconds: 500),
             () => scrollController.animateTo(
               scrollController.position.maxScrollExtent + 1000,
@@ -160,40 +161,45 @@ class LogsView extends StatelessWidget {
               curve: Curves.ease,
             ),
           );
+
           logger.d("Debug: $state");
           return GameOptionContainer(
               margin: EdgeInsets.all(5.0),
               padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 5.0),
-              child: ListView(
-                controller: scrollController,
-                children: state.logs == null
-                    ? [Center(child: CircularProgressIndicator())]
-                    : state.logs?.logsByGenerations
-                            .map(
-                              (key, value) => MapEntry(
-                                  key,
-                                  ExpansionTile(
-                                    expandedAlignment: Alignment.centerLeft,
-                                    title: Text("Generation ${key}"),
-                                    textColor: Colors.white,
-                                    collapsedTextColor: Colors.grey,
-                                    iconColor: Colors.white,
-                                    collapsedIconColor: Colors.grey,
-                                    expandedCrossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    initiallyExpanded: state.logs
-                                            ?.logsByGenerations.keys.last ==
-                                        key,
-                                    children: value
-                                        .map((message) => _buildLog(message,
-                                            state.logs?.playersNames, context))
-                                        .toList(),
-                                  )),
-                            )
-                            .values
-                            .toList() ??
-                        [],
-              ));
+              child: Disposer(
+                  dispose: () => timer.cancel(),
+                  child: ListView(
+                    controller: scrollController,
+                    children: state.logs == null
+                        ? [Center(child: CircularProgressIndicator())]
+                        : state.logs?.logsByGenerations
+                                .map(
+                                  (key, value) => MapEntry(
+                                      key,
+                                      ExpansionTile(
+                                        expandedAlignment: Alignment.centerLeft,
+                                        title: Text("Generation ${key}"),
+                                        textColor: Colors.white,
+                                        collapsedTextColor: Colors.grey,
+                                        iconColor: Colors.white,
+                                        collapsedIconColor: Colors.grey,
+                                        expandedCrossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        initiallyExpanded: state.logs
+                                                ?.logsByGenerations.keys.last ==
+                                            key,
+                                        children: value
+                                            .map((message) => _buildLog(
+                                                message,
+                                                state.logs?.playersNames,
+                                                context))
+                                            .toList(),
+                                      )),
+                                )
+                                .values
+                                .toList() ??
+                            [],
+                  )));
         });
   }
 }

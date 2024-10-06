@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/amounts_notifier.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/payment_view/payment_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/selected_cards_model.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/container_with_tabs.dart';
@@ -23,6 +24,8 @@ void showPopupWithTabs({
   final SelectedCards midleTabSelectedCards =
       SelectedCards.fromList(tabsInfo.midleTabInfo?.cards ?? []);
   final ValueNotifier<int?> rightTabSelectedOption = ValueNotifier(null);
+  final AmountsNotifier rightTabAmounts =
+      AmountsNotifier.fromList(tabsInfo.rightTabInfo?.amounts ?? []);
   final ValueNotifier<int> selectedTab = ValueNotifier(0);
 
   String? getButtonText() => tabsInfo.getConfirmButtonText?.call(UserActionInfo(
@@ -31,6 +34,7 @@ void showPopupWithTabs({
         midleTabCards: midleTabSelectedCards.selectedCardModels,
         rightTabCards: rightTabSelectedCards.selectedCardModels,
         optionIndx: rightTabSelectedOption.value,
+        amounts: tabsInfo.rightTabInfo?.amounts,
       ));
 
   Widget _listenableBuilder(builder) => ListenableBuilder(
@@ -73,6 +77,7 @@ void showPopupWithTabs({
                         rightTabCards: rightTabSelectedCards.selectedCardModels,
                         payment: payment,
                         optionIndx: rightTabSelectedOption.value,
+                        amounts: rightTabAmounts.changedAmounts,
                       ));
                       if (onConfirmFn != null) onConfirmFn();
                     }
@@ -128,6 +133,7 @@ void showPopupWithTabs({
                 rightTabSelectedCards: rightTabSelectedCards,
                 midleTabSelectedCards: midleTabSelectedCards,
                 rightTabSelectedOption: rightTabSelectedOption,
+                rightTabAmounts: rightTabAmounts,
               ),
             ),
             _getButtonView(context),
@@ -149,6 +155,7 @@ void showPopupWithTabs({
               midleTabSelectedCards.dispose();
               selectedTab.dispose();
               rightTabSelectedOption.dispose();
+              rightTabAmounts.dispose();
               PopupsRegistr.unregisterPopupDisposer("showPopupWithTabs");
             },
             child: LayoutBuilder(

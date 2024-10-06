@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/common/amount_presentation_info.dart';
 
 class SelectedPayment with ChangeNotifier {
   final PaymentInfo paymentInfo;
@@ -526,11 +527,11 @@ class SelectedPayment with ChangeNotifier {
     );
   }
 
-  List<PresentationInfo> get presentationInfos {
+  List<AmountPresentationInfo> get presentationInfos {
     return [
       ...this.paymentInfo.availablePayment.megaCredits > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.megacredit.path,
                 onDecreaseButtonFn: megaCreditsDecrease,
                 onIncreaseButtonFn: megaCreditsIncrease,
@@ -541,7 +542,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.heat > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.heat.path,
                 onDecreaseButtonFn: heatDecrease,
                 onIncreaseButtonFn: heatIncrease,
@@ -552,7 +553,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.steel > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.steel.path,
                 onDecreaseButtonFn: steelDecrease,
                 onIncreaseButtonFn: steelIncrease,
@@ -563,7 +564,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.titanium > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.titanium.path,
                 onDecreaseButtonFn: titaniumDecrease,
                 onIncreaseButtonFn: titaniumIncrease,
@@ -574,7 +575,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.microbes > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.microbe.path,
                 onDecreaseButtonFn: microbesDecrease,
                 onIncreaseButtonFn: microbesIncrease,
@@ -585,7 +586,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.floaters > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.floater.path,
                 onDecreaseButtonFn: floatersDecrease,
                 onIncreaseButtonFn: floatersIncrease,
@@ -596,7 +597,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.lunaArchivesScience > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.science.path,
                 onDecreaseButtonFn: scienceDecrease,
                 onIncreaseButtonFn: scienceIncrease,
@@ -607,7 +608,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.seeds > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.seed.path,
                 onDecreaseButtonFn: seedsDecrease,
                 onIncreaseButtonFn: seedsIncrease,
@@ -618,7 +619,7 @@ class SelectedPayment with ChangeNotifier {
           : [],
       ...this.paymentInfo.availablePayment.auroraiData > 0
           ? [
-              PresentationInfo(
+              AmountPresentationInfo(
                 iconPath: Assets.resources.data.path,
                 onDecreaseButtonFn: auroraiDataDecrease,
                 onIncreaseButtonFn: auroraiDataIncrease,
@@ -629,20 +630,4 @@ class SelectedPayment with ChangeNotifier {
           : [],
     ];
   }
-}
-
-class PresentationInfo {
-  final void Function() onDecreaseButtonFn;
-  final void Function() onIncreaseButtonFn;
-  final void Function() onMaxButtonFn;
-  final String iconPath;
-  final int value;
-
-  PresentationInfo({
-    required this.iconPath,
-    required this.onDecreaseButtonFn,
-    required this.onIncreaseButtonFn,
-    required this.onMaxButtonFn,
-    required this.value,
-  });
 }

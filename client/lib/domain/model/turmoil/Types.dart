@@ -423,7 +423,17 @@ class PolicyId {
                 ),
                 ICardRenderItem(
                   type: CardRenderItemType.CARDS,
-                  amount: 3,
+                  amount: 1,
+                  size: CardItemSize.MEDIUM,
+                ),
+                ICardRenderItem(
+                  type: CardRenderItemType.CARDS,
+                  amount: 1,
+                  size: CardItemSize.MEDIUM,
+                ),
+                ICardRenderItem(
+                  type: CardRenderItemType.CARDS,
+                  amount: 1,
                   size: CardItemSize.MEDIUM,
                 ),
               ]

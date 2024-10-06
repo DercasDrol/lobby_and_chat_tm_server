@@ -206,6 +206,7 @@ class PlayerInputModel {
     AresGlobalParametersResponse? aresResponse,
     required bool Function(PlayerInputModel inputModel) isTargetInputModelFn,
     List<CardName>? preludeCards,
+    Map<String, int>? amounts,
   }) {
     switch (inputModel.type) {
       case PlayerInputType.OPTION:
@@ -228,6 +229,7 @@ class PlayerInputModel {
             aresResponse: aresResponse,
             isTargetInputModelFn: isTargetInputModelFn,
             preludeCards: preludeCards,
+            amounts: amounts,
           );
           return (resp != null
               ? (acc != null
@@ -260,6 +262,7 @@ class PlayerInputModel {
             aresResponse: aresResponse,
             isTargetInputModelFn: isTargetInputModelFn,
             preludeCards: preludeCards,
+            amounts: amounts,
           );
 
           if (resp != null) index = index0;
@@ -287,6 +290,7 @@ class PlayerInputModel {
             aresResponse: aresResponse,
             isTargetInputModelFn: isTargetInputModelFn,
             preludeCards: preludeCards,
+            amounts: amounts,
           );
           return (resp != null
               ? (acc != null
@@ -340,8 +344,9 @@ class PlayerInputModel {
             ? SelectDelegateResponse(player: player)
             : null;
       case PlayerInputType.AMOUNT:
-        return number != null && isTargetInputModelFn(inputModel)
-            ? SelectAmountResponse(amount: number)
+        final amount = amounts?[inputModel.title.toString()];
+        return isTargetInputModelFn(inputModel) && amount != null
+            ? SelectAmountResponse(amount: amount)
             : null;
       case PlayerInputType.COLONY:
         return colonyName != null && isTargetInputModelFn(inputModel)
@@ -410,6 +415,65 @@ class PlayerInputModel {
             .toList();
   }
 
+  List<PartyName>? getAvailableParties() {
+    final inputModel = _findInputModelByInputType(
+      this,
+      PlayerInputType.PARTY,
+      false,
+      null,
+    );
+    return inputModel?.parties;
+  }
+
+  int? getDelegateCost() {
+    final inputModel = _findInputModelByInputType(
+      this,
+      PlayerInputType.PARTY,
+      false,
+      null,
+    );
+    final title = inputModel?.title?.toString() ?? "";
+    return title.contains("M€")
+        ? int.parse(title.replaceAll(new RegExp(r'[^0-9]'), ''))
+        : null;
+  }
+
+  bool isPolicyActionAvailable(PartyName party) =>
+      _findInputModelByInputType(this, PlayerInputType.OPTION, false,
+          "(Turmoil ${party.toString()})") !=
+      null;
+  InputResponse? getInputResponsePartyAction(PartyName party) =>
+      _inputResponseByPlayerInputModel(
+        inputModel: this,
+        isTargetInputModelFn: _getCheckModelFn(this, PlayerInputType.OPTION,
+            false, "(Turmoil ${party.toString()})"),
+      );
+  bool isWorldGovernmentActionAvailable() =>
+      _findInputModelByInputType(this, PlayerInputType.OR, false,
+          "Select action for World Government Terraforming") !=
+      null;
+
+  InputResponse? getInputResponseIncreaseOxigen() =>
+      _inputResponseByPlayerInputModel(
+        inputModel: this,
+        isTargetInputModelFn: _getCheckModelFn(
+            this, PlayerInputType.OPTION, false, "Increase oxygen"),
+      );
+
+  InputResponse? getInputResponseIncreaseTemperature() =>
+      _inputResponseByPlayerInputModel(
+        inputModel: this,
+        isTargetInputModelFn: _getCheckModelFn(
+            this, PlayerInputType.OPTION, false, "Increase temperature"),
+      );
+
+  InputResponse? getInputResponseIncreaseVenus() =>
+      _inputResponseByPlayerInputModel(
+        inputModel: this,
+        isTargetInputModelFn: _getCheckModelFn(
+            this, PlayerInputType.OPTION, false, "Increase venus"),
+      );
+
   InputResponse? getInputResponseSelectedParty(PartyName party) =>
       _inputResponseByPlayerInputModel(
         inputModel: this,
@@ -443,7 +507,39 @@ class PlayerInputModel {
       );
 
 /** end ProjectCards block */
+/** Amounts block */
+  PlayerInputModel? getInputModelAmounts() {
+    final inputModel =
+        _findInputModelByInputType(this, PlayerInputType.AND, false, null);
+    return inputModel == null ||
+            ((inputModel.options
+                    ?.any((e) => e.type != PlayerInputType.AMOUNT) ??
+                true))
+        ? null
+        : inputModel;
+  }
 
+  InputResponse? getInputResponseAmounts(Map<String, int> amounts) {
+    final titles = amounts.keys.toList();
+    var isTargetModel = (PlayerInputModel inputModel) {
+      final int tileIndex = titles.indexWhere((title) =>
+          _getCheckModelFn(this, PlayerInputType.AMOUNT, false, title)
+              .call(inputModel));
+      if (tileIndex != -1) {
+        titles.removeAt(tileIndex);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    return _inputResponseByPlayerInputModel(
+      inputModel: this,
+      isTargetInputModelFn: isTargetModel,
+      amounts: amounts,
+    );
+  }
+
+/** end Amounts block */
 /** Options block */
   PlayerInputModel? getInputModelOptions() {
     final inputModel = _findInputModelByInputType(

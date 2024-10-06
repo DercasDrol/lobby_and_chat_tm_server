@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
+import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_ma_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_parties_info.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/turmoil/delegates_lobby_and_active_party.dart';
@@ -9,6 +11,7 @@ import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and
 import 'package:tab_container/tab_container.dart';
 
 class TopPanel extends StatefulWidget {
+  final ParticipantId participantId;
   final PresentationMaInfo awardsInfo;
   final PresentationMaInfo milestonesInfo;
   final PresentationTurmoilInfo? turmoilInfo;
@@ -18,6 +21,7 @@ class TopPanel extends StatefulWidget {
     required this.milestonesInfo,
     required this.playerColor,
     this.turmoilInfo,
+    required this.participantId,
   });
 
   @override
@@ -30,8 +34,12 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final elementWidth = 120.0;
     final elementHeight = 80.0;
+    selectedTab.value = int.parse(
+      localStorage.getItem("selectedTab_${widget.participantId.toString()}") ??
+          selectedTab.value.toString(),
+    );
     final width = widget.turmoilInfo != null
-        ? widget.turmoilInfo!.turmoilModel.parties.length * 120.0
+        ? widget.turmoilInfo!.turmoilModel.parties.length * 120.0 * 1.15
         : widget.awardsInfo.ma.length * 120.0;
     final controller = TabController(
       length: widget.turmoilInfo != null ? 3 : 2,
@@ -40,6 +48,8 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
     );
     controller.addListener(() {
       selectedTab.value = controller.index;
+      localStorage.setItem("selectedTab_${widget.participantId.toString()}",
+          controller.index.toString());
     });
 
     return ConstrainedBox(
@@ -68,7 +78,7 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
           if (widget.turmoilInfo != null)
             ListenableBuilder(
               listenable: selectedTab,
-              builder: (context, child) => Column(children: [
+              builder: (context, child) => Column(spacing: 5.0, children: [
                 selectedTab.value == 2
                     ? Wrap(
                         alignment: WrapAlignment.center,
@@ -77,7 +87,9 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
                         children: [
                             DelegatesLobbyAndActiveParty(
                               turmoilModel: widget.turmoilInfo!.turmoilModel,
-                              width: elementWidth * 1.05,
+                              onApplyPolicyAction:
+                                  widget.turmoilInfo!.onApplyPolicyAction,
+                              width: elementWidth * 1.20,
                               height: elementHeight * 1.14,
                             ),
                             GlobalEventsList(
@@ -89,7 +101,7 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
               ]),
               child: PartyLineView(
                 presentationInfo: widget.turmoilInfo!,
-                width: elementWidth,
+                width: elementWidth * 1.15,
                 height: elementHeight,
                 playerColor: widget.playerColor,
               ),

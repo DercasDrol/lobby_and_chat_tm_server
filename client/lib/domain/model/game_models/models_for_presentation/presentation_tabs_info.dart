@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
 import 'package:mars_flutter/domain/model/game_models/CardModel.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_amount_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_option_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tag_info.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
@@ -26,6 +27,7 @@ class PresentationTabInfo extends Equatable {
   final String tabTitle;
   final bool? showDiscount;
   final List<PresentationOptionInfo>? options;
+  final List<PresentationAmountInfo>? amounts;
 
   PresentationTabInfo({
     this.minCards,
@@ -35,6 +37,7 @@ class PresentationTabInfo extends Equatable {
     this.disabledCards,
     this.showDiscount,
     this.options,
+    this.amounts,
   });
 
   @override
@@ -45,6 +48,7 @@ class PresentationTabInfo extends Equatable {
         minCards,
         maxCards,
         options,
+        amounts,
       ];
 }
 
@@ -55,6 +59,7 @@ class UserActionInfo extends Equatable {
   final List<CardModel> rightTabCards;
   final Payment? payment;
   final int? optionIndx;
+  final List<PresentationAmountInfo>? amounts;
 
   UserActionInfo({
     this.midleTabCards,
@@ -63,6 +68,7 @@ class UserActionInfo extends Equatable {
     required this.rightTabCards,
     this.payment,
     this.optionIndx,
+    this.amounts,
   });
 
   @override
@@ -72,7 +78,8 @@ class UserActionInfo extends Equatable {
         midleTabCards,
         rightTabCards,
         payment,
-        optionIndx
+        optionIndx,
+        amounts,
       ];
 }
 

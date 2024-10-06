@@ -30,6 +30,8 @@ class PartyLineView extends StatelessWidget {
       child: Wrap(
         children: presentationInfo.turmoilModel.parties.map(
           (party) {
+            final isAvailableForClick =
+                (presentationInfo.availableParties ?? []).contains(party.name);
             return ValueListenableBuilder(
               valueListenable: partyNotifiers[party.name]!,
               builder: (context, showButton, child) {
@@ -42,7 +44,7 @@ class PartyLineView extends StatelessWidget {
                         minimumSize: Size.zero,
                         padding: EdgeInsets.zero,
                       ),
-                      onPressed: presentationInfo.onConfirm == null
+                      onPressed: !isAvailableForClick
                           ? null
                           : () {
                               final bool oldValue =
@@ -56,10 +58,10 @@ class PartyLineView extends StatelessWidget {
                           party: party,
                           agenda: presentationInfo.turmoilModel.politicalAgendas
                               ?.getAgenda(party.name),
-                          isAvailableForClick:
-                              presentationInfo.onConfirm != null,
+                          isAvailableForClick: isAvailableForClick,
                           height: height,
                           width: width,
+                          dominant: presentationInfo.turmoilModel.dominant,
                         )
                       ]),
                     ),
@@ -70,11 +72,11 @@ class PartyLineView extends StatelessWidget {
                               counter: presentationInfo.turmoilModel.lobby
                                       .contains(playerColor)
                                   ? 0
-                                  : PresentationTurmoilInfo.delegateCost,
-                              onPressed: presentationInfo.onConfirm == null
+                                  : presentationInfo.delegateCost,
+                              onPressed: presentationInfo.onSendDelegate == null
                                   ? null
-                                  : () =>
-                                      presentationInfo.onConfirm!(party.name),
+                                  : () => presentationInfo
+                                      .onSendDelegate!(party.name),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 5.0),
                                 child: Text(

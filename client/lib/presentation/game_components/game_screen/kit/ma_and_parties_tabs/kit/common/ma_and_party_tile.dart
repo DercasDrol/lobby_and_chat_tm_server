@@ -7,11 +7,13 @@ import 'package:mars_flutter/domain/model/ma/MilestoneAwardMetadata.dart';
 import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
 import 'package:mars_flutter/domain/model/turmoil/Types.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/common/party_leader.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/common/party_policy_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/ma_and_parties_tabs/kit/turmoil/kit/party_body.dart';
 
 class MaAndPartyTile extends StatelessWidget {
   final MaModel? ma;
+  final PartyName? dominant;
   final PartyModel? party;
   final Agenda? agenda;
   final double width;
@@ -39,6 +41,7 @@ class MaAndPartyTile extends StatelessWidget {
     this.isAvailableForClick = false,
     this.party,
     this.agenda,
+    this.dominant,
   }) : super(key: key);
 
   @override
@@ -86,8 +89,8 @@ class MaAndPartyTile extends StatelessWidget {
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
                             ),
-                            color: (isAvailableForClick ?? false) &&
-                                    _partyBody == null
+                            color: (isAvailableForClick ?? false) //&&
+                                //  _partyBody == null
                                 ? Colors.white
                                 : Colors.black,
                           ),
@@ -111,18 +114,29 @@ class MaAndPartyTile extends StatelessWidget {
                             child: _partyBody,
                           ),
                         ),
-                        if (_partyColor != null)
+                        if (_partyColor != null) ...[
                           Container(
                             width: width * 1.2,
                             height: height * 0.31,
                             color: _partyColor,
                           ),
+                          Padding(
+                            padding: EdgeInsets.only(right: width * 0.9),
+                            child: PartyLeader(
+                              width: width * 0.4,
+                              height: height * 0.5,
+                              color: party?.partyLeader?.toColor(true),
+                              crowed: party?.name == dominant,
+                            ),
+                          ),
+                        ],
                         Padding(
                           padding: EdgeInsets.only(bottom: 2.0),
                           child: Text(
                             _name.toString().toUpperCase(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontSize: height * 0.2,
                               fontWeight: _partyColor != null &&
                                       party?.name != PartyName.SCIENTISTS
                                   ? FontWeight.w500

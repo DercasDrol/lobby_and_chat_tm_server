@@ -19,34 +19,41 @@ class PartyBodyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: showPolicy
-            ? null
-            : BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.grey.shade300,
-            Colors.grey.shade400,
-            Colors.grey.shade500,
-            Colors.grey.shade400,
-            Colors.grey.shade300,
-            Colors.grey.shade400,
-            Colors.grey.shade500,
-            Colors.grey.shade400,
-            Colors.grey.shade300,
-          ],
-        ),
-      ),
+          borderRadius: showPolicy
+              ? null
+              : BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.grey.shade300,
+              Colors.grey.shade400,
+              Colors.grey.shade500,
+              Colors.grey.shade400,
+              Colors.grey.shade300,
+              Colors.grey.shade400,
+              Colors.grey.shade500,
+              Colors.grey.shade400,
+              Colors.grey.shade300,
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: Offset(0, 1),
+            )
+          ]),
       child: agenda != null
           ? Container(
-              padding: EdgeInsets.only(bottom: width * 0.15),
+              padding: EdgeInsets.only(bottom: height * 0.15),
               alignment: Alignment.center,
               child: CardBody(
-                width: width,
+                width: width * 1.2,
                 height: height,
                 elementsSizeMultiplicator: showPolicy ? 2.3 : 2.2,
                 renderData: showPolicy

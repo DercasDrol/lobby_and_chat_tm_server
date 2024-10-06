@@ -319,8 +319,8 @@ class CardsView extends StatelessWidget {
                       });
                 },
               ),
-              getEventsGrid(constraints),
-              getMiniEventsGrid(constraints),
+              if (useSavedFilters) getEventsGrid(constraints),
+              //getMiniEventsGrid(constraints),
             ]),
           ),
         );

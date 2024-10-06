@@ -9,6 +9,7 @@ import 'package:mars_flutter/domain/model/game_models/SimpleGameModel.dart';
 import 'package:mars_flutter/domain/model/game_models/WaitingForModel.dart';
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 import 'package:mars_flutter/domain/model/logs/LogMessage.dart';
+import 'package:mars_flutter/domain/model/logs/Message.dart';
 
 class GameAPIClient {
   final Future<String> host;
@@ -50,9 +51,10 @@ class GameAPIClient {
     }
   }
 
-  Future<ViewModel> sendActionAndDownloadAndParseGameStateJson(
+  Future<ViewModel?> sendActionAndDownloadAndParseGameStateJson(
     InputResponse inputResponse,
     ParticipantId participantId,
+    ViewModel? viewModel,
   ) async {
     logger.d("debug: sendActionAndDownloadAndParseGameStateJson");
     logger.d(inputResponse);
@@ -66,6 +68,11 @@ class GameAPIClient {
     if (response.statusCode == 200) {
       return ViewModel.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
+    } else if (response.statusCode == 400) {
+      return viewModel?.copyWith(
+          userMistakeNotification: Message.fromJson(
+              jsonDecode(utf8.decode(response.bodyBytes))
+                  as Map<String, dynamic>));
     } else {
       throw Exception('Failed to load json');
     }

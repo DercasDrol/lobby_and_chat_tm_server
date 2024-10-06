@@ -2203,10 +2203,14 @@ class Assets {
   static const $AssetsCardModuleIconsGen cardModuleIcons =
       $AssetsCardModuleIconsGen();
   static const $AssetsCeosGen ceos = $AssetsCeosGen();
+  static const AssetGenImage chairmanCrown =
+      AssetGenImage('assets/chairman_crown.png');
   static const $AssetsColoniesPlanetsGen coloniesPlanets =
       $AssetsColoniesPlanetsGen();
   static const AssetGenImage colonyShips =
       AssetGenImage('assets/colony_ships.png');
+  static const AssetGenImage crownedPartyLeader =
+      AssetGenImage('assets/crowned_party_leader.png');
   static const AssetGenImage cube = AssetGenImage('assets/cube.png');
   static const AssetGenImage erosion = AssetGenImage('assets/erosion.png');
   static const $AssetsExpansionIconsGen expansionIcons =
@@ -2241,6 +2245,8 @@ class Assets {
   static const AssetGenImage severeErosion =
       AssetGenImage('assets/severe-erosion.png');
   static const $AssetsSidebarGen sidebar = $AssetsSidebarGen();
+  static const AssetGenImage simplePartyLeader =
+      AssetGenImage('assets/simple_party_leader.png');
   static const AssetGenImage soloWin = AssetGenImage('assets/solo_win.png');
   static const AssetGenImage stars = AssetGenImage('assets/stars.jpg');
   static const $AssetsTagsGen tags = $AssetsTagsGen();
@@ -2257,7 +2263,9 @@ class Assets {
         boardIcons,
         boardIconsAres,
         boardIconsAresBig,
+        chairmanCrown,
         colonyShips,
+        crownedPartyLeader,
         cube,
         erosion,
         favicon,
@@ -2271,6 +2279,7 @@ class Assets {
         removeDustStorms,
         severeDustStorm,
         severeErosion,
+        simplePartyLeader,
         soloWin,
         stars,
         triangle16,

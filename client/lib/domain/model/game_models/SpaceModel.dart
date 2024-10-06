@@ -29,6 +29,14 @@ class SpaceModel {
   final TileType? tileType;
   final SpaceHighlight? highlight;
   final bool? rotated; // Absent or true
+
+  final int? gagarin; // 0 means current
+  final bool? cathedral; // Absent or true
+  final bool? nomads; // Absent or true
+  final PlayerColor? coOwner;
+  final int? undergroundResources;
+  final PlayerColor? excavator;
+
   SpaceModel({
     required this.id,
     required this.x,
@@ -39,6 +47,12 @@ class SpaceModel {
     this.tileType,
     this.highlight,
     this.rotated,
+    this.gagarin,
+    this.cathedral,
+    this.nomads,
+    this.coOwner,
+    this.undergroundResources,
+    this.excavator,
   });
 
   static SpaceModel fromJson(Map<String, dynamic> json) {
@@ -61,6 +75,16 @@ class SpaceModel {
           ? null
           : SpaceHighlight.fromString(json['highlight'] as String),
       rotated: json['rotated'] as bool?,
+      gagarin: json['gagarin'] as int?,
+      cathedral: json['cathedral'] as bool?,
+      nomads: json['nomads'] as bool?,
+      coOwner: json['coOwner'] == null
+          ? null
+          : PlayerColor.fromString(json['coOwner'] as String),
+      undergroundResources: json['undergroundResources'] as int?,
+      excavator: json['excavator'] == null
+          ? null
+          : PlayerColor.fromString(json['excavator'] as String),
     );
   }
 }

@@ -14,6 +14,8 @@ import 'package:mars_flutter/domain/model/game_models/CardModel.dart';
 import 'package:mars_flutter/domain/model/game_models/GameModel.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerInputModel.dart';
 import 'package:mars_flutter/domain/model/game_models/TimerModel.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_amount_info.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_global_scales_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_logs_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_ma_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_button_info.dart';
@@ -27,6 +29,7 @@ import 'package:mars_flutter/domain/model/game_models/models_for_presentation/pr
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 import 'package:mars_flutter/domain/model/inputs/Payment.dart';
 import 'package:mars_flutter/domain/model/inputs/SelectInitialCards.dart';
+import 'package:mars_flutter/domain/model/logs/Message.dart';
 import 'package:mars_flutter/domain/model/ma/AwardName.dart';
 import 'package:mars_flutter/domain/model/ma/MilestoneName.dart';
 import 'package:mars_flutter/domain/model/turmoil/PartyName.dart';
@@ -36,12 +39,30 @@ class ViewModel extends Equatable {
   final List<PublicPlayerModel> players;
   final ParticipantId id;
   final PublicPlayerModel? thisPlayer;
+  final Message? userMistakeNotification;
+
+  ViewModel copyWith({
+    GameModel? game,
+    List<PublicPlayerModel>? players,
+    ParticipantId? id,
+    PublicPlayerModel? thisPlayer,
+    Message? userMistakeNotification,
+  }) =>
+      ViewModel(
+        game: game ?? this.game,
+        players: players ?? this.players,
+        id: id ?? this.id,
+        thisPlayer: thisPlayer ?? this.thisPlayer,
+        userMistakeNotification:
+            userMistakeNotification ?? this.userMistakeNotification,
+      );
 
   ViewModel({
     required this.game,
     required this.players,
     required this.id,
     required this.thisPlayer,
+    this.userMistakeNotification,
   });
 
   bool get isContainsWaitingFor => false;
@@ -148,35 +169,44 @@ class ViewModel extends Equatable {
 
   List<TagInfo> _getTagInfo({
     required final PublicPlayerModel player,
-  }) =>
-      Tag.values
-          .where((tag) =>
-              (game.gameOptions.venusNextExtension ? true : tag != Tag.VENUS) &&
-              (game.gameOptions.pathfindersExpansion
-                  ? true
-                  : tag != Tag.MARS && tag != Tag.CLONE) &&
-              (game.gameOptions.moonExpansion ? true : tag != Tag.MOON))
-          .map(
-            (e) => TagInfo(
-              tag: e,
-              count: player.tags.fold(
-                0,
-                (previousValue, tag) =>
-                    tag.tag == e ? tag.count : previousValue,
-              ),
-              discont: player.tableau.fold(
-                0,
-                (previousValue, card) =>
-                    card.discount?.fold(
-                      previousValue,
-                      (previousValue0, e0) =>
-                          (previousValue0 ?? 0) + (e0.tag == e ? e0.amount : 0),
-                    ) ??
-                    previousValue,
-              ),
+  }) {
+    final res = Tag.values
+        .where((tag) =>
+            (game.gameOptions.venusNextExtension ? true : tag != Tag.VENUS) &&
+            (game.gameOptions.pathfindersExpansion
+                ? true
+                : tag != Tag.MARS && tag != Tag.CLONE) &&
+            (game.gameOptions.moonExpansion ? true : tag != Tag.MOON) &&
+            tag != Tag.INFLUENCE)
+        .map(
+          (e) => TagInfo(
+            tag: e,
+            count: player.tags.fold(
+              0,
+              (previousValue, tag) => tag.tag == e ? tag.count : previousValue,
             ),
-          )
-          .toList();
+            discont: player.tableau.fold(
+              0,
+              (previousValue, card) =>
+                  card.discount?.fold(
+                    previousValue,
+                    (previousValue0, e0) =>
+                        (previousValue0 ?? 0) + (e0.tag == e ? e0.amount : 0),
+                  ) ??
+                  previousValue,
+            ),
+          ),
+        )
+        .toList();
+    if (this.game.gameOptions.turmoilExtension) {
+      res.add(TagInfo(
+        tag: Tag.INFLUENCE,
+        count: player.influence,
+        discont: 0,
+      ));
+    }
+    return res;
+  }
 
   PresentationPlayerPanelInfo getPresentationPlayerPanelInfo({
     required final PublicPlayerModel player,
@@ -199,6 +229,7 @@ class ViewModel extends Equatable {
       ),
       tagsInfo: _getTagInfo(player: player),
       allCardsDiscount: _getAllCardsDiscount(player: player),
+      //actionNotificationString: planetInfo.actionTitle,
     );
   }
 
@@ -229,15 +260,29 @@ class ViewModel extends Equatable {
         ma: this.game.milestones,
         availableMa: this._availableMilestones,
       );
-  PresentationTurmoilInfo? getPartiesInfo(
+  PresentationTurmoilInfo? getTurmoilInfo(
           {required Future<void> Function(InputResponse inputResponse)
               sendPlayerAction}) =>
       this.game.turmoil == null
           ? null
           : PresentationTurmoilInfo(
-              onConfirm: null,
+              onSendDelegate: null,
               turmoilModel: this.game.turmoil!,
+              availableParties: null,
             );
+  PresentationGlobalScalesInfo getGlobalScalesInfo(
+      {required Future<void> Function(InputResponse inputResponse)
+          sendPlayerAction}) {
+    return PresentationGlobalScalesInfo(
+      oceans: this.game.oceans,
+      temperature: this.game.temperature,
+      oxygenLevel: this.game.oxygenLevel,
+      venusScaleLevel: this.game.gameOptions.venusNextExtension
+          ? this.game.venusScaleLevel
+          : null,
+      moon: this.game.moon,
+    );
+  }
 }
 
 // 'off': Resources (or production) are unprotected.
@@ -679,6 +724,57 @@ class PlayerViewModel extends ViewModel {
     }
   }
 
+  PresentationTabsInfo? _getAmountsTabsInfo(
+    Future<void> Function(InputResponse) saveFn,
+  ) {
+    PlayerInputModel? inputModelAmounts = this.isContainsWaitingFor
+        ? this.waitingFor!.getInputModelAmounts()
+        : null;
+
+    final List<PresentationAmountInfo>? amounts = inputModelAmounts?.options
+        ?.map((e) {
+          final max = e.max ?? 0;
+          final maxByDefault = e.maxByDefault ?? false;
+          final min = e.min ?? 0;
+          return PresentationAmountInfo(
+            buttonLabel: e.buttonLabel,
+            title: e.title.toString(),
+            max: max,
+            maxByDefault: maxByDefault,
+            min: min,
+            value: (maxByDefault) ? max : min,
+          );
+        })
+        .cast<PresentationAmountInfo>()
+        .toList();
+    if (amounts == null || amounts.isEmpty) {
+      return null;
+    } else {
+      return PresentationTabsInfo(
+          playerColor: thisPlayer.color,
+          rightTabInfo: PresentationTabInfo(
+            tabTitle:
+                inputModelAmounts?.title.toString() ?? 'Available amounts',
+            amounts: amounts,
+          ),
+          getOnConfirmButtonFn: (actionInfo) => () {
+                final List<PresentationAmountInfo>? amounts =
+                    actionInfo.amounts;
+                final map = Map<String, int>.fromIterable(
+                  amounts!,
+                  key: (e) => e.title,
+                  value: (e) => e.value,
+                );
+                final InputResponse? resp =
+                    this.waitingFor?.getInputResponseAmounts(map);
+                resp == null ? null : saveFn(resp);
+              },
+          getConfirmButtonText: (actionInfo) {
+            return inputModelAmounts?.buttonLabel ?? "Confirm";
+          });
+    }
+  }
+
   /**Initial game stage block */
   int _getMkCountAfterPreludes(
       CardName corpName, List<CardModel> preludeCards, int selectedCardsCount) {
@@ -836,7 +932,7 @@ class PlayerViewModel extends ViewModel {
               counter: startingMk,
               counterLable: "Starting Megacredits:",
             ),
-            ...(mkAfterPrelude != null
+            ...(isPreludeAvailable && mkAfterPrelude != null
                 ? [
                     MegacreditsCounter(
                       counter: mkAfterPrelude + startingMk,
@@ -927,6 +1023,8 @@ class PlayerViewModel extends ViewModel {
           player.color, () => this._getPaymentTabInfo(sendPlayerAction)),
       optionsTabsInfo: _prepareOnlyThisPlayerData<PresentationTabsInfo?>(
           player.color, () => this._getOptionsTabsInfo(sendPlayerAction)),
+      amountsTabsInfo: _prepareOnlyThisPlayerData<PresentationTabsInfo?>(
+          player.color, () => this._getAmountsTabsInfo(sendPlayerAction)),
       initialTabsInfo: _prepareOnlyThisPlayerData<PresentationTabsInfo?>(
           player.color, () => this._getInitialChoiceTabsInfo(sendPlayerAction)),
       cardsToSelectTabsInfo: _prepareOnlyThisPlayerData<PresentationTabsInfo?>(
@@ -946,6 +1044,10 @@ class PlayerViewModel extends ViewModel {
                   sendPlayerAction, planetInfo)),
       tagsInfo: tagsDiscounts,
       allCardsDiscount: allCardsDiscount,
+      actionNotificationString: _prepareOnlyThisPlayerData<String?>(
+        player.color,
+        () => planetInfo.actionTitle,
+      ),
     );
   }
 
@@ -1265,27 +1367,99 @@ class PlayerViewModel extends ViewModel {
         },
       );
   @override
-  PresentationTurmoilInfo? getPartiesInfo(
+  PresentationTurmoilInfo? getTurmoilInfo(
           {required Future<void> Function(InputResponse inputResponse)
               sendPlayerAction}) =>
       this.game.turmoil == null
           ? null
           : PresentationTurmoilInfo(
-              onConfirm: (PartyName party) {
+              onSendDelegate: (PartyName party) {
                 final InputResponse? response =
                     this.waitingFor?.getInputResponseSelectedParty(party);
                 response == null ? null : sendPlayerAction(response);
               },
+              onApplyPolicyAction: this.game.turmoil!.ruling == null ||
+                      this.waitingFor == null
+                  ? null
+                  : this
+                          .waitingFor!
+                          .isPolicyActionAvailable(this.game.turmoil!.ruling!)
+                      ? () {
+                          final InputResponse? response = this
+                              .waitingFor
+                              ?.getInputResponsePartyAction(
+                                  this.game.turmoil!.ruling!);
+                          response == null ? null : sendPlayerAction(response);
+                        }
+                      : null,
+              availableParties: this.waitingFor?.getAvailableParties(),
               turmoilModel: this.game.turmoil!,
+              delegateCost: this.waitingFor?.getDelegateCost(),
             );
+  @override
+  PresentationGlobalScalesInfo getGlobalScalesInfo(
+      {required Future<void> Function(InputResponse inputResponse)
+          sendPlayerAction}) {
+    final isWorldGovernment =
+        this.waitingFor?.isWorldGovernmentActionAvailable() ?? false;
+    // we don't need to get the response for oceans scale, because we use space action for this
+    final InputResponse? temperatureResponse =
+        this.waitingFor?.getInputResponseIncreaseTemperature();
+    final InputResponse? oxygenLevelResponse =
+        this.waitingFor?.getInputResponseIncreaseOxigen();
+    final InputResponse? venusScaleLevelResponse =
+        this.waitingFor?.getInputResponseIncreaseVenus();
+    // moon scales will be added when moon expansion will be implemented
+    return PresentationGlobalScalesInfo(
+      oceans: this.game.oceans,
+      temperature: this.game.temperature,
+      oxygenLevel: this.game.oxygenLevel,
+      venusScaleLevel: this.game.gameOptions.venusNextExtension
+          ? this.game.venusScaleLevel
+          : null,
+      moon: this.game.moon,
+      scaleAction: isWorldGovernment ? ScaleAction.INCREASE : null,
+      onChangeAction: isWorldGovernment
+          ? (GlobalScale scale) {
+              switch (scale) {
+                case GlobalScale.TEMPERATURE:
+                  temperatureResponse == null
+                      ? null
+                      : sendPlayerAction(temperatureResponse);
+                  break;
+                case GlobalScale.OXYGEN_LEVEL:
+                  oxygenLevelResponse == null
+                      ? null
+                      : sendPlayerAction(oxygenLevelResponse);
+                  break;
+                case GlobalScale.VENUS_SCALE:
+                  venusScaleLevelResponse == null
+                      ? null
+                      : sendPlayerAction(venusScaleLevelResponse);
+                  break;
+                default:
+                  break;
+              }
+            }
+          : null,
+      availableScalesToAction: isWorldGovernment
+          ? [
+              if (temperatureResponse != null) GlobalScale.TEMPERATURE,
+              if (oxygenLevelResponse != null) GlobalScale.OXYGEN_LEVEL,
+              if (venusScaleLevelResponse != null) GlobalScale.VENUS_SCALE,
+            ]
+          : [],
+    );
+  }
+
 /**Planet block */
   PresentationPlanetInfoCN getPlanetInfo(
       {required Future<void> Function(InputResponse inputResponse)
           sendPlayerAction}) {
-    final bool passIsAvailable =
+    final bool passIsNotAvailable =
         this.waitingFor?.getOnConfirmPassButtonText() == null;
     return PresentationPlanetInfoCN(
-      onConfirm: passIsAvailable
+      onConfirm: passIsNotAvailable
           ? (SpaceId spaceId) {
               final InputResponse? response =
                   this.waitingFor?.getInputResponseSpace(spaceId, null);
@@ -1294,7 +1468,11 @@ class PlayerViewModel extends ViewModel {
           : null,
       spaceModels: this.game.spaces,
       availableSpaces:
-          passIsAvailable ? this.waitingFor?.getAvailableSpaces(null) : null,
+          passIsNotAvailable ? this.waitingFor?.getAvailableSpaces(null) : null,
+      actionTitle: passIsNotAvailable &&
+              this.waitingFor?.getAvailableSpaces(null) != null
+          ? this.waitingFor?.title?.toString()
+          : null,
       activePlayer: thisPlayerColor,
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 
 import 'package:flutter/material.dart';
@@ -187,9 +189,7 @@ class MarsApp extends StatelessWidget {
     };
 
     Repositories.auth.jwt.addListener(listener);
-
     _router.routeInformationProvider.addListener(listener);
-
     listener();
 
     html.window.addEventListener('beforeunload', (event) {

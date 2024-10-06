@@ -7,7 +7,7 @@ import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/cost.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_button_with_cost.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/payment_view/payment_changer.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/common/amount_changer_view.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/payment_view/selected_payment_model.dart';
 
 class ButtonWithPayment extends StatelessWidget {
@@ -97,7 +97,8 @@ class ButtonWithPayment extends StatelessWidget {
                                   : acc,
                             ).toList()),
                       ...selectedPayment?.presentationInfos
-                              .map((e) => PaymentChanger(presentationInfo: e))
+                              .map(
+                                  (e) => AmountChangerView(presentationInfo: e))
                               .toList() ??
                           [],
                       Padding(

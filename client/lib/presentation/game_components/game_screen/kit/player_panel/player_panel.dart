@@ -369,6 +369,18 @@ class PlayerPanelView extends StatelessWidget {
               ),
             );
 
+  _prepareActionNotificationString(color, String? string) => string == null
+      ? SizedBox.shrink()
+      : Padding(
+          padding: EdgeInsets.only(left: 200.0),
+          child: _ButtonBackground(
+            Text(string,
+                style:
+                    MAIN_TEXT_STYLE.copyWith(fontSize: 16, letterSpacing: 3.0)),
+            color,
+          ),
+        );
+
   _preparePassAndSkipButtonsBlock(color) =>
       playerPanelInfo.passButtonInfo?.buttonText == null &&
               playerPanelInfo.skipButtonInfo?.buttonText == null
@@ -401,65 +413,75 @@ class PlayerPanelView extends StatelessWidget {
           ValueListenableBuilder(
             valueListenable: hideButtonsN,
             builder: (BuildContext context, bool hideButtons, Widget? child) {
-              return hideButtons
-                  ? SizedBox.shrink()
-                  : Stack(
-                      children: [
-                        _preparePassAndSkipButtonsBlock(color),
-                        _commonButtonBlock(
-                          color,
-                          context,
-                          playerPanelInfo.cardsToSelectTabsInfo,
-                          playerPanelInfo
-                              .cardsToSelectTabsInfo?.rightTabInfo?.tabTitle,
-                          true,
-                          null,
-                        ),
-                        _commonButtonBlock(
-                          color,
-                          context,
-                          playerPanelInfo.paymentTabsInfo,
-                          playerPanelInfo
-                              .paymentTabsInfo?.rightTabInfo?.tabTitle,
-                          true,
-                          null,
-                        ),
-                        _commonButtonBlock(
-                          color,
-                          context,
-                          playerPanelInfo.optionsTabsInfo,
-                          playerPanelInfo
-                              .optionsTabsInfo?.rightTabInfo?.tabTitle,
-                          true,
-                          null,
-                        ),
-                        _commonButtonBlock(
-                          color,
-                          context,
-                          playerPanelInfo.standartProjectsTabsInfo,
-                          playerPanelInfo
-                              .standartProjectsTabsInfo?.leftTabInfo?.tabTitle,
-                          false,
-                          null,
-                        ),
-                        _commonButtonBlock(
-                          color,
-                          context,
-                          playerPanelInfo.initialTabsInfo,
+              return Stack(
+                children: [
+                  if (!hideButtons) ...[
+                    _preparePassAndSkipButtonsBlock(color),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.cardsToSelectTabsInfo,
+                      playerPanelInfo
+                          .cardsToSelectTabsInfo?.rightTabInfo?.tabTitle,
+                      true,
+                      null,
+                    ),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.paymentTabsInfo,
+                      playerPanelInfo.paymentTabsInfo?.rightTabInfo?.tabTitle,
+                      true,
+                      null,
+                    ),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.optionsTabsInfo,
+                      playerPanelInfo.optionsTabsInfo?.rightTabInfo?.tabTitle,
+                      true,
+                      null,
+                    ),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.amountsTabsInfo,
+                      playerPanelInfo.amountsTabsInfo?.rightTabInfo?.tabTitle,
+                      true,
+                      null,
+                    ),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.standartProjectsTabsInfo,
+                      playerPanelInfo
+                          .standartProjectsTabsInfo?.leftTabInfo?.tabTitle,
+                      false,
+                      null,
+                    ),
+                    _commonButtonBlock(
+                      color,
+                      context,
+                      playerPanelInfo.initialTabsInfo,
+                      (playerPanelInfo.initialTabsInfo?.leftTabInfo?.tabTitle ??
+                              ' ') +
+                          ' and ' +
                           (playerPanelInfo
-                                      .initialTabsInfo?.leftTabInfo?.tabTitle ??
-                                  ' ') +
-                              ' and ' +
-                              (playerPanelInfo.initialTabsInfo?.rightTabInfo
-                                      ?.tabTitle ??
-                                  ' '),
-                          true,
-                          null,
-                        ),
-                        _prepareTemperatureButton(color),
-                        _prepareGreeneryButton(color, hideButtonsN)
-                      ],
-                    );
+                                  .initialTabsInfo?.rightTabInfo?.tabTitle ??
+                              ' '),
+                      true,
+                      null,
+                    ),
+                    _prepareTemperatureButton(color),
+                    _prepareGreeneryButton(color, hideButtonsN)
+                  ],
+                  _prepareActionNotificationString(
+                    color,
+                    playerPanelInfo.actionNotificationString ??
+                        (hideButtons ? "Place greenery" : null),
+                  ),
+                ],
+              );
             },
           ),
           Stack(

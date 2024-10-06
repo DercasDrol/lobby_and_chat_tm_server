@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/amounts_notifier.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/selected_cards_model.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/tab_with_amounts.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/tab_with_cards.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/tab_with_options.dart';
 import 'package:tab_container/tab_container.dart';
@@ -12,6 +14,7 @@ class ContainerWithTabs extends StatefulWidget {
   final SelectedCards rightTabSelectedCards;
   final ValueNotifier<int> selectedTab;
   final ValueNotifier<int?> rightTabSelectedOption;
+  final AmountsNotifier rightTabAmounts;
 
   const ContainerWithTabs({
     required this.tabsInfo,
@@ -20,6 +23,7 @@ class ContainerWithTabs extends StatefulWidget {
     required this.rightTabSelectedOption,
     required this.midleTabSelectedCards,
     required this.selectedTab,
+    required this.rightTabAmounts,
   });
 
   @override
@@ -101,7 +105,9 @@ class _ContainerWithTabsState extends State<ContainerWithTabs>
         widget.tabsInfo.rightTabInfo?.cards == null &&
                 widget.tabsInfo.rightTabInfo?.disabledCards == null
             ? widget.tabsInfo.rightTabInfo?.options == null
-                ? SizedBox.shrink()
+                ? widget.tabsInfo.rightTabInfo?.amounts == null
+                    ? SizedBox.shrink()
+                    : TabWithAmounts(amounts: widget.rightTabAmounts)
                 : TabWithOptions(
                     selectedOption: widget.rightTabSelectedOption,
                     optionsInfo: widget.tabsInfo.rightTabInfo!.options!,

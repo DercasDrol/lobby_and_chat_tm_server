@@ -10,6 +10,7 @@ import 'package:mars_flutter/domain/model/Color.dart';
 import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
 import 'package:mars_flutter/domain/game_cubit.dart';
 import 'package:mars_flutter/domain/game_state.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_global_scales_info.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_planet_info.dart';
 import 'package:mars_flutter/domain/model/inputs/InputResponse.dart';
 import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
@@ -140,7 +141,8 @@ class ScreenBuilder extends StatelessWidget {
     );
   }
 
-  Widget _prepareGlobalStatePanel(ViewModel viewModel) {
+  Widget _prepareGlobalStatePanel(
+      PresentationGlobalScalesInfo globalScalesInfo) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +157,7 @@ class ScreenBuilder extends StatelessWidget {
                   startValue: 0,
                   endValue: 14,
                   stepValue: 1,
-                  currentValue: viewModel.game.oxygenLevel,
+                  currentValue: globalScalesInfo.oxygenLevel,
                   width: _globalParameterScaleWidth,
                   height: _globalParameterScaleHeight,
                   colors: [
@@ -170,6 +172,15 @@ class ScreenBuilder extends StatelessWidget {
                   },
                   header: "O2",
                   suffix: "%",
+                  scaleAction: globalScalesInfo.availableScalesToAction
+                          .contains(GlobalScale.OXYGEN_LEVEL)
+                      ? globalScalesInfo.scaleAction
+                      : null,
+                  onApplyScaleAction: globalScalesInfo.availableScalesToAction
+                          .contains(GlobalScale.OXYGEN_LEVEL)
+                      ? () => globalScalesInfo.onChangeAction
+                          ?.call(GlobalScale.OXYGEN_LEVEL)
+                      : null,
                 ),
               ),
               Padding(
@@ -178,7 +189,7 @@ class ScreenBuilder extends StatelessWidget {
                   startValue: 0,
                   endValue: 9,
                   stepValue: 1,
-                  currentValue: viewModel.game.oceans,
+                  currentValue: globalScalesInfo.oceans,
                   width: _globalParameterScaleWidth,
                   height: _globalParameterScaleHeight,
                   colors: [
@@ -195,7 +206,7 @@ class ScreenBuilder extends StatelessWidget {
                   startValue: -30,
                   endValue: 8,
                   stepValue: 2,
-                  currentValue: viewModel.game.temperature,
+                  currentValue: globalScalesInfo.temperature,
                   width: _globalParameterScaleWidth,
                   height: _globalParameterScaleHeight,
                   colors: [
@@ -212,16 +223,25 @@ class ScreenBuilder extends StatelessWidget {
                   header: "t°C",
                   suffix: "°",
                   showPlusForPositiveValues: true,
+                  scaleAction: globalScalesInfo.availableScalesToAction
+                          .contains(GlobalScale.TEMPERATURE)
+                      ? globalScalesInfo.scaleAction
+                      : null,
+                  onApplyScaleAction: globalScalesInfo.availableScalesToAction
+                          .contains(GlobalScale.TEMPERATURE)
+                      ? () => globalScalesInfo.onChangeAction
+                          ?.call(GlobalScale.TEMPERATURE)
+                      : null,
                 ),
               ),
-              viewModel.game.gameOptions.venusNextExtension
+              globalScalesInfo.venusScaleLevel != null
                   ? Padding(
                       padding: EdgeInsets.only(bottom: 20.0),
                       child: GlobalParameterScaleView(
                         startValue: 0,
                         endValue: 30,
                         stepValue: 2,
-                        currentValue: viewModel.game.venusScaleLevel,
+                        currentValue: globalScalesInfo.venusScaleLevel!,
                         width: _globalParameterScaleWidth,
                         height: _globalParameterScaleHeight,
                         colors: [
@@ -234,6 +254,16 @@ class ScreenBuilder extends StatelessWidget {
                           16: Image.asset(Assets.resources.tr.path),
                         },
                         header: "%",
+                        scaleAction: globalScalesInfo.availableScalesToAction
+                                .contains(GlobalScale.VENUS_SCALE)
+                            ? globalScalesInfo.scaleAction
+                            : null,
+                        onApplyScaleAction: globalScalesInfo
+                                .availableScalesToAction
+                                .contains(GlobalScale.VENUS_SCALE)
+                            ? () => globalScalesInfo.onChangeAction
+                                ?.call(GlobalScale.VENUS_SCALE)
+                            : null,
                       ),
                     )
                   : SizedBox.shrink(),
@@ -248,13 +278,14 @@ class ScreenBuilder extends StatelessWidget {
     return FittedBox(
       child: TopPanel(
         //maxHeight: _topPanelMaxHeight,
+        participantId: viewModel.id,
         awardsInfo: viewModel.getAwardsInfo(
             sendPlayerAction: sendPlayerAction, logs: logs),
         milestonesInfo:
             viewModel.getMilestonesInfo(sendPlayerAction: sendPlayerAction),
         playerColor: viewModel.thisPlayer?.color ?? PlayerColor.NEUTRAL,
         turmoilInfo:
-            viewModel.getPartiesInfo(sendPlayerAction: sendPlayerAction),
+            viewModel.getTurmoilInfo(sendPlayerAction: sendPlayerAction),
       ),
     );
   }
@@ -273,7 +304,7 @@ class ScreenBuilder extends StatelessWidget {
                   StarsBackground(),
                   planetInfoCN == null
                       ? SizedBox.shrink()
-                      : MarsView(planetInfoCN: planetInfoCN),
+                      : MarsView(key: UniqueKey(), planetInfoCN: planetInfoCN),
                   Align(
                     alignment: Alignment.topCenter,
                     child: BlocBuilder<LogsCubit, LogsState>(
@@ -297,7 +328,8 @@ class ScreenBuilder extends StatelessWidget {
                             planetInfoCN,
                           ),
                         ),
-                  _prepareGlobalStatePanel(state.viewModel!),
+                  _prepareGlobalStatePanel(state.viewModel!
+                      .getGlobalScalesInfo(sendPlayerAction: sendPlayerAction)),
                   Padding(
                     padding: EdgeInsets.all(5.0),
                     child: Tooltip(
@@ -354,6 +386,7 @@ class ScreenBuilder extends StatelessWidget {
         planetInfoCN.availableSpaces = newPlanetInfo?.availableSpaces;
         planetInfoCN.onConfirm = newPlanetInfo?.onConfirm;
         planetInfoCN.activePlayer = newPlanetInfo?.activePlayer;
+        planetInfoCN.actionTitle = newPlanetInfo?.actionTitle;
 
         return getGameView(true, planetInfoCN);
       case ViewModelStatus.loading:

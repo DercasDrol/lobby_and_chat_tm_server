@@ -38,7 +38,7 @@ enum PlayerColor {
   };
   static const _TO_VIEW_COLOR_WITH_OPACITY_MAP = {
     BLUE: Color.fromARGB(230, 33, 149, 243),
-    RED: Color.fromARGB(230, 160, 11, 0),
+    RED: Color.fromARGB(230, 214, 21, 7),
     YELLOW: Color.fromARGB(230, 255, 235, 59),
     GREEN: Color.fromARGB(230, 76, 175, 79),
     BLACK: Color.fromARGB(230, 50, 50, 50),
