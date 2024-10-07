@@ -29,6 +29,17 @@ func InitDB(dbUrl string) error {
 		log.E("PrepareDBtoWork failed: %v\n", err)
 		return err
 	}
+	ticker := time.NewTicker(24 * time.Hour)
+
+	go func() {
+		for t := range ticker.C {
+			log.I("Clean dead games at", t)
+			err = removeDeadGames()
+			if err != nil {
+				log.E("removeDeadGames failed: %v\n", err)
+			}
+		}
+	}()
 	return nil
 }
 
@@ -40,6 +51,40 @@ func newConn() (*pgxpool.Pool, error) {
 	}
 
 	return dbpool, nil
+}
+
+func removeDeadGames() error {
+	dbpool, err := newConn()
+	if err != nil {
+		return err
+	}
+	defer dbpool.Close()
+
+	query := `
+		SELECT id, user_id FROM games WHERE death_day + INTERVAL '7 day' < now();
+	`
+	res, err := dbpool.Query(context.Background(), query)
+	if err != nil {
+		log.E("SELECT expired games failed: %v\n", err)
+		return err
+	}
+	defer res.Close()
+	for res.Next() {
+		var userId string
+		var lobbyGameId string
+		err = res.Scan(&lobbyGameId, &userId)
+		if err != nil {
+			log.E("rows.Scan failed: %v\n", err)
+			return err
+		}
+		err = deleteGame(userId, lobbyGameId, dbpool)
+		if err != nil {
+			log.E("deleteGame failed: %v\n", err)
+			return err
+		}
+	}
+	log.I("Expired games are removed\n")
+	return nil
 }
 
 func InsertOrUpdateUser(id string, name string, avatar string) error {
@@ -119,7 +164,33 @@ func InsertNewEventAndGetInsertedIdBack(userId string, message string, eventType
 		return nil, nil, err
 	}
 	log.I("chat_events: %v,%v,%v inserted\n", user_id, message, eventType)
+	err = deleteOldEvents(dbpool, room_key)
+	if err != nil {
+		log.E("deleteOldEvents failed: %v\n", err)
+		return nil, nil, err
+	}
 	return &id, &created_at, nil
+}
+
+func deleteOldEvents(dbpool *pgxpool.Pool, room_key string) error {
+	query := `
+		DELETE FROM chat_events
+		WHERE room_key = $1 
+		AND id NOT IN (
+			SELECT id
+			FROM chat_events
+			WHERE room_key = $1
+			ORDER BY id DESC
+			LIMIT 300
+		);
+	`
+	_, err := dbpool.Exec(context.Background(), query, room_key)
+	if err != nil {
+		log.E("DELETE FROM chat_events failed: %v\n", err)
+		return err
+	}
+	log.I("old chat_events deleted from: %v\n", room_key)
+	return nil
 }
 
 func InsertNewGameSettings(userId string, newGameConfig string) (*LobbyGame, error) {
@@ -277,20 +348,38 @@ func DeleteGame(userId string, lobbyGameId string) error {
 	}
 	defer dbpool.Close()
 
+	return deleteGame(userId, lobbyGameId, dbpool)
+}
+
+func deleteGame(userId string, lobbyGameId string, dbpool *pgxpool.Pool) error {
 	query := `
 		DELETE FROM players
 		WHERE game_id = $1;
 	`
-	_, err = dbpool.Exec(context.Background(), query, lobbyGameId)
+	_, err := dbpool.Exec(context.Background(), query, lobbyGameId)
 	if err != nil {
 		log.E("DELETE FROM players failed: %v\n", err)
+		return err
+	}
+	query = `
+		DELETE FROM chat_events
+		WHERE room_key = $1;
+	`
+	_, err = dbpool.Exec(context.Background(), query, lobbyGameId)
+	if err != nil {
+		log.E("DELETE FROM chat_events failed: %v\n", err)
 		return err
 	}
 	query = `
 		DELETE FROM games
 		WHERE id = $1 AND user_id = $2;
 	`
-	_, err = dbpool.Exec(context.Background(), query, lobbyGameId, userId)
+	user_id, err := strconv.ParseInt(userId, 10, 64)
+	if err != nil {
+		log.E("strconv.ParseInt failed: %v\n", err)
+		return err
+	}
+	_, err = dbpool.Exec(context.Background(), query, lobbyGameId, user_id)
 	if err != nil {
 		log.E("DELETE FROM games failed: %v\n", err)
 		return err

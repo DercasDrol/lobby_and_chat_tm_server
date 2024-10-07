@@ -46,8 +46,10 @@ class EventListView extends StatelessWidget {
                     ? Alignment.topRight
                     : Alignment.topLeft,
                 children: [
-                  TapRegion(
-                    onTapInside: (_) => launchUrl(
+                  MaterialButton(
+                    padding: EdgeInsets.all(0),
+                    minWidth: 0,
+                    onPressed: () => launchUrl(
                         Uri.parse(DISCORD_USER_URL + message.senderId)),
                     child: CircleAvatar(
                       radius: 20,

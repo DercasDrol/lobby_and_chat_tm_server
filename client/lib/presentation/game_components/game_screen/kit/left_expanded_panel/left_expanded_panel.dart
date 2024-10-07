@@ -63,7 +63,6 @@ class _LeftExpandedPanelState extends State<LeftExpandedPanel> {
                 color: _color,
               ),
               child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(10),
@@ -81,7 +80,7 @@ class _LeftExpandedPanelState extends State<LeftExpandedPanel> {
                       gameChatCubit: widget.gameChatCubit,
                       generalChatCubit: widget.generalChatCubit,
                       width: width,
-                      height: constrain.maxHeight - goToLobbyButtonHeight - 12,
+                      height: constrain.maxHeight - goToLobbyButtonHeight - 2,
                       logsCubit: widget.logsCubit,
                       //scrollController: _scrollController,
                     ),
