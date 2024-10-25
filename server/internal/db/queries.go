@@ -529,6 +529,16 @@ func LeaveGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
+func GetLobbyGame(lobbyGameId string) (*LobbyGame, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	return getLobbyGame(lobbyGameId, dbpool)
+}
+
 func getLobbyGame(lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGame, error) {
 	query := `
 		SELECT id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id
@@ -574,7 +584,7 @@ func ChangePlayerColor(lobbyGame *LobbyGame, userId string) (*LobbyGame, error) 
 	return updateNewGameSettings(lobbyGame.UserIdCreatedBy, *lobbyGame, dbpool)
 }
 
-func getGameServerUrl(lobbyGameId string, dbpool *pgxpool.Pool) (string, error) {
+func getGameServerUrl(lobbyGameId any, dbpool *pgxpool.Pool) (string, error) {
 
 	query := `
 		SELECT game_servers.url
@@ -610,4 +620,38 @@ func GetPlayer(lobbyGameId string, userId string) (*Player, error) {
 		return nil, err
 	}
 	return &player, nil
+}
+
+func UpdateGameStatus(lobbyGame *LobbyGame) (bool, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return false, err
+	}
+	defer dbpool.Close()
+	serverUrl, err := getGameServerUrl(lobbyGame.LobbyGameid, dbpool)
+	if err != nil {
+		log.E("startGameHandler db.getServerUrl error: %v", err)
+		return false, err
+	}
+	updated, err := updateGameStatus(serverUrl, lobbyGame)
+	if err != nil {
+		log.E("updateGameStatus failed: %v\n", err)
+		return false, err
+	}
+	if updated {
+		query := `
+			UPDATE games
+			SET final_statistic = $1
+			WHERE id = $2;
+		`
+		_, err = dbpool.Exec(context.Background(), query, lobbyGame.FinalStatistic, lobbyGame.LobbyGameid)
+		if err != nil {
+			log.E("UPDATE games failed: %v\n", err)
+			return false, err
+		}
+		return true, nil
+	} else {
+		return false, nil
+	}
+
 }

@@ -139,25 +139,25 @@ func getSimpleGameModel(host string, lobbyGame *LobbyGame) (*SimpleGameModel, er
 
 	req, err := http.NewRequest(http.MethodPut, requestURL, bytes.NewReader(newGameCongigJson))
 	if err != nil {
-		fmt.Printf("startGameHandler: could not create request: %s\n", err)
+		log.E("startGameHandler: could not create request: %s\n", err)
 		return nil, err
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Printf("startGameHandler: error making http request: %s\n", err)
+		log.E("startGameHandler: error making http request: %s\n", err)
 		return nil, err
 	}
 
-	fmt.Printf("startGameHandler: got response!\n")
-	fmt.Printf("startGameHandler: status code: %d\n", res.StatusCode)
+	log.D("startGameHandler: got response!\n")
+	log.D("startGameHandler: status code: %d\n", res.StatusCode)
 
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		fmt.Printf("startGameHandler: could not read response body: %s\n", err)
+		log.E("startGameHandler: could not read response body: %s\n", err)
 		return nil, err
 	}
-	fmt.Printf("startGameHandler: response body: %s\n", resBody)
+	log.D("startGameHandler: response body: %s\n", resBody)
 
 	simpleGameModel := &SimpleGameModel{}
 	err = json.Unmarshal(resBody, simpleGameModel)
@@ -166,4 +166,45 @@ func getSimpleGameModel(host string, lobbyGame *LobbyGame) (*SimpleGameModel, er
 		return nil, err
 	}
 	return simpleGameModel, nil
+}
+
+func updateGameStatus(host string, lobbyGame *LobbyGame) (bool, error) {
+	protocol := "https://"
+	if strings.HasPrefix(host, "localhost:") {
+		protocol = "http://"
+	}
+	requestURL := fmt.Sprintf("%v%v/api/spectator?id=%v", protocol, host, *lobbyGame.SpectatorId)
+
+	req, err := http.NewRequest(http.MethodGet, requestURL, bytes.NewReader([]byte{}))
+	if err != nil {
+		log.E("getGameStatus: could not create request: %s\n", err)
+		return false, err
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.E("getGameStatus: error making http request: %s\n", err)
+		return false, err
+	}
+
+	log.D("getGameStatus: got response!\n")
+	log.D("getGameStatus: status code: %d\n", res.StatusCode)
+	if res.StatusCode != http.StatusOK {
+		log.E("getGameStatus: status code is not 200: %d\n", res.StatusCode)
+		log.E("getGameStatus: requestURL: %s\n", requestURL)
+		return false, nil
+	}
+	resBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.E("getGameStatus: could not read response body: %s\n", err)
+		return false, err
+	}
+	log.D("getGameStatus: response body: %s\n", resBody)
+	stringBody := string(resBody)
+	if lobbyGame.FinalStatistic != nil && *lobbyGame.FinalStatistic == stringBody {
+		return false, nil
+	} else {
+		lobbyGame.FinalStatistic = &stringBody
+		return true, nil
+	}
 }

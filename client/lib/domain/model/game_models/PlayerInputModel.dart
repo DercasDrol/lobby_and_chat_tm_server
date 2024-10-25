@@ -471,7 +471,7 @@ class PlayerInputModel {
       _inputResponseByPlayerInputModel(
         inputModel: this,
         isTargetInputModelFn: _getCheckModelFn(
-            this, PlayerInputType.OPTION, false, "Increase venus"),
+            this, PlayerInputType.OPTION, false, "Increase Venus scale"),
       );
 
   InputResponse? getInputResponseSelectedParty(PartyName party) =>

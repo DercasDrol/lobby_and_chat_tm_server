@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/domain/model/Color.dart';
@@ -34,15 +36,19 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final elementWidth = 120.0;
     final elementHeight = 80.0;
-    selectedTab.value = int.parse(
-      localStorage.getItem("selectedTab_${widget.participantId.toString()}") ??
-          selectedTab.value.toString(),
-    );
+    final tabCount = widget.turmoilInfo != null ? 3 : 2;
+    selectedTab.value = min(
+        tabCount - 1,
+        int.parse(
+          localStorage
+                  .getItem("selectedTab_${widget.participantId.toString()}") ??
+              selectedTab.value.toString(),
+        ));
     final width = widget.turmoilInfo != null
         ? widget.turmoilInfo!.turmoilModel.parties.length * 120.0 * 1.15
         : widget.awardsInfo.ma.length * 120.0;
     final controller = TabController(
-      length: widget.turmoilInfo != null ? 3 : 2,
+      length: tabCount,
       vsync: this,
       initialIndex: selectedTab.value,
     );

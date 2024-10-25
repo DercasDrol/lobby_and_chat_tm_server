@@ -9,6 +9,7 @@ import (
 	"mars-go-service/internal/utils"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 	"sync"
 
 	"encoding/json"
@@ -202,7 +203,20 @@ func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 	saveAndShareEvent(LEAVE, chatRoom, userId.(string), "")
 }
 
-func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
+func updateGameStateTrigger(chatRoom string, gameForCheckChannel *chan string) {
+	log.D("updateGameStateTrigger %v", chatRoom)
+	go func() {
+		_, err := strconv.Atoi(chatRoom)
+		if err == nil {
+			log.D("updateGameStateTrigger %v", chatRoom)
+			*gameForCheckChannel <- chatRoom
+		} else {
+			log.E("updateGameStateTrigger strconv.Atoi error: %v", err)
+		}
+	}()
+}
+
+func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config, gameForCheckChannel *chan string) error {
 	connsState = &connectionsState{
 		soIdToUserIdMap: &sync.Map{},
 		roomToSoIdsMap:  &sync.Map{},
@@ -263,6 +277,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	})
 
 	socketServer.OnEvent("/", "leave", func(so socketio.Conn, chatRoom string) {
+		updateGameStateTrigger(chatRoom, gameForCheckChannel)
 		leaveHandler(so, chatRoom, false)
 	})
 
@@ -298,6 +313,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 		roomsMap0.Range(func(key, value interface{}) bool {
 			room := key.(string)
 			leaveHandler(so, room, true)
+			updateGameStateTrigger(room, gameForCheckChannel)
 			return true
 		})
 		connsState.soIdToUserIdMap.Delete(so.ID())

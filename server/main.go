@@ -43,16 +43,16 @@ func main() {
 		Scopes:       []string{discord.ScopeIdentify},
 		Endpoint:     discord.Endpoint,
 	}
-
+	gameForCheckChannel := make(chan string)
 	go func() {
-		err = StartChatService(conf, *pConf.Auth.JwtSecret, authConf)
+		err = StartChatService(conf, *pConf.Auth.JwtSecret, authConf, &gameForCheckChannel)
 		if err != nil {
 			log.E("Failed to start chat service: %v", err)
 			os.Exit(1)
 		}
 	}()
 	go func() {
-		err = StartLobbyService(conf, *pConf.Auth.JwtSecret, authConf)
+		err = StartLobbyService(conf, *pConf.Auth.JwtSecret, authConf, &gameForCheckChannel)
 		if err != nil {
 			log.E("Failed to start lobby service: %v", err)
 			os.Exit(1)
@@ -134,10 +134,10 @@ func StartAuthService(conf *config.AppConfig, jwtSecret string, authConf *oauth2
 }
 
 // StartAuthService starts all the component of this service.
-func StartLobbyService(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
+func StartLobbyService(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config, gameForCheckChannel *chan string) error {
 	log.I("start the lobby service...")
 
-	if err := lobby.InitServer(conf, jwtSecret, authConf); err != nil {
+	if err := lobby.InitServer(conf, jwtSecret, authConf, gameForCheckChannel); err != nil {
 		log.E("Failed to start the lobby server: err:[%v]", err)
 	}
 
@@ -145,10 +145,10 @@ func StartLobbyService(conf *config.AppConfig, jwtSecret string, authConf *oauth
 }
 
 // StartChatService starts all the component of this service.
-func StartChatService(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
+func StartChatService(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config, gameForCheckChannel *chan string) error {
 	log.I("start the chat service...")
 
-	if err := chat.InitServer(conf, jwtSecret, authConf); err != nil {
+	if err := chat.InitServer(conf, jwtSecret, authConf, gameForCheckChannel); err != nil {
 		log.E("Failed to start the chat server: err:[%v]", err)
 	}
 

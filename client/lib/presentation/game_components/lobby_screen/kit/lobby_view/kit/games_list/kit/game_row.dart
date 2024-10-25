@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:mars_flutter/data/asset_paths_gen/assets.gen.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_container.dart';
 import 'package:mars_flutter/presentation/game_components/common/game_option_view.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 
 class GameRow extends StatelessWidget {
   final LobbyCubit lobbyCubit;
@@ -43,13 +43,14 @@ class GameRow extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     );
-
+    final gen = game.finalState?.game.generation;
     final playersCount = GameOptionView(
       images: [Assets.misc.delegate.path],
       lablePart1: game.createGameModel.players.length.toString() +
           (!game.isStarted
               ? ' / ' + game.createGameModel.maxPlayers.toString()
               : ""),
+      lablePart2: gen != null ? ' / Gen: $gen' : null,
       fontColor: GAME_OPTIONS_CONSTANTS.dropdownSelectedItemTextColor,
       type: GameOptionType.SIMPLE,
     );
@@ -65,6 +66,23 @@ class GameRow extends StatelessWidget {
         fontColor: GAME_OPTIONS_CONSTANTS.dropdownSelectedItemTextColor,
         type: GameOptionType.SIMPLE,
       ),
+    );
+
+    final timerStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w300,
+      fontSize: 13,
+      fontFeatures: <FontFeature>[
+        FontFeature.tabularFigures(),
+      ],
+    );
+    final timerView = TimerCountdown(
+      format: CountDownTimerFormat.daysHoursMinutesSeconds,
+      endTime: game.deathAt!,
+      timeTextStyle: timerStyle,
+      colonsTextStyle: timerStyle,
+      enableDescriptions: false,
+      spacerWidth: 0,
     );
 
     return GameOptionContainer(
@@ -104,33 +122,45 @@ class GameRow extends StatelessWidget {
                   ]),
                 ),
                 SizedBox(
-                    width: 79.0,
-                    child: game.isDead
+                  width: 79.0,
+                  child: Column(children: [
+                    game.isDead
                         ? Text('Game is Dead',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.red))
-                        : game.isPlayerCanJoin || game.isStarted
-                            ? BottomButton(
-                                text: !game.isStarted
-                                    ? 'Join'
-                                    : game.isPlayerJoined(lobbyCubit.userId) &&
-                                            !game.isFinished
-                                        ? "Continue"
-                                        : 'Watch',
-                                onPressed: () {
-                                  if (!game.isStarted && game.isPlayerCanJoin) {
-                                    lobbyCubit.joinNewGame(game.lobbyGameId);
-                                  } else if (game
-                                          .isPlayerJoined(lobbyCubit.userId) &&
-                                      !game.isFinished) {
-                                    lobbyCubit.continueGame(game.lobbyGameId);
-                                  } else if (game.spectatorId != null) {
-                                    lobbyCubit.setGameActionType(
-                                        GameActionType.SHOW_SPECTATOR_GAME,
-                                        game.lobbyGameId);
-                                  }
-                                })
-                            : SizedBox.shrink()),
+                        : Column(children: [
+                            game.isPlayerCanJoin || game.isStarted
+                                ? BottomButton(
+                                    text: !game.isStarted
+                                        ? 'Join'
+                                        : game.isPlayerJoined(
+                                                    lobbyCubit.userId) &&
+                                                !game.isFinished
+                                            ? "Continue"
+                                            : game.isFinished
+                                                ? 'Results'
+                                                : 'Watch',
+                                    onPressed: () {
+                                      if (!game.isStarted &&
+                                          game.isPlayerCanJoin) {
+                                        lobbyCubit
+                                            .joinNewGame(game.lobbyGameId);
+                                      } else if (game.isPlayerJoined(
+                                              lobbyCubit.userId) &&
+                                          !game.isFinished) {
+                                        lobbyCubit
+                                            .continueGame(game.lobbyGameId);
+                                      } else if (game.spectatorId != null) {
+                                        lobbyCubit.setGameActionType(
+                                            GameActionType.SHOW_SPECTATOR_GAME,
+                                            game.lobbyGameId);
+                                      }
+                                    })
+                                : SizedBox.shrink(),
+                            if (game.deathAt != null) timerView
+                          ]),
+                  ]),
+                ),
               ],
             ),
           ],

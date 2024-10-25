@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:mars_flutter/domain/model/Phase.dart';
 import 'package:mars_flutter/domain/model/Types.dart';
 import 'package:mars_flutter/domain/model/game/NewGameConfig.dart';
 import 'package:mars_flutter/domain/model/game_models/GameModel.dart';
+import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/create_game_model.dart';
 
 class LobbyGame extends Equatable {
@@ -15,7 +17,7 @@ class LobbyGame extends Equatable {
   final DateTime? sharedAt;
   final DateTime? startedAt;
   final DateTime? finishedAt;
-  final String? finalState;
+  final ViewModel? finalState;
   final String userIdCreatedBy;
   final SpectatorId? spectatorId;
 
@@ -55,7 +57,9 @@ class LobbyGame extends Equatable {
       finishedAt: e['finishedAt'] == null
           ? null
           : DateTime.parse(e['finishedAt'] as String),
-      finalState: e['finalState'] as String?,
+      finalState: e['finalState'] == null
+          ? null
+          : ViewModel.fromJson(jsonDecode(e['finalState'] as String)),
       userIdCreatedBy: e['userIdCreatedBy'] as String,
       spectatorId: e['spectatorId'] == null
           ? null
@@ -89,7 +93,7 @@ class LobbyGame extends Equatable {
   }
 
   bool get isFinished {
-    return finishedAt != null;
+    return finishedAt != null || finalState?.game.phase == Phase.END;
   }
 
   @override
@@ -114,7 +118,7 @@ class LobbyGame extends Equatable {
     DateTime? sharedAt,
     DateTime? startedAt,
     DateTime? finishedAt,
-    String? finalState,
+    ViewModel? finalState,
     String? userIdCreatedBy,
     SpectatorId? spectatorId,
   }) {

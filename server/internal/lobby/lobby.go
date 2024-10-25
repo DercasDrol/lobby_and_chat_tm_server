@@ -19,18 +19,14 @@ import (
 )
 
 type connectionsState struct {
-	lobbyUsersMap *sync.Map //map[ /*socketId*/ string] /*userId*/ string
-	socketsMap    *sync.Map //map[string] /*socketId*/ *socketio.Conn
+	socketIdUserIdMap *sync.Map //map[ /*socketId*/ string] /*userId*/ string
+	socketsMap        *sync.Map //map[string] /*socketId*/ *socketio.Conn
 }
 
 var (
 	log          *logger.Logger
 	connsState   *connectionsState
 	socketServer *socketio.Server
-)
-
-const (
-	START_GAME_HANDLER = "game"
 )
 
 func init() {
@@ -48,7 +44,7 @@ func emitGames(so socketio.Conn, gamesJson string) {
 
 func createHandler(so socketio.Conn, newGameConfig string) {
 	log.D("%v creates new game %v", so.ID(), newGameConfig)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("createHandler userId not found")
 		return
@@ -93,7 +89,7 @@ func broadcastGames(games []*db.LobbyGame) {
 	//BroadcastToRoom sends one by one and waits for the response
 	//some connections may be closed from client side but not disconected on server side (refresh page, close tab, etc)
 	//because BroadcastToRoom waits for the response from each connection, it may take a long time
-	connsState.lobbyUsersMap.Range(func(soId, _ interface{}) bool {
+	connsState.socketIdUserIdMap.Range(func(soId, _ interface{}) bool {
 		so0, ok := connsState.socketsMap.Load(soId.(string))
 		if ok {
 			so1 := *so0.(*socketio.Conn)
@@ -111,7 +107,7 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 		log.E("json.Unmarshal(NewGameConfig) error: %v", err)
 		return
 	}
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("updateHandler userId not found")
 		return
@@ -137,7 +133,7 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 
 func deleteHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v delete %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("deleteHandler userId not found")
 		return
@@ -148,7 +144,7 @@ func deleteHandler(so socketio.Conn, lobbyGameId string) {
 		log.E("deleteHandler db.DeleteGameSettings error: %v", err)
 		return
 	}
-	connsState.lobbyUsersMap.Range(func(soId, _ interface{}) bool {
+	connsState.socketIdUserIdMap.Range(func(soId, _ interface{}) bool {
 		so0, ok := connsState.socketsMap.Load(soId.(string))
 		if ok {
 			so1 := *so0.(*socketio.Conn)
@@ -160,7 +156,7 @@ func deleteHandler(so socketio.Conn, lobbyGameId string) {
 
 func shareGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v share %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("shareGameHandler userId not found")
 		return
@@ -177,7 +173,7 @@ func shareGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func startGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v start game %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("startGameHandler userId not found")
 		return
@@ -194,7 +190,7 @@ func startGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func joinGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v join game %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("joinGameHandler userId not found")
 		return
@@ -211,7 +207,7 @@ func joinGameHandler(so socketio.Conn, lobbyGameId string) {
 
 func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v leave game %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("leaveGameHandler userId not found")
 		return
@@ -226,7 +222,7 @@ func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
 }
 
 func loadGamesHandler(so socketio.Conn) {
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("loadGamesHandler userId not found")
 		return
@@ -247,7 +243,7 @@ func loadGamesHandler(so socketio.Conn) {
 
 func changePlayerColorHandler(so socketio.Conn, lobbyGame string) {
 	log.D("%v changePlayerColor %v", so.ID(), lobbyGame)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("changePlayerColorHandler userId not found")
 		return
@@ -269,7 +265,7 @@ func changePlayerColorHandler(so socketio.Conn, lobbyGame string) {
 
 func loadPlayerHandler(so socketio.Conn, lobbyGameId string) {
 	log.D("%v loadPlayerHandler %v", so.ID(), lobbyGameId)
-	userId, ok := connsState.lobbyUsersMap.Load(so.ID())
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 	if !ok {
 		log.E("loadPlayerIdHandler userId not found")
 		return
@@ -287,11 +283,48 @@ func loadPlayerHandler(so socketio.Conn, lobbyGameId string) {
 	so.Emit("player", string(playerJson))
 }
 
+func updateGameStatusHandler(lobbyGameId string) {
+	log.D("updateGameStatusHandler %v", lobbyGameId)
+	lobbyGameToUpdate, err := db.GetLobbyGame(lobbyGameId)
+	if err != nil {
+		log.E("updateGameStatusHandler GetLobbyGame error: %v", err)
+		return
+	}
+
+	if lobbyGameToUpdate.StartedAt != nil {
+		updated, err := db.UpdateGameStatus(lobbyGameToUpdate)
+		if err != nil {
+			log.E("updateGameStatusHandler db.UpdateGameStatus error: %v", err)
+			return
+		}
+		if updated {
+			if lobbyGameToUpdate.SharedAt == nil {
+				connsState.socketIdUserIdMap.Range(func(soId, userId interface{}) bool {
+					if userId == lobbyGameToUpdate.UserIdCreatedBy {
+						so, ok := connsState.socketsMap.Load(soId.(string))
+						if !ok {
+							log.E("updateGameStatusHandler so not found")
+							return false
+						}
+						sendGamesToOneUser(*so.(*socketio.Conn), lobbyGameToUpdate)
+						return false
+					}
+					return true
+				})
+			} else {
+				broadcastGame(lobbyGameToUpdate)
+			}
+		}
+	} else {
+		log.E("updateGameStatusHandler: game not started")
+	}
+}
+
 // InitServer initializes the server
-func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config) error {
+func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config, gameForCheckChannel *chan string) error {
 	connsState = &connectionsState{
-		lobbyUsersMap: &sync.Map{},
-		socketsMap:    &sync.Map{},
+		socketIdUserIdMap: &sync.Map{},
+		socketsMap:        &sync.Map{},
 	}
 
 	socketServer = socketio.NewServer(&engineio.Options{
@@ -302,7 +335,7 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 			if err != nil {
 				log.E("jwt.GetUserId error: %v", err)
 			}
-			connsState.lobbyUsersMap.Store(so.ID(), userId)
+			connsState.socketIdUserIdMap.Store(so.ID(), userId)
 		},
 		RequestChecker: func(r *http.Request) (http.Header, error) {
 			jwtFromRequest := r.URL.Query().Get("jwt")
@@ -348,10 +381,16 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 
 		log.D("disconnected... %v, by %v", so.ID(), reason)
-		connsState.lobbyUsersMap.Delete(so.ID())
+		connsState.socketIdUserIdMap.Delete(so.ID())
 		connsState.socketsMap.Delete(so.ID())
 	})
-
+	go func() {
+		log.D("StartGameForCheckGorutine")
+		for gameForCheck := range *gameForCheckChannel {
+			log.D("gameForCheck: %v", gameForCheck)
+			updateGameStatusHandler(gameForCheck)
+		}
+	}()
 	go func() {
 		if err := socketServer.Serve(); err != nil {
 			log.E("socketio listen error: %s\n", err)
@@ -370,6 +409,5 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 
 	log.I("Serving at %v", *conf.LobbyServerConfig.Port)
 	log.E("%v", utils.ListenAndServe(fmt.Sprintf(":%v", *conf.LobbyServerConfig.Port), httpServeMux))
-
 	return nil
 }
