@@ -162,3 +162,9 @@ type GameOptionsModel struct {
 	VenusNext                        bool     `json:"venusNext"`
 	UndoOption                       bool     `json:"undoOption"`
 }
+
+type GameTemplate struct {
+	Id            int           `json:"id"`
+	Name          string        `json:"name"`
+	NewGameConfig NewGameConfig `json:"newGameConfig"`
+}

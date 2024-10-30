@@ -7,6 +7,7 @@ import 'package:mars_flutter/data/api/constants.dart';
 import 'package:mars_flutter/data/jwt.dart';
 import 'package:mars_flutter/domain/model/game/NewGameConfig.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/lobby_game.dart';
+import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/lobby_game_template.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/chat_and_lobby/player.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -18,12 +19,26 @@ class LobbyAPIClient {
 
   final ValueNotifier<bool> isLobbyConnectionOk = ValueNotifier(false);
   void Function(Map<int, LobbyGame>)? _onNewGamesSubscriber = null;
+  void Function(Map<int, LobbyGameTemplate>)? _onNewGameTemplatesSubscriber =
+      null;
   void Function(int)? _onDeleteGameSubscriber = null;
+  void Function(int)? _onDeleteGameTemplateSubscriber = null;
   void Function(Player)? _onPlayerSubscriber = null;
   subscribeOnNewGames(void Function(Map<int, LobbyGame>) onNewGames) =>
       _onNewGamesSubscriber = onNewGames;
 
   unsubscribeOnNewGames() => _onNewGamesSubscriber = null;
+
+  subscribeOnNewGameTemplates(
+          void Function(Map<int, LobbyGameTemplate>) onNewGameTemplate) =>
+      _onNewGameTemplatesSubscriber = onNewGameTemplate;
+
+  unsubscribeOnNewGameTemplates() => _onNewGameTemplatesSubscriber = null;
+
+  subscribeOnDeleteGameTemplate(void Function(int) onDeleteGameTemplate) =>
+      _onDeleteGameTemplateSubscriber = onDeleteGameTemplate;
+
+  unsubscribeOnDeleteGameTemplate() => _onDeleteGameTemplateSubscriber = null;
 
   subscribeOnDeleteGame(void Function(int) onDeleteGame) =>
       _onDeleteGameSubscriber = onDeleteGame;
@@ -73,6 +88,34 @@ class LobbyAPIClient {
       if (_onDeleteGameSubscriber != null) {
         final id = int.parse(lobbyGameId);
         _onDeleteGameSubscriber!(id);
+      }
+    });
+
+    _socket.on('game_templates', (newGameTemplatesFromServer) {
+      logger.d('LobbyAPIClient game_templates: $newGameTemplatesFromServer');
+
+      if (_onNewGameTemplatesSubscriber != null) {
+        Iterable l = jsonDecode(newGameTemplatesFromServer);
+        final List<LobbyGameTemplate> templates = l
+            .map((e) => LobbyGameTemplate.fromJson(e as Map<String, dynamic>))
+            .toList();
+
+        final Map<int, LobbyGameTemplate> templatesMap =
+            Map<int, LobbyGameTemplate>.fromIterable(
+          templates,
+          key: (template) => template.id,
+          value: (template) => template,
+        );
+        _onNewGameTemplatesSubscriber!(templatesMap);
+      }
+    });
+
+    _socket.on('deleted_game_template', (templateId) {
+      logger.d('LobbyAPIClient deleted_game_template: $templateId');
+
+      if (_onDeleteGameTemplateSubscriber != null) {
+        final id = templateId;
+        _onDeleteGameTemplateSubscriber!(id);
       }
     });
 
@@ -159,5 +202,31 @@ class LobbyAPIClient {
   void loadGames() {
     logger.d("loadGames");
     _socket.emit('load_games');
+  }
+
+  void loadGameTemplates() {
+    logger.d("loadGameTemplates");
+    _socket.emit('load_game_templates');
+  }
+
+  void saveGameTemplate(LobbyGameTemplate template) {
+    logger.d("saveChangedOptions : $template ");
+    _socket.emit(
+      'save_game_template',
+      template.toShortJson(),
+    );
+  }
+
+  void deleteGameTemplate(int templateId) {
+    logger.d("deleteGameTemplate : $templateId ");
+    _socket.emit('delete_game_template', templateId.toString());
+  }
+
+  void updateGameTemplate(LobbyGameTemplate template) {
+    logger.d("updateGameTemplate : $template ");
+    _socket.emit(
+      'update_game_template',
+      template.toShortJson(),
+    );
   }
 }

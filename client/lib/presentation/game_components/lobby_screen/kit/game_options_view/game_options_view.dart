@@ -11,6 +11,7 @@ import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/multiplayer_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/players_options_view.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/players_view/players_view.dart';
+import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/templates_view.dart';
 
 class GameOptionsView extends StatelessWidget {
   final LobbyCubit lobbyCubit;
@@ -38,7 +39,6 @@ class GameOptionsView extends StatelessWidget {
     final isChangesAllowed =
         lobbyGame.startedAt == null && isOwnGame && !isForTooltip;
     prepareOnChangeFn(fn) => isChangesAllowed ? fn : null;
-
     final expansionsView = ExpansionsView(
       expansions: CreateGameModel.expansions,
       selectedExpansions: createGameModel.selectedExpansions,
@@ -171,7 +171,7 @@ class GameOptionsView extends StatelessWidget {
         ),
       ),
     );
-
+    final internalHeight = height - 38 - (isChangesAllowed ? 45 : 0);
     return isForTooltip
         ? tooltipVersion
         : Container(
@@ -187,11 +187,12 @@ class GameOptionsView extends StatelessWidget {
             ),
             child: Column(
               children: [
+                if (isChangesAllowed) TemplatesView(lobbyCubit: lobbyCubit),
                 Container(
                   padding: EdgeInsets.all(5),
                   constraints: BoxConstraints(
-                    minHeight: height - 38,
-                    maxHeight: height - 38,
+                    minHeight: internalHeight,
+                    maxHeight: internalHeight,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.grey[700],

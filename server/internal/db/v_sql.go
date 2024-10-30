@@ -12,6 +12,7 @@ var (
 	sql_version_updaters = []func(*pgxpool.Pool) error{
 		vSQL_1,
 		vSQL_2,
+		vSQL_3,
 		vSQLAfterUpdate,
 	}
 )
@@ -224,6 +225,43 @@ func vSQL_2(dbpool *pgxpool.Pool) error {
 		return err
 	}
 	_, err = dbpool.Exec(context.Background(), "UPDATE db_version SET version = 2")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func vSQL_3(dbpool *pgxpool.Pool) error {
+	_, err := dbpool.Exec(context.Background(), `
+		CREATE TABLE IF NOT EXISTS public.game_templates
+		(
+			id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+			name character varying(100) COLLATE pg_catalog."default",
+			settings json NOT NULL,
+			user_id bigint NOT NULL,
+			CONSTRAINT game_templates_pkey PRIMARY KEY (id)
+		)
+
+		TABLESPACE pg_default;
+	`)
+	if err != nil {
+		return err
+	}
+	_, err = dbpool.Exec(context.Background(), `ALTER TABLE IF EXISTS public.game_templates OWNER to postgres;`)
+	if err != nil {
+		return err
+	}
+	_, err = dbpool.Exec(context.Background(), `
+		CREATE INDEX IF NOT EXISTS game_templates_user_ids
+		ON public.game_templates USING btree
+		(user_id ASC NULLS LAST)
+		WITH (deduplicate_items=True)
+		TABLESPACE pg_default;
+	`)
+	if err != nil {
+		return err
+	}
+	_, err = dbpool.Exec(context.Background(), "UPDATE db_version SET version = 3")
 	if err != nil {
 		return err
 	}

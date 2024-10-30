@@ -76,14 +76,16 @@ class GameRow extends StatelessWidget {
         FontFeature.tabularFigures(),
       ],
     );
-    final timerView = TimerCountdown(
-      format: CountDownTimerFormat.daysHoursMinutesSeconds,
-      endTime: game.deathAt!,
-      timeTextStyle: timerStyle,
-      colonsTextStyle: timerStyle,
-      enableDescriptions: false,
-      spacerWidth: 0,
-    );
+    final timerView = game.deathAt != null
+        ? TimerCountdown(
+            format: CountDownTimerFormat.daysHoursMinutesSeconds,
+            endTime: game.deathAt!,
+            timeTextStyle: timerStyle,
+            colonsTextStyle: timerStyle,
+            enableDescriptions: false,
+            spacerWidth: 0,
+          )
+        : SizedBox.shrink();
 
     return GameOptionContainer(
       padding: EdgeInsets.only(

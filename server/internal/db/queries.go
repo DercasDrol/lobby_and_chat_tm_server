@@ -655,3 +655,110 @@ func UpdateGameStatus(lobbyGame *LobbyGame) (bool, error) {
 	}
 
 }
+
+func SaveGameTemplate(userId string, gameTemplate GameTemplate) (*GameTemplate, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+	return saveGameTemplate(userId, gameTemplate, dbpool)
+}
+
+func saveGameTemplate(userId string, gameTemplate GameTemplate, dbpool *pgxpool.Pool) (*GameTemplate, error) {
+	var templateId int
+	query := `
+		INSERT INTO game_templates (user_id, name, settings)
+		VALUES($1, $2, $3)
+		RETURNING id;
+	`
+	err := dbpool.QueryRow(context.Background(), query, userId, gameTemplate.Name, gameTemplate.NewGameConfig).Scan(&templateId)
+	if err != nil {
+		log.E("INSERT INTO game_templates failed: %v\n", err)
+		return nil, err
+	}
+	gameTemplate.Id = templateId
+	return &gameTemplate, nil
+}
+
+func GetGameTemplates(userId string) ([]*GameTemplate, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `
+		SELECT id, name, settings
+		FROM game_templates
+		WHERE user_id = $1;
+	`
+	rows, err := dbpool.Query(context.Background(), query, userId)
+	if err != nil {
+		log.E("SELECT FROM game_templates failed: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	gameTemplates := make([]*GameTemplate, 0)
+	for rows.Next() {
+		gameTemplate := &GameTemplate{}
+		err = rows.Scan(&gameTemplate.Id, &gameTemplate.Name, &gameTemplate.NewGameConfig)
+		if err != nil {
+			log.E("rows.Scan failed: %v\n", err)
+			return nil, err
+		}
+		gameTemplates = append(gameTemplates, gameTemplate)
+	}
+	return gameTemplates, nil
+}
+
+func UpdateGameTemplate(userId string, gameTemplate GameTemplate) (*GameTemplate, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+	return updateGameTemplate(userId, gameTemplate, dbpool)
+}
+
+func updateGameTemplate(userId string, gameTemplate GameTemplate, dbpool *pgxpool.Pool) (*GameTemplate, error) {
+	query := `
+		UPDATE game_templates
+		SET name = $2, settings = $3
+		WHERE id = $1 AND user_id = $4
+		RETURNING id;
+	`
+	var templateId int
+	err := dbpool.QueryRow(context.Background(), query, gameTemplate.Id, gameTemplate.Name, gameTemplate.NewGameConfig, userId).Scan(&templateId)
+	if err != nil {
+		log.E("UPDATE game_templates failed: %v\n", err)
+		return nil, err
+	}
+	if templateId != gameTemplate.Id {
+		log.E("UPDATE game_templates failed: templateId != gameTemplate.Id")
+		return nil, err
+	}
+	return &gameTemplate, nil
+}
+
+func DeleteGameTemplate(userId string, templateId string) (*int, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `
+		DELETE FROM game_templates
+		WHERE id = $1 AND user_id = $2
+		RETURNING id;
+	`
+	var deletedTemplateId int
+	err = dbpool.QueryRow(context.Background(), query, templateId, userId).Scan(&deletedTemplateId)
+	if err != nil {
+		log.E("DELETE FROM game_templates failed: %v\n", err)
+		return nil, err
+	}
+	return &deletedTemplateId, nil
+}

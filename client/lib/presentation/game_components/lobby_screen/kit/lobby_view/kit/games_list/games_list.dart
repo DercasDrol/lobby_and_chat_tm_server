@@ -34,7 +34,8 @@ class GamesList extends StatelessWidget {
             } else {
               return false;
             }
-          }).toList();
+          }).toList()
+                ..sort((a, b) => a.lobbyGameId.compareTo(b.lobbyGameId));
           return Container(
             padding: EdgeInsets.all(5),
             constraints: BoxConstraints(

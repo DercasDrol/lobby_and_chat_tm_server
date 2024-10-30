@@ -12,6 +12,7 @@ import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_
 import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
 import 'package:mars_flutter/presentation/game_components/common/stars_background.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/game_options_view.dart';
+import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/lobby_view/kit/lobby_notification_popup.dart';
 import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/lobby_view/lobby_view.dart';
 
 //list of the games in left area, and chat in right area
@@ -61,6 +62,10 @@ class MainLobbyScreen extends StatelessWidget {
                       return !needGoToGame;
                     },
                     builder: (context, lobbyState) {
+                      if (lobbyState.notification != null)
+                        showLobbyPopup(context, lobbyState.notification!, () {
+                          lobbyCubit.clearNotification();
+                        });
                       logger.d('lobbyState changed: $lobbyState');
 
                       final gameToShowGameOptions =

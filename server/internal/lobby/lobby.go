@@ -141,7 +141,7 @@ func deleteHandler(so socketio.Conn, lobbyGameId string) {
 	//delete game
 	err := db.DeleteGame(userId.(string), lobbyGameId)
 	if err != nil {
-		log.E("deleteHandler db.DeleteGameSettings error: %v", err)
+		log.E("deleteHandler db.DeleteGame error: %v", err)
 		return
 	}
 	connsState.socketIdUserIdMap.Range(func(soId, _ interface{}) bool {
@@ -320,6 +320,95 @@ func updateGameStatusHandler(lobbyGameId string) {
 	}
 }
 
+func sendGameTemplate(so socketio.Conn, template *db.GameTemplate) {
+	templates := make([]*db.GameTemplate, 1)
+	templates[0] = template
+	templatesJson, err := json.Marshal(templates)
+	if err != nil {
+		log.E("sendGameTemplate json.Marshal error: %v", err)
+		return
+	}
+	so.Emit("game_templates", string(templatesJson))
+}
+
+func loadGameTemplatesHandler(so socketio.Conn) {
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("loadGameTemplatesHandler userId not found")
+		return
+	}
+	gameTemplates, err := db.GetGameTemplates(userId.(string))
+	if err != nil {
+		log.E("loadGameTemplatesHandler db.GetGameTemplates error: %v", err)
+		return
+	}
+	gameTemplatesJson, err := json.Marshal(gameTemplates)
+	if err != nil {
+		log.E("loadGameTemplatesHandler json.Marshal error: %v", err)
+		return
+	}
+	so.Emit("game_templates", string(gameTemplatesJson))
+}
+
+func saveGameTemplatesHandler(so socketio.Conn, gameTemplateString string) {
+	log.D("%v saveGameTemplatesHandler %v", so.ID(), gameTemplateString)
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("saveGameTemplatesHandler userId not found")
+		return
+	}
+	gameTemplate := &db.GameTemplate{}
+	err := json.Unmarshal([]byte(gameTemplateString), gameTemplate)
+	if err != nil {
+		log.E("saveGameTemplatesHandler json.Unmarshal error: %v", err)
+		return
+	}
+
+	template, err := db.SaveGameTemplate(userId.(string), *gameTemplate)
+	if err != nil {
+		log.E("saveGameTemplatesHandler db.SaveGameTemplate error: %v", err)
+		return
+	}
+	sendGameTemplate(so, template)
+}
+
+func updateGameTemplateHandler(so socketio.Conn, gameTemplateString string) {
+	log.D("%v updateGameTemplatesHandler %v", so.ID(), gameTemplateString)
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("updateGameTemplatesHandler userId not found")
+		return
+	}
+	gameTemplate := &db.GameTemplate{}
+	err := json.Unmarshal([]byte(gameTemplateString), gameTemplate)
+	if err != nil {
+		log.E("updateGameTemplatesHandler json.Unmarshal error: %v", err)
+		return
+	}
+
+	template, err := db.UpdateGameTemplate(userId.(string), *gameTemplate)
+	if err != nil {
+		log.E("updateGameTemplatesHandler db.UpdateGameTemplate error: %v", err)
+		return
+	}
+	sendGameTemplate(so, template)
+}
+
+func deleteGameTemplateHandler(so socketio.Conn, gameTemplateId string) {
+	log.D("%v deleteGameTemplateHandler %v", so.ID(), gameTemplateId)
+	userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
+	if !ok {
+		log.E("deleteGameTemplateHandler userId not found")
+		return
+	}
+	id, err := db.DeleteGameTemplate(userId.(string), gameTemplateId)
+	if err != nil {
+		log.E("deleteGameTemplateHandler db.DeleteGameTemplate error: %v", err)
+		return
+	}
+	so.Emit("deleted_game_template", id)
+}
+
 // InitServer initializes the server
 func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Config, gameForCheckChannel *chan string) error {
 	connsState = &connectionsState{
@@ -377,6 +466,14 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	socketServer.OnEvent("/", "change_player_color", changePlayerColorHandler)
 
 	socketServer.OnEvent("/", "load_player", loadPlayerHandler)
+
+	socketServer.OnEvent("/", "load_game_templates", loadGameTemplatesHandler)
+
+	socketServer.OnEvent("/", "save_game_template", saveGameTemplatesHandler)
+
+	socketServer.OnEvent("/", "update_game_template", updateGameTemplateHandler)
+
+	socketServer.OnEvent("/", "delete_game_template", deleteGameTemplateHandler)
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
 
