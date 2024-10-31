@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 
 import 'package:flutter/material.dart';
@@ -135,7 +133,7 @@ class MarsApp extends StatelessWidget {
     );
     String targetRoute = _router.routeInformationProvider.value.uri.path;
     gameCubit.stream.listen((state) {
-      //currently new client have no end game screen so we need to redirect to the olg client on the end phase
+      //currently new client have no end game screen so we need to redirect to the old client on the end phase
       if (state.viewModel?.game.phase == Phase.END) {
         gameCubit.setParticipant(null);
         _router.routeInformationProvider.go(GAME_CLIENT_ROUTE);
@@ -153,6 +151,12 @@ class MarsApp extends StatelessWidget {
       else if (gameIdToAction != null) localStorage.removeItem(userId!);
       logger.d("CurrentRoute: ${cRoute} isTokenOk: ${jwt}");
       final jwtIsOk = jwt != null && jwt != "";
+
+      if (jwtIsOk && cRoute == MAIN_MENU_ROUTE) {
+        if (lobbyCubit.state.gameIdToAction != null &&
+            !lobbyCubit.currentGameStarted)
+          lobbyCubit.leaveNewGame(lobbyCubit.state.gameIdToAction!);
+      }
 
       if (!jwtIsOk &&
           [LOBBY_ROUTE, GAME_CLIENT_ROUTE, NEW_GAME_CLIENT_ROUTE]

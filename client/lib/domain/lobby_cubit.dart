@@ -42,6 +42,9 @@ class LobbyCubit extends Cubit<LobbyState> {
             : null;
   }
 
+  bool get currentGameStarted =>
+      state.gamesList?[state.gameIdToAction]?.startedAt != null;
+
   void init() {
     lobbyRepository.subscribeOnNewGames(
       (Map<int /*LobbyGame.id*/, LobbyGame> gamesFromServer) {

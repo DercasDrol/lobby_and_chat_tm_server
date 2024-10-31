@@ -240,7 +240,7 @@ func updateNewGameSettings(userId string, lobbyGameToUpdate LobbyGame, dbpool *p
 		WHERE id = $2 AND user_id = $3 
 		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
-	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.LobbyGameid, userId))
+	return getLobbyGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameToUpdate.NewGameConfig, lobbyGameToUpdate.LobbyGameid, userId))
 }
 
 func UpdateNewGameSettings(userId string, lobbyGameToUpdate LobbyGame) (*LobbyGame, error) {
@@ -331,7 +331,7 @@ func GetLobbyGames(userId string) ([]*LobbyGame, error) {
 
 	lobbyGames := make([]*LobbyGame, 0)
 	for rows.Next() {
-		lobbyGame, err := getChangedGameFromRow(rows)
+		lobbyGame, err := getLobbyGameFromRow(rows)
 		if err != nil {
 			log.E("getChangedGameFromRow failed: %v\n", err)
 			return nil, err
@@ -402,7 +402,7 @@ func ShareGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
 
-	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId))
+	return getLobbyGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId))
 }
 
 func StartGame(userId string, lobbyGameId string) (*LobbyGame, error) {
@@ -439,7 +439,7 @@ func StartGame(userId string, lobbyGameId string) (*LobbyGame, error) {
 		RETURNING id, settings, death_day, finished_at, final_statistic, started_at, created_at, user_id, shared_at, server_spectator_id;
 	`
 
-	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId, lobbyGame.NewGameConfig, simpleGameModel.Id, time.Unix(0, int64(simpleGameModel.ExpectedPurgeTime)*int64(time.Millisecond)), simpleGameModel.SpectatorId))
+	return getLobbyGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId, userId, lobbyGame.NewGameConfig, simpleGameModel.Id, time.Unix(0, int64(simpleGameModel.ExpectedPurgeTime)*int64(time.Millisecond)), simpleGameModel.SpectatorId))
 }
 
 func addServerPlayerIds(lobbyGameId string, players *[]NewPlayerModel, gameServerPlayers *[]SimplePlayer, dbpool *pgxpool.Pool) error {
@@ -546,7 +546,7 @@ func getLobbyGame(lobbyGameId string, dbpool *pgxpool.Pool) (*LobbyGame, error) 
 		WHERE id = $1;
 	`
 
-	return getChangedGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId))
+	return getLobbyGameFromRow(dbpool.QueryRow(context.Background(), query, lobbyGameId))
 }
 
 // temporary solution, lobbyGame too big to be passed as a parameter from client
@@ -761,4 +761,37 @@ func DeleteGameTemplate(userId string, templateId string) (*int, error) {
 		return nil, err
 	}
 	return &deletedTemplateId, nil
+}
+
+func GetNotStartedGames(userId string) ([]*LobbyGame, error) {
+	dbpool, err := newConn()
+	if err != nil {
+		return nil, err
+	}
+	defer dbpool.Close()
+
+	query := `
+		SELECT games.id, settings, death_day, finished_at, final_statistic, started_at, created_at, games.user_id, shared_at, server_spectator_id
+		FROM games
+		JOIN players ON games.id = players.game_id
+		WHERE (games.user_id = $1 OR players.user_id = $1) AND started_at IS NULL
+		GROUP BY games.id;
+	`
+	rows, err := dbpool.Query(context.Background(), query, userId)
+	if err != nil {
+		log.E("SELECT FROM games failed: %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	lobbyGames := make([]*LobbyGame, 0)
+	for rows.Next() {
+		lobbyGame, err := getLobbyGameFromRow(rows)
+		if err != nil {
+			log.E("getChangedGameFromRow failed: %v\n", err)
+			return nil, err
+		}
+		lobbyGames = append(lobbyGames, lobbyGame)
+	}
+	return lobbyGames, nil
 }

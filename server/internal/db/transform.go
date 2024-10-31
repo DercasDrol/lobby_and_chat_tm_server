@@ -106,7 +106,7 @@ func updateLobbyGamePlayers(newPlayersMap map[string] /*userId*/ string /*player
 }
 
 // need to be called for each rows.Next()
-func getChangedGameFromRow(row pgx.Row) (*LobbyGame, error) {
+func getLobbyGameFromRow(row pgx.Row) (*LobbyGame, error) {
 	lobbyGame := &LobbyGame{}
 	var newGameConfig string
 	err := row.Scan(&lobbyGame.LobbyGameid, &newGameConfig, &lobbyGame.DeathDay, &lobbyGame.FinishedAt, &lobbyGame.FinalStatistic, &lobbyGame.StartedAt, &lobbyGame.CreatedAt, &lobbyGame.UserIdCreatedBy, &lobbyGame.SharedAt, &lobbyGame.SpectatorId)

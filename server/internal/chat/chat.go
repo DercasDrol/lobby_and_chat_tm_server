@@ -206,6 +206,9 @@ func leaveHandler(so socketio.Conn, chatRoom string, isDisconnect bool) {
 func updateGameStateTrigger(chatRoom string, gameForCheckChannel *chan string) {
 	log.D("updateGameStateTrigger %v", chatRoom)
 	go func() {
+		if chatRoom == GENERAL_ROOM {
+			return
+		}
 		_, err := strconv.Atoi(chatRoom)
 		if err == nil {
 			log.D("updateGameStateTrigger %v", chatRoom)

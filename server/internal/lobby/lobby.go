@@ -9,6 +9,7 @@ import (
 	"mars-go-service/internal/utils"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 	"sync"
 
 	"encoding/json"
@@ -138,8 +139,12 @@ func deleteHandler(so socketio.Conn, lobbyGameId string) {
 		log.E("deleteHandler userId not found")
 		return
 	}
-	//delete game
-	err := db.DeleteGame(userId.(string), lobbyGameId)
+	deleteGame(userId.(string), lobbyGameId)
+
+}
+
+func deleteGame(userId string, lobbyGameId string) {
+	err := db.DeleteGame(userId, lobbyGameId)
 	if err != nil {
 		log.E("deleteHandler db.DeleteGame error: %v", err)
 		return
@@ -152,6 +157,22 @@ func deleteHandler(so socketio.Conn, lobbyGameId string) {
 		}
 		return true
 	})
+}
+
+func leaveOrDeleteNotStartedGamesHandler(userId string) {
+	lobbyGames, err := db.GetNotStartedGames(userId)
+	if err != nil {
+		log.E("leaveOrDeleteNotStartedGamesHandler db.GetNotStartedGames error: %v", err)
+		return
+	}
+	for _, lobbyGame := range lobbyGames {
+		gameId := strconv.Itoa(lobbyGame.LobbyGameid)
+		if lobbyGame.UserIdCreatedBy == userId {
+			deleteGame(userId, gameId)
+		} else {
+			leaveGame(userId, gameId)
+		}
+	}
 }
 
 func shareGameHandler(so socketio.Conn, lobbyGameId string) {
@@ -212,10 +233,13 @@ func leaveGameHandler(so socketio.Conn, lobbyGameId string) {
 		log.E("leaveGameHandler userId not found")
 		return
 	}
-	//leave game
-	lobbyGame, err := db.LeaveGame(userId.(string), lobbyGameId)
+	leaveGame(userId.(string), lobbyGameId)
+}
+
+func leaveGame(userId string, lobbyGameId string) {
+	lobbyGame, err := db.LeaveGame(userId, lobbyGameId)
 	if err != nil {
-		log.E("leaveGameHandler db.LeaveGame error: %v", err)
+		log.E("leaveGame db.LeaveGame error: %v", err)
 		return
 	}
 	broadcastGame(lobbyGame)
@@ -476,10 +500,26 @@ func InitServer(conf *config.AppConfig, jwtSecret string, authConf *oauth2.Confi
 	socketServer.OnEvent("/", "delete_game_template", deleteGameTemplateHandler)
 
 	socketServer.OnDisconnect("/", func(so socketio.Conn, reason string) {
-
 		log.D("disconnected... %v, by %v", so.ID(), reason)
+		userId, ok := connsState.socketIdUserIdMap.Load(so.ID())
 		connsState.socketIdUserIdMap.Delete(so.ID())
 		connsState.socketsMap.Delete(so.ID())
+		if ok {
+			existsSocketWithSameUserId := false
+			log.D("looking for userId from other connections: %v", userId)
+			connsState.socketIdUserIdMap.Range(func(_, userId0 interface{}) bool {
+				if userId == userId0 {
+					log.D("existsSocketWithSameUserId %v", userId0)
+					existsSocketWithSameUserId = true
+					return false
+				}
+				return true
+			})
+			if !existsSocketWithSameUserId {
+				log.D("call leaveOrDeleteNotStartedGamesHandler %v", userId)
+				leaveOrDeleteNotStartedGamesHandler(userId.(string))
+			}
+		}
 	})
 	go func() {
 		log.D("StartGameForCheckGorutine")
