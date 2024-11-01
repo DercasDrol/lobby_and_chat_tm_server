@@ -15,12 +15,13 @@ import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 class GameRow extends StatelessWidget {
   final LobbyCubit lobbyCubit;
   final LobbyGame game;
+  final double width;
 
-  const GameRow({
-    super.key,
-    required this.game,
-    required this.lobbyCubit,
-  });
+  const GameRow(
+      {super.key,
+      required this.game,
+      required this.lobbyCubit,
+      required this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +29,12 @@ class GameRow extends StatelessWidget {
 
     final gameOptionsView = GameOptionsView(
       lobbyCubit: lobbyCubit,
-      width: 525,
-      height: 400,
+      width: 530,
+      height: 500,
       lobbyGame: game,
       isOwnGame: false,
       isForTooltip: true,
+      columnsCount: 2,
     );
 
     final userNamesTextRow = Padding(
@@ -86,7 +88,9 @@ class GameRow extends StatelessWidget {
             spacerWidth: 0,
           )
         : SizedBox.shrink();
-
+    final buttonPartWidth = 79.0;
+    final boardPartWidth = 150.0;
+    final userNamesPartWidth = width - boardPartWidth - buttonPartWidth - 5.0;
     return GameOptionContainer(
       padding: EdgeInsets.only(
         right: 5.0,
@@ -101,7 +105,7 @@ class GameRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 336.0,
+              width: userNamesPartWidth,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -116,7 +120,7 @@ class GameRow extends StatelessWidget {
             Row(
               children: [
                 SizedBox(
-                  width: 150.0,
+                  width: boardPartWidth,
                   child: Column(children: [
                     SizedBox(height: 7.0),
                     playersCount,
@@ -124,7 +128,7 @@ class GameRow extends StatelessWidget {
                   ]),
                 ),
                 SizedBox(
-                  width: 79.0,
+                  width: buttonPartWidth,
                   child: Column(children: [
                     game.isDead
                         ? Text('Game is Dead',

@@ -20,6 +20,7 @@ class ColonyModel {
     return ColonyModel(
       colonies: json['colonies']
           .map((e) => PlayerColor.fromString(e as String))
+          .cast<PlayerColor>()
           .toList(),
       isActive: json['isActive'] as bool,
       name: ColonyName.fromString(json['name'] as String),

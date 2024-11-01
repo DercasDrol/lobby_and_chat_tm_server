@@ -10,11 +10,13 @@ class GamesList extends StatelessWidget {
   final LobbyCubit lobbyCubit;
   final LobbyCategory lobbyCategory;
   final double height;
+  final double width;
   const GamesList({
     super.key,
     required this.lobbyCubit,
     required this.lobbyCategory,
     required this.height,
+    required this.width,
   });
 
   @override
@@ -36,11 +38,12 @@ class GamesList extends StatelessWidget {
             }
           }).toList()
                 ..sort((a, b) => a.lobbyGameId.compareTo(b.lobbyGameId));
+          final internalHeight = height - 88;
           return Container(
             padding: EdgeInsets.all(5),
             constraints: BoxConstraints(
-              minHeight: height - 88,
-              maxHeight: height - 88,
+              minHeight: internalHeight,
+              maxHeight: internalHeight,
             ),
             decoration: BoxDecoration(
               color: Colors.grey[700],
@@ -57,6 +60,7 @@ class GamesList extends StatelessWidget {
                 return GameRow(
                   game: game,
                   lobbyCubit: lobbyCubit,
+                  width: width - 20,
                 );
               },
             ),

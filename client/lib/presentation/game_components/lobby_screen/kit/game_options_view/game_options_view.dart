@@ -18,6 +18,7 @@ class GameOptionsView extends StatelessWidget {
   final LobbyGame lobbyGame;
   final bool isOwnGame;
   final double width;
+  final int columnsCount;
   final double height;
   final bool isForTooltip;
   final String? allowColorChangeUserId;
@@ -31,6 +32,7 @@ class GameOptionsView extends StatelessWidget {
     required this.isOwnGame,
     this.isForTooltip = false,
     this.allowColorChangeUserId,
+    required this.columnsCount,
   });
 
   @override
@@ -205,9 +207,8 @@ class GameOptionsView extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                                minWidth: width * 0.44, maxWidth: width * 0.44),
+                          SizedBox(
+                            width: width / columnsCount * 0.88,
                             child: Column(children: [
                               boardsOptionsView,
                               playersOptionsView,
@@ -215,17 +216,28 @@ class GameOptionsView extends StatelessWidget {
                             ]),
                           ),
                           SizedBox(width: 10),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                                minWidth: width * 0.52, maxWidth: width * 0.52),
+                          SizedBox(
+                            width: width / columnsCount * 1.00,
                             child: Column(children: [
                               expansionsOptionsView,
-                              if (createGameModel.maxPlayers > 1)
+                              if (createGameModel.maxPlayers > 1 &&
+                                  columnsCount < 3)
                                 getMultiplayerOptionsView(),
                               commonOptionsView,
-                              filterOptionsView,
+                              if (columnsCount < 3) filterOptionsView,
                             ]),
-                          )
+                          ),
+                          if (columnsCount > 2) ...[
+                            SizedBox(width: 10),
+                            SizedBox(
+                              width: width / columnsCount * 1.00,
+                              child: Column(children: [
+                                if (createGameModel.maxPlayers > 1)
+                                  getMultiplayerOptionsView(),
+                                filterOptionsView,
+                              ]),
+                            )
+                          ]
                         ],
                       ),
                     ]),

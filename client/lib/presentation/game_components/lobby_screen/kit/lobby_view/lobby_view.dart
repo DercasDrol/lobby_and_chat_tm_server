@@ -20,7 +20,11 @@ class LobbyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buildGameList = (lobbyCategory) => GamesList(
-        lobbyCubit: lobbyCubit, height: height, lobbyCategory: lobbyCategory);
+          lobbyCubit: lobbyCubit,
+          height: height,
+          lobbyCategory: lobbyCategory,
+          width: width,
+        );
 
     return LobbyElementsTabs(
       width: width,

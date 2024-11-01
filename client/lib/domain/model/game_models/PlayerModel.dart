@@ -411,7 +411,8 @@ final class PublicPlayerModel extends Equatable {
       cardsInHandNbr: json['cardsInHandNbr'] as int,
       citiesCount: json['citiesCount'] as int,
       coloniesCount: json['coloniesCount'] as int,
-      color: PlayerColor.fromString(json['color']) ?? PlayerColor.NEUTRAL,
+      color: PlayerColor.fromString(json['color'] as String) ??
+          PlayerColor.NEUTRAL,
       energy: json['energy'] as int,
       energyProduction: json['energyProduction'] as int,
       fleetSize: json['fleetSize'] as int,

@@ -13,29 +13,46 @@ class AresData {
   static fromJson(Map<String, dynamic> json) {
     return AresData(
       includeHazards: json['includeHazards'],
-      hazardData: json['hazardData']
-          .map((e) => HazardConstraint.fromJson(e))
-          .toList()
-          .cast<HazardConstraint>(),
-      milestoneResults: json['milestoneResults']
-          .map((e) => MilestoneCount.fromJson(e))
-          .toList()
-          .cast<MilestoneCount>(),
+      hazardData: json['hazardData'].runtimeType == {}.runtimeType
+          ? json['hazardData']
+              .map((type, e) => HazardConstraint.fromJson(type, e))
+              .cast<HazardConstraint>()
+              .toList()
+          : [],
+      milestoneResults: json['milestoneResults'].runtimeType == [].runtimeType
+          ? json['milestoneResults']
+              .map((e) => MilestoneCount.fromJson(e))
+              .cast<MilestoneCount>()
+              .toList()
+          : [],
     );
   }
 }
 
-class HazardConstraint {
+abstract class HazardConstraint {
   int threshold;
   bool available;
 
   HazardConstraint({required this.threshold, required this.available});
 
-  static HazardConstraint fromJson(Map<String, dynamic> json) {
-    return HazardConstraint(
-      threshold: json['threshold'] as int,
-      available: json['available'] as bool,
-    );
+  factory HazardConstraint.fromJson(String type, Map<String, dynamic> json) {
+    final threshold = json['threshold'] as int;
+    final available = json['available'] as bool;
+    switch (type) {
+      case 'erosionOceanCount':
+        return ErosionOceanCount(threshold: threshold, available: available);
+      case 'removeDustStormsOceanCount':
+        return RemoveDustStormsOceanCount(
+            threshold: threshold, available: available);
+      case 'severeErosionTemperature':
+        return SevereErosionTemperature(
+            threshold: threshold, available: available);
+      case 'severeDustStormOxygen':
+        return SevereDustStormOxygen(
+            threshold: threshold, available: available);
+      default:
+        throw Exception('Unknown HazardConstraint type: $type');
+    }
   }
 }
 

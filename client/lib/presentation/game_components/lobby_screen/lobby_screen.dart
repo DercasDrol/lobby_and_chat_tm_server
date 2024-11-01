@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,8 +32,7 @@ class MainLobbyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userId = lobbyCubit.userId;
-    final leftPartHeight = 600.0;
-    final leftPartWidth = 580.0;
+
     return Scaffold(
       floatingActionButton: Padding(
         padding: EdgeInsets.only(top: 15.0),
@@ -44,84 +45,94 @@ class MainLobbyScreen extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: Stack(
-        children: [
-          StarsBackground(),
-          Center(
-            child: FittedBox(
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                BlocBuilder<LobbyCubit, LobbyState>(
-                    bloc: lobbyCubit,
-                    buildWhen: (pState, state) {
-                      final needGoToGame = lobbyCubit.needGoToGame;
-                      if (needGoToGame) {
-                        context.go(localStorage.getItem(SELECTED_GAME_CLIENT) ??
-                            GAME_CLIENT_ROUTE);
-                      }
-                      return !needGoToGame;
-                    },
-                    builder: (context, lobbyState) {
-                      if (lobbyState.notification != null)
-                        showLobbyPopup(context, lobbyState.notification!, () {
-                          lobbyCubit.clearNotification();
-                        });
-                      logger.d('lobbyState changed: $lobbyState');
+      body: LayoutBuilder(builder: (context, constrains) {
+        final height = max(constrains.maxHeight * 0.9, 500.0);
+        final rightPartWidth = 300.0;
+        final leftPartWidth = min(
+            max(600.0,
+                ((constrains.maxWidth * 0.9 - rightPartWidth) ~/ 300) * 300.0),
+            900.0);
+        return Stack(
+          children: [
+            StarsBackground(),
+            Center(
+              child: FittedBox(
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  BlocBuilder<LobbyCubit, LobbyState>(
+                      bloc: lobbyCubit,
+                      buildWhen: (pState, state) {
+                        final needGoToGame = lobbyCubit.needGoToGame;
+                        if (needGoToGame) {
+                          context.go(
+                              localStorage.getItem(SELECTED_GAME_CLIENT) ??
+                                  GAME_CLIENT_ROUTE);
+                        }
+                        return !needGoToGame;
+                      },
+                      builder: (context, lobbyState) {
+                        if (lobbyState.notification != null)
+                          showLobbyPopup(context, lobbyState.notification!, () {
+                            lobbyCubit.clearNotification();
+                          });
+                        logger.d('lobbyState changed: $lobbyState');
 
-                      final gameToShowGameOptions =
-                          lobbyState.gamesList?[lobbyState.gameIdToAction];
+                        final gameToShowGameOptions =
+                            lobbyState.gamesList?[lobbyState.gameIdToAction];
 
-                      return gameToShowGameOptions == null
-                          ? LobbyView(
-                              lobbyCubit: lobbyCubit,
-                              width: leftPartWidth,
-                              height: leftPartHeight,
-                            )
-                          : GameOptionsView(
-                              lobbyCubit: lobbyCubit,
-                              width: leftPartWidth,
-                              height: leftPartHeight,
-                              lobbyGame: gameToShowGameOptions,
-                              isOwnGame: userId ==
-                                  gameToShowGameOptions.userIdCreatedBy,
-                              allowColorChangeUserId:
-                                  gameToShowGameOptions.startedAt == null
-                                      ? userId
-                                      : null,
-                            );
-                    }),
-                SizedBox.fromSize(size: Size(10, 10)),
-                BlocBuilder<ChatCubit, ChatState>(
-                  bloc: gameChatCubit,
-                  buildWhen: (previous, current) =>
-                      previous.chatKey != current.chatKey &&
-                      [previous.chatKey, current.chatKey].contains(null),
-                  builder: (context, gameChatState) {
-                    return LobbyElementsTabs(
-                      width: 300,
-                      height: leftPartHeight,
-                      borderRadius: BorderRadius.zero,
-                      children: [
-                        if (gameChatState.chatKey != null)
+                        return gameToShowGameOptions == null
+                            ? LobbyView(
+                                lobbyCubit: lobbyCubit,
+                                width: leftPartWidth,
+                                height: height,
+                              )
+                            : GameOptionsView(
+                                lobbyCubit: lobbyCubit,
+                                width: leftPartWidth,
+                                height: height,
+                                lobbyGame: gameToShowGameOptions,
+                                isOwnGame: userId ==
+                                    gameToShowGameOptions.userIdCreatedBy,
+                                allowColorChangeUserId:
+                                    gameToShowGameOptions.startedAt == null
+                                        ? userId
+                                        : null,
+                                columnsCount: leftPartWidth ~/ 300,
+                              );
+                      }),
+                  SizedBox.fromSize(size: Size(10, 10)),
+                  BlocBuilder<ChatCubit, ChatState>(
+                    bloc: gameChatCubit,
+                    buildWhen: (previous, current) =>
+                        previous.chatKey != current.chatKey &&
+                        [previous.chatKey, current.chatKey].contains(null),
+                    builder: (context, gameChatState) {
+                      return LobbyElementsTabs(
+                        width: rightPartWidth,
+                        height: height,
+                        borderRadius: BorderRadius.zero,
+                        children: [
+                          if (gameChatState.chatKey != null)
+                            ChatView(
+                              cubit: gameChatCubit,
+                            ),
                           ChatView(
-                            cubit: gameChatCubit,
+                            cubit: generalChatCubit,
                           ),
-                        ChatView(
-                          cubit: generalChatCubit,
-                        ),
-                      ],
-                      tabsNames: [
-                        if (gameChatState.chatKey != null) "Game Chat",
-                        "General Chat",
-                      ],
-                    );
-                  },
-                )
-              ]),
+                        ],
+                        tabsNames: [
+                          if (gameChatState.chatKey != null) "Game Chat",
+                          "General Chat",
+                        ],
+                      );
+                    },
+                  )
+                ]),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }
