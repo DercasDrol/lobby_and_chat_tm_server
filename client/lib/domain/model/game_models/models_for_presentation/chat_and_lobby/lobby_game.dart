@@ -67,7 +67,7 @@ class LobbyGame extends Equatable {
     );
   }
 
-  get isSharedGame => this.sharedAt != null;
+  bool get isSharedGame => this.sharedAt != null;
 
   String toShortJson() {
     return '''{"lobbyGameid":$lobbyGameId,"newGameConfig":${jsonEncode(NewGameConfig.fromCreateGameModel(createGameModel).toJson())},"userIdCreatedBy":"$userIdCreatedBy"}''';

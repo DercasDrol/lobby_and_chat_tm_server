@@ -24,5 +24,6 @@ void main() async {
   ColonyMetadataParser.parse();
   MilestoneAwardParser.parse();
   PopupsRegistr.runPopupRegistr();
+
   runApp(MarsApp());
 }

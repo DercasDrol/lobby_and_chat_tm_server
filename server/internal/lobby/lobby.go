@@ -122,7 +122,9 @@ func updateHandler(so socketio.Conn, lobbyGameJson string) {
 			log.E("updateHandler db.UpdateNewGameSettings error: %v", err)
 			return
 		}
-		if lobbyGame.SharedAt == nil {
+		if lobbyGame.NewGameConfig.MaxPlayers > 1 && lobbyGame.SharedAt == nil {
+			shareGameHandler(so, strconv.FormatInt(int64(lobbyGame.LobbyGameid), 10))
+		} else if lobbyGame.SharedAt == nil {
 			sendGamesToOneUser(so, lobbyGame)
 		} else {
 			broadcastGame(lobbyGame)

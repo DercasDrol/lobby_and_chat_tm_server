@@ -274,54 +274,57 @@ class CardsView extends StatelessWidget {
         headerHeightN.value = 2300.0;
         return ValueListenableBuilder(
           valueListenable: selectedCardsN ?? ValueNotifier({}),
-          builder: (context, selectedCards, child) => Scrollbar(
-            controller: scrollContriller,
-            thickness: 15.0,
-            child: CustomScrollView(controller: scrollContriller, slivers: [
-              ValueListenableBuilder(
-                valueListenable: headerHeightN,
-                builder: (context, headerHeight, child) =>
-                    SliverPersistentHeader(
-                  pinned: false,
-                  floating: true,
-                  delegate: _SliverAppBarDelegate(
-                    minHeight: headerHeight,
-                    maxHeight: headerHeight,
-                    child: getHeaderView(),
+          builder: (context, selectedCards, child) => Container(
+            color: Colors.grey[700],
+            child: Scrollbar(
+              controller: scrollContriller,
+              thickness: 15.0,
+              child: CustomScrollView(controller: scrollContriller, slivers: [
+                ValueListenableBuilder(
+                  valueListenable: headerHeightN,
+                  builder: (context, headerHeight, child) =>
+                      SliverPersistentHeader(
+                    pinned: false,
+                    floating: false,
+                    delegate: _SliverAppBarDelegate(
+                      minHeight: headerHeight,
+                      maxHeight: headerHeight,
+                      child: getHeaderView(),
+                    ),
                   ),
                 ),
-              ),
-              ValueListenableBuilder<List<Tag>>(
-                valueListenable: selectedTagsN,
-                builder: (context, selectedTags, child) {
-                  return ValueListenableBuilder<List<CardType>>(
-                      valueListenable: selectedTypesN,
-                      builder: (context, selectedTypes, child) {
-                        return ValueListenableBuilder<List<GameModule>>(
-                            valueListenable: selectedModulesN,
-                            builder: (context, selectedModules, child) {
-                              return ValueListenableBuilder<String?>(
-                                  valueListenable: textFilterN,
-                                  builder: (context, textFilter, child) {
-                                    final filteredCards = filterCards(
-                                      allCards,
-                                      selectedTypes,
-                                      selectedModules,
-                                      selectedTags,
-                                      textFilter,
-                                    );
-                                    return getCardsGrid(
-                                      filteredCards,
-                                      constraints,
-                                    );
-                                  });
-                            });
-                      });
-                },
-              ),
-              if (useSavedFilters) getEventsGrid(constraints),
-              //getMiniEventsGrid(constraints),
-            ]),
+                ValueListenableBuilder<List<Tag>>(
+                  valueListenable: selectedTagsN,
+                  builder: (context, selectedTags, child) {
+                    return ValueListenableBuilder<List<CardType>>(
+                        valueListenable: selectedTypesN,
+                        builder: (context, selectedTypes, child) {
+                          return ValueListenableBuilder<List<GameModule>>(
+                              valueListenable: selectedModulesN,
+                              builder: (context, selectedModules, child) {
+                                return ValueListenableBuilder<String?>(
+                                    valueListenable: textFilterN,
+                                    builder: (context, textFilter, child) {
+                                      final filteredCards = filterCards(
+                                        allCards,
+                                        selectedTypes,
+                                        selectedModules,
+                                        selectedTags,
+                                        textFilter,
+                                      );
+                                      return getCardsGrid(
+                                        filteredCards,
+                                        constraints,
+                                      );
+                                    });
+                              });
+                        });
+                  },
+                ),
+                if (useSavedFilters) getEventsGrid(constraints),
+                //getMiniEventsGrid(constraints),
+              ]),
+            ),
           ),
         );
       });

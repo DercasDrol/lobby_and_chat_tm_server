@@ -128,14 +128,7 @@ class ScreenBuilder extends StatelessWidget {
                 showPopupWithError(context: context, text: message),
             planetInfo: planetInfo,
           );
-          return PlayerPanelView(
-            width: 760 + playerPanelInfo.tagsInfo.length * 25,
-            height: _playerBoardHeight,
-            onNameClick: () => tryChangeActiveParticipant(player.color),
-            playerPanelInfo: playerPanelInfo,
-            topPopupPadding: _topPanelMaxHeight,
-            bottomPopupPadding: _playerBoardHeight * viewModel.players.length,
-          );
+          return PlayerPanelView(playerPanelInfo: playerPanelInfo);
         },
       ).toList(),
     );
@@ -316,18 +309,6 @@ class ScreenBuilder extends StatelessWidget {
                       ),
                     ),
                   ),
-                  planetInfoCN == null
-                      ? SizedBox.shrink()
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: _preparePlayerBoards(
-                            context,
-                            state.viewModel!,
-                            sendPlayerAction,
-                            tryChangeActiveParticipant,
-                            planetInfoCN,
-                          ),
-                        ),
                   _prepareGlobalStatePanel(state.viewModel!
                       .getGlobalScalesInfo(sendPlayerAction: sendPlayerAction)),
                   Padding(
@@ -369,7 +350,19 @@ class ScreenBuilder extends StatelessWidget {
                       generationValue: state.viewModel!.game.generation,
                       size: _globalParameterScaleWidth * 2.5,
                     ),
-                  )
+                  ),
+                  planetInfoCN == null
+                      ? SizedBox.shrink()
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: _preparePlayerBoards(
+                            context,
+                            state.viewModel!,
+                            sendPlayerAction,
+                            tryChangeActiveParticipant,
+                            planetInfoCN,
+                          ),
+                        )
                 ],
               )
             : const Center(child: CircularProgressIndicator());

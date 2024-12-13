@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:localstorage/localstorage.dart';
 import 'package:web/web.dart' as html;
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -18,7 +19,8 @@ class AuthAPIClient {
 
   void getGameHost() async {
     final host = html.window.location.hostname;
-    final _protocol = host.startsWith("localhost") ? "http://" : "https://";
+    final _protocol =
+        host.startsWith("localhost") || kDebugMode ? "http://" : "https://";
     final url = _protocol + host + ":" + AUTH_PORT + "/game_server/";
     final response =
         await http.get(Uri.parse(url), headers: {'Content-Type': 'text/plain'});
@@ -50,7 +52,11 @@ class AuthAPIClient {
 
     _socket.on('jwt', (jwtToken) {
       logger.d('AuthApiClient handle(jwt)');
-      secureStorage.write(key: 'jwt', value: jwtToken);
+      if (kDebugMode) {
+        localStorage.setItem('jwt', jwtToken);
+      } else {
+        secureStorage.write(key: 'jwt', value: jwtToken);
+      }
       this.jwt.value = jwtToken;
     });
 
@@ -70,11 +76,26 @@ class AuthAPIClient {
     authUrl.dispose();
   }
 
-  void checkJwtInStorage() async {
-    final jwtFromStorage = await secureStorage.read(key: 'jwt');
-    if (jwtFromStorage != null) {
-      logger.d('AuthApiClient have found jwt in storage');
-      this.jwt.value = jwtFromStorage;
+  void checkJwtInStorage() {
+    if (kDebugMode) {
+      final jwtFromLocalStorage = localStorage.getItem('jwt');
+      if (jwtFromLocalStorage != null) {
+        logger.d('AuthApiClient have found jwt in localStorage');
+        this.jwt.value = jwtFromLocalStorage;
+      } else {
+        logger.d('AuthApiClient have not found jwt in localStorage');
+      }
+    } else {
+      secureStorage.read(key: 'jwt').then((jwtFromStorage) {
+        if (jwtFromStorage != null) {
+          logger.d('AuthApiClient have found jwt in storage');
+          this.jwt.value = jwtFromStorage;
+        } else {
+          logger.d('AuthApiClient have not found jwt in storage');
+        }
+      }, onError: (e) {
+        logger.d('AuthApiClient error while reading jwt from storage: $e');
+      });
     }
   }
 

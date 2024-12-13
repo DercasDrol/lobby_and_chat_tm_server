@@ -8,36 +8,23 @@ import 'package:mars_flutter/domain/model/game_models/PlayerModel.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_player_panel_info.dart';
 import 'package:mars_flutter/presentation/game_components/common/card_tooltip.dart';
 import 'package:mars_flutter/presentation/game_components/common/styles.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/panel_button.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/player_resource_box.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/action_cards_button.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/main_cards_button.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/tag_row.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/terraforming_rate.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/timer.dart';
-import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/victory_points.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/panel_button.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/player_resource_box.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/action_cards_button.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/main_cards_button.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/tag_row.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/terraforming_rate.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/timer.dart';
+import 'package:mars_flutter/presentation/game_components/game_screen/kit/player_panel/kit/victory_points.dart';
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/show_popup_with_tabs.dart';
 
 class PlayerPanelView extends StatelessWidget {
-  final double width;
-  final double height;
-  final double topPopupPadding;
-  final double bottomPopupPadding;
   final PresentationPlayerPanelInfo playerPanelInfo;
-  //onNameClick used for switching between players for dev purposes. With auth system it is not working anymore
-  final void Function() onNameClick;
-
-  const PlayerPanelView({
-    required this.width,
-    required this.height,
-    required this.playerPanelInfo,
-    required this.onNameClick,
-    required this.topPopupPadding,
-    required this.bottomPopupPadding,
-  });
+  const PlayerPanelView({required this.playerPanelInfo});
 
   static const _productionBoxWidth = 45.0;
   static const _nameBoxWidth = 120.0;
+  static const height = 48.0;
   _prepareResourceBoxList() {
     final PublicPlayerModel playerState = playerPanelInfo.playerState;
     addPadding(child) => Padding(
@@ -45,6 +32,7 @@ class PlayerPanelView extends StatelessWidget {
           child: child,
         );
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         addPadding(PlayerResourceView(
           width: _productionBoxWidth,
@@ -180,11 +168,13 @@ class PlayerPanelView extends StatelessWidget {
     );
   }
 
+  final _timerBlockWidth = 80.0;
   _prepareTimerBlock() {
     return Padding(
       padding: EdgeInsets.all(4.0),
       child: SizedBox(
-        width: 80.0,
+        width: _timerBlockWidth,
+        height: height,
         child: TimerView(
           key: UniqueKey(),
           currentPhase: playerPanelInfo.actionLabel == null ||
@@ -202,6 +192,7 @@ class PlayerPanelView extends StatelessWidget {
     );
   }
 
+  final _cardsButtonWidth = 80.0;
   _prepareCardsButton() {
     final cardsForPlay =
         playerPanelInfo.projectCardsTabsInfo.leftTabInfo?.cards;
@@ -226,37 +217,35 @@ class PlayerPanelView extends StatelessWidget {
                       ClientCard.fromCardName(card.name).type == CardType.EVENT)
                   .length,
             },
-      width: 60.0,
+      width: _cardsButtonWidth,
       tabsInfo: playerPanelInfo.projectCardsTabsInfo,
-      topPopupPadding: topPopupPadding,
-      bottomPopupPadding: bottomPopupPadding,
       tagsInfo: playerPanelInfo.tagsInfo,
     );
   }
 
+  final _cardsActionCardsButton = 25.0;
   _prepareActionCardsButton() {
     return ActionCardsButton(
       availableActionsCount: playerPanelInfo.availableActionsCount,
       tabsInfo: playerPanelInfo.actionsOnCardsTabsInfo,
       height: height,
-      width: 25.0,
-      topPopupPadding: topPopupPadding,
-      bottomPopupPadding: bottomPopupPadding,
+      width: _cardsActionCardsButton,
     );
   }
 
   _prepareVP() => VictoryPointsView(
         height: height,
-        width: 45.0,
+        width: _productionBoxWidth,
         victoryPoints: playerPanelInfo.playerState.victoryPointsBreakdown,
       );
 
   _prepareRT() => TerraformingRateView(
         height: height,
-        width: 45.0,
+        width: _productionBoxWidth,
         terraformingRate: playerPanelInfo.playerState.terraformRating,
       );
-  _prepareTagRow() => Flexible(
+
+  _prepareTagRow(width) => Flexible(
         flex: 6,
         child: Padding(
           padding: EdgeInsets.only(right: 4.0),
@@ -355,12 +344,8 @@ class PlayerPanelView extends StatelessWidget {
               child: _ButtonBackground(
                 PanelButton(
                   panelButtonBorder: PanelButtonBorder.FULL,
-                  onClick: () => showPopupWithTabs(
-                    context: context,
-                    tabsInfo: tabInfo!,
-                    topPadding: topPopupPadding,
-                    bottomPadding: bottomPopupPadding,
-                  ),
+                  onClick: () =>
+                      showPopupWithTabs(context: context, tabsInfo: tabInfo!),
                   buttonText: buttonName ?? ' ',
                   tooltipText: buttonName ?? ' ',
                   callOnClickAutomatically: callOnClickAutomatically,
@@ -405,6 +390,92 @@ class PlayerPanelView extends StatelessWidget {
   Widget build(BuildContext context) {
     Color color = playerPanelInfo.playerState.color.toColor(true);
     ValueNotifier<bool> hideButtonsN = ValueNotifier(false);
+
+    final panelView = LayoutBuilder(builder: (context, constraints) {
+      final _tagsRowWidth = playerPanelInfo.tagsInfo.length * height * 0.53;
+      final productionRowWidth = 8 * (_productionBoxWidth + 4.0);
+      final fullPanelWidth = _nameBoxWidth +
+          productionRowWidth +
+          _timerBlockWidth +
+          _cardsButtonWidth +
+          _cardsActionCardsButton;
+      final minimalScreenWidth =
+          productionRowWidth + _cardsButtonWidth + _cardsActionCardsButton;
+      final useLowWidthMode = (fullPanelWidth + 10) > constraints.maxWidth;
+      final useMobileView = constraints.maxWidth < minimalScreenWidth + 10;
+
+      final List<Widget> components = useMobileView
+          ? [
+              _prepareResourceBoxList(),
+              _prepareTagRow(_tagsRowWidth),
+            ]
+          : useLowWidthMode
+              ? [
+                  Row(mainAxisSize: MainAxisSize.min, children: [
+                    _prepareResourceBoxList(),
+                    _prepareCardsButton(),
+                    _prepareActionCardsButton(),
+                  ]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _prepareNameBlock(),
+                      _prepareTimerBlock(),
+                      _prepareRT(),
+                      _prepareVP(),
+                    ],
+                  ),
+                  _prepareTagRow(_tagsRowWidth),
+                ]
+              : [
+                  _prepareNameBlock(),
+                  _prepareTimerBlock(),
+                  _prepareResourceBoxList(),
+                  _prepareCardsButton(),
+                  _prepareActionCardsButton(),
+                  _prepareRT(),
+                  _prepareVP(),
+                  _prepareTagRow(_tagsRowWidth),
+                ];
+
+      return Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(7),
+              color: color,
+              border: Border.all(
+                color: playerPanelInfo
+                            .projectCardsTabsInfo.leftTabInfo?.tabTitle ==
+                        null
+                    ? Colors.black
+                    : Colors.white,
+                width: 1.0,
+              ),
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: components,
+            ),
+          ),
+          if (!useMobileView)
+            Padding(
+              padding:
+                  EdgeInsets.only(top: height * (useLowWidthMode ? 1.5 : 0.1)),
+              child: playerPanelInfo.showFirstMark
+                  ? Image.asset(
+                      Assets.misc.firstPlayer.path,
+                      width: height * 0.6,
+                    )
+                  : SizedBox.shrink(),
+            ),
+        ],
+      );
+    });
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 2.0),
       child: Column(
@@ -484,48 +555,7 @@ class PlayerPanelView extends StatelessWidget {
               );
             },
           ),
-          Stack(
-            children: [
-              Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: color,
-                  border: Border.all(
-                    color: playerPanelInfo
-                                .projectCardsTabsInfo.leftTabInfo?.tabTitle ==
-                            null
-                        ? Colors.black
-                        : Colors.white,
-                    width: 1.0,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _prepareNameBlock(),
-                    _prepareTimerBlock(),
-                    _prepareResourceBoxList(),
-                    _prepareCardsButton(),
-                    _prepareActionCardsButton(),
-                    _prepareRT(),
-                    _prepareVP(),
-                    _prepareTagRow(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: height * 0.1),
-                child: playerPanelInfo.showFirstMark
-                    ? Image.asset(
-                        Assets.misc.firstPlayer.path,
-                        width: height * 0.6,
-                      )
-                    : SizedBox.shrink(),
-              ),
-            ],
-          ),
+          panelView,
         ],
       ),
     );

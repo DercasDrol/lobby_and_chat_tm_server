@@ -21,6 +21,8 @@ import 'package:mars_flutter/domain/repositories.dart';
 import 'package:mars_flutter/presentation/game_components/auth_screen/auth_screen.dart';
 
 import 'package:mars_flutter/presentation/game_components/cards_screen/cards_screen.dart';
+import 'package:mars_flutter/presentation/game_components/game_options_screen/game_options_screen.dart';
+
 import 'package:mars_flutter/presentation/game_components/game_screen/game_screen.dart';
 
 import 'package:mars_flutter/presentation/game_components/iframe_game_screen/iframe_game_screen.dart';
@@ -79,7 +81,6 @@ class MarsApp extends StatelessWidget {
                           generalChatCubit: generalChatCubit,
                         );
                       } else {
-                        context.go(LOBBY_ROUTE);
                         return const SizedBox.shrink();
                       }
                     },
@@ -107,7 +108,6 @@ class MarsApp extends StatelessWidget {
                           gameCubit: gameCubit,
                         );
                       } else {
-                        context.go(LOBBY_ROUTE);
                         return const SizedBox.shrink();
                       }
                     },
@@ -120,6 +120,15 @@ class MarsApp extends StatelessWidget {
                 gameChatCubit: gameChatCubit,
                 generalChatCubit: generalChatCubit,
                 lobbyCubit: lobbyCubit,
+              ),
+            ),
+            GoRoute(
+              path: 'game_options',
+              builder: (BuildContext context, GoRouterState state) =>
+                  GameOptionsScreen(
+                lobbyCubit: lobbyCubit,
+                gameChatCubit: gameChatCubit,
+                generalChatCubit: generalChatCubit,
               ),
             ),
             GoRoute(
@@ -157,34 +166,52 @@ class MarsApp extends StatelessWidget {
             !lobbyCubit.currentGameStarted)
           lobbyCubit.leaveNewGame(lobbyCubit.state.gameIdToAction!);
       }
+      final isNotMainMenuAndAuthRoute = [
+        LOBBY_ROUTE,
+        GAME_CLIENT_ROUTE,
+        NEW_GAME_CLIENT_ROUTE,
+        GAME_OPTIONS_ROUTE
+      ].contains(cRoute);
 
-      if (!jwtIsOk &&
-          [LOBBY_ROUTE, GAME_CLIENT_ROUTE, NEW_GAME_CLIENT_ROUTE]
-              .contains(cRoute)) {
+      final isEmptyGameOptionsRoute =
+          cRoute == GAME_OPTIONS_ROUTE && gameIdToAction == null;
+      final checkIfGameRoute = (tRoute) =>
+          [GAME_CLIENT_ROUTE, NEW_GAME_CLIENT_ROUTE].contains(tRoute);
+
+      if (!jwtIsOk && isNotMainMenuAndAuthRoute) {
         targetRoute = cRoute;
         _router.routeInformationProvider.go(AUTH_ROUTE);
       } else if (jwtIsOk &&
           cRoute == AUTH_ROUTE &&
-          [GAME_CLIENT_ROUTE, NEW_GAME_CLIENT_ROUTE].contains(targetRoute) &&
+          checkIfGameRoute(targetRoute) &&
           userId != null) {
         final gameIdToAction = localStorage.getItem(userId);
         if (gameIdToAction != null) {
           lobbyCubit.continueGame(int.parse(gameIdToAction));
         }
         _router.routeInformationProvider.go(targetRoute);
-      } else if (jwtIsOk && cRoute == AUTH_ROUTE) {
+      } else if (jwtIsOk &&
+          (cRoute == AUTH_ROUTE ||
+              isEmptyGameOptionsRoute ||
+              (checkIfGameRoute(cRoute) && !lobbyCubit.needGoToGame))) {
         _router.routeInformationProvider.go(LOBBY_ROUTE);
       } else if (cRoute == AUTH_ROUTE) {
         Repositories.auth.initAuth();
       }
 
       if (jwtIsOk &&
-          [LOBBY_ROUTE, GAME_CLIENT_ROUTE, NEW_GAME_CLIENT_ROUTE]
-              .contains(cRoute) &&
+          [
+            LOBBY_ROUTE,
+            GAME_CLIENT_ROUTE,
+            NEW_GAME_CLIENT_ROUTE,
+            GAME_OPTIONS_ROUTE
+          ].contains(cRoute) &&
           !Repositories.chat.isChatConnectionOk.value) {
         Repositories.chat.initConnectionToChatServer(jwt);
       }
-      if (jwtIsOk && LOBBY_ROUTE == cRoute && lobbyCubit.needGoToGame) {
+      if (jwtIsOk &&
+          [LOBBY_ROUTE, GAME_OPTIONS_ROUTE].contains(cRoute) &&
+          lobbyCubit.needGoToGame) {
         _router.routeInformationProvider.go(
             localStorage.getItem(SELECTED_GAME_CLIENT) ?? GAME_CLIENT_ROUTE);
       }
@@ -194,6 +221,7 @@ class MarsApp extends StatelessWidget {
 
     Repositories.auth.jwt.addListener(listener);
     _router.routeInformationProvider.addListener(listener);
+    lobbyCubit.stream.listen((state) => listener());
     listener();
 
     html.window.addEventListener('beforeunload', (event) {
@@ -208,22 +236,29 @@ class MarsApp extends StatelessWidget {
       return null;
     });
 
-    return MaterialApp.router(
-      scrollBehavior: MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-          PointerDeviceKind.stylus,
-          PointerDeviceKind.unknown
+    return GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
         },
-      ),
-      routerConfig: _router,
-      onNavigationNotification:
-          (NavigationNotification navigationNotification) {
-        logger.d("onNavigationNotification: $navigationNotification");
-        return true;
-      },
-    );
+        child: MaterialApp.router(
+          scrollBehavior: MaterialScrollBehavior().copyWith(
+            multitouchDragStrategy:
+                MultitouchDragStrategy.averageBoundaryPointers,
+            dragDevices: {
+              PointerDeviceKind.trackpad,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+              PointerDeviceKind.stylus,
+              PointerDeviceKind.unknown
+            },
+          ),
+          routerConfig: _router,
+          onNavigationNotification:
+              (NavigationNotification navigationNotification) {
+            logger.d("onNavigationNotification: $navigationNotification");
+            return true;
+          },
+        ));
   }
 
   MarsApp();

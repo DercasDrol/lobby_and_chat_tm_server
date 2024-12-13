@@ -66,7 +66,7 @@ class PlanetSlice extends StatelessWidget {
         alignment: FractionalOffset.fromOffsetAndSize(
           Offset(
             0.0,
-            11.13 * itemIndex,
+            height / 8.0 * itemIndex,
           ),
           Size(
             width,

@@ -40,6 +40,12 @@ class PlayerId implements ParticipantId {
   String toString() => id ?? 'undefined PlayerId';
 
   @override
+  bool get isPlayer => true;
+
+  @override
+  bool get isSpectator => false;
+
+  @override
   List<Object?> get props => [id];
 
   @override
@@ -70,6 +76,12 @@ class SpectatorId implements ParticipantId {
 
   @override
   bool? get stringify => false;
+
+  @override
+  bool get isPlayer => false;
+
+  @override
+  bool get isSpectator => true;
 }
 
 class ParticipantId extends Equatable {
@@ -82,6 +94,9 @@ class ParticipantId extends Equatable {
   }
   @override
   String toString() => id ?? 'undefined ParticipantId';
+
+  bool get isPlayer => this is PlayerId;
+  bool get isSpectator => this is SpectatorId;
 
   @override
   List<Object?> get props => [id];

@@ -115,6 +115,7 @@ const NEW_GAME_CLIENT_ROUTE = '/new_game_client';
 const CARDS_ROUTE = '/cards';
 const MAIN_MENU_ROUTE = '/';
 const AUTH_ROUTE = '/auth';
+const GAME_OPTIONS_ROUTE = '/game_options';
 
 //description urls
 //--------------------------

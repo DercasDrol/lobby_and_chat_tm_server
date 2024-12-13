@@ -74,10 +74,6 @@ class ChatView extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 5.0),
               decoration: BoxDecoration(
                 color: Colors.grey[400],
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
               ),
               child: MessageInputView(
                 onClickSend: cubit.sendMessage,

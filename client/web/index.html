@@ -27,11 +27,31 @@
   <link rel="apple-touch-icon" href="icons/mars.png">
   <link rel="icon" type="image/png" href="favicon.png"/>
   <title>Terraforming Mars</title>
-
-
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    var refreshIntervalId = null;
+    function zoomIframe(zoomSize) {
+      if (refreshIntervalId != null) {
+        clearInterval(refreshIntervalId);
+      }
+      function zoomIframeInternal() {
+        var iframes = document.getElementsByTagName('iframe');
+        if (iframes.length > 0) {
+          var iframe = iframes[0];
+          iframe.style.zoom = zoomSize;
+          clearInterval(refreshIntervalId);
+          return true;
+        } else {
+          return false;
+        }
+      }
+      if (!zoomIframeInternal()) {
+        refreshIntervalId = setInterval(zoomIframeInternal, 300);
+      }
+    }
+  </script>
 </body>
 </html>

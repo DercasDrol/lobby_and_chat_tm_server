@@ -16,7 +16,7 @@ class MessageInputView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _messageController = TextEditingController();
-    final FocusNode focusNode = FocusNode();
+    final FocusNode focusNode = FocusNode(canRequestFocus: false)..unfocus();
     return Container(
       height: height,
       child: Row(

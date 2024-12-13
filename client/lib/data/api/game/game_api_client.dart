@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:mars_flutter/common/log.dart';
@@ -18,7 +19,8 @@ class GameAPIClient {
 
   Future<String> _getPathWithId(RequestPath requestPath) async {
     final host = await this.host;
-    final _protocol = host.startsWith("localhost:") ? "http://" : "https://";
+    final _protocol =
+        host.startsWith("localhost:") || kDebugMode ? "http://" : "https://";
     return _protocol + host + '/' + requestPath.toString() + "?id=";
   }
 

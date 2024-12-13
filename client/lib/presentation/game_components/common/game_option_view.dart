@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:mars_flutter/presentation/game_components/common/card/kit/card_body/card_body.dart';
 import 'package:mars_flutter/presentation/game_components/common/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,7 +20,7 @@ class GameOptionView extends StatelessWidget {
   final bool? isSelected;
   final bool? useTwoLines;
   final bool? useBigberSize;
-  final void Function(String?)? onDropdownOptionChangedOrOptionToggled;
+  final void Function((int, String)?)? onDropdownOptionChangedOrOptionToggled;
   static final _defaultSelectedColor = Colors.black;
   static final _defaultNotSelectedColor = Colors.white;
 
@@ -57,9 +58,13 @@ class GameOptionView extends StatelessWidget {
             ? _defaultSelectedColor
             : _defaultNotSelectedColor)
         : fontColor;
-    String? _selectedValue = dropdownDefaultValueIdx != null
-        ? dropdownOptions![dropdownDefaultValueIdx!]
+
+    (int, String)? _selectedValue = dropdownDefaultValueIdx != null &&
+            dropdownOptions != null &&
+            dropdownDefaultValueIdx! < dropdownOptions!.length
+        ? dropdownOptions!.indexed.elementAt(dropdownDefaultValueIdx!)
         : null;
+
     final addInkWell = (child) =>
         [GameOptionType.TOGGLE_BUTTON, GameOptionType.BUTTON].contains(type) &&
                 onDropdownOptionChangedOrOptionToggled != null
@@ -81,25 +86,27 @@ class GameOptionView extends StatelessWidget {
                 iconDisabledColor: Colors.white,
                 iconSize: 25,
               ),
-              valueListenable: ValueNotifier(_selectedValue),
+              valueListenable: ValueNotifier(_selectedValue?.$2),
               isExpanded: true,
               isDense: true,
               style: TextStyle(color: _fontColor),
               onChanged: (_) => {},
-              items: dropdownOptions!.map<DropdownItem<String>>((String value) {
+              items: dropdownOptions!.indexed
+                  .map<DropdownItem<String>>(((int, String) value) {
                 return DropdownItem<String>(
-                  value: value,
+                  value: value.$2,
                   height: 25.0,
                   onTap: () {
                     _selectedValue = value;
                   },
                   child: Center(
                     child: Text(
-                      value,
+                      value.$2,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: fontSize,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 );
@@ -139,7 +146,7 @@ class GameOptionView extends StatelessWidget {
         : Padding(
             padding: EdgeInsets.only(left: 7.0, right: 8.0),
             child: Text(
-              _selectedValue ?? ' ',
+              _selectedValue?.$2 ?? ' ',
               style: TextStyle(
                 color: GAME_OPTIONS_CONSTANTS.dropdownSelectedItemTextColor,
                 fontSize: fontSize,

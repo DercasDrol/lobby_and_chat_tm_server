@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter_web/webview_flutter_web.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
@@ -10,7 +11,8 @@ class IframeCardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     WebViewPlatform.instance = WebWebViewPlatform();
     final serverHandler = 'cards';
-    final protocol = host.startsWith("localhost:") ? "http" : "https";
+    final protocol =
+        host.startsWith("localhost:") || kDebugMode ? "http" : "https";
     final PlatformWebViewController controller = PlatformWebViewController(
       const PlatformWebViewControllerCreationParams(),
     )..loadRequest(

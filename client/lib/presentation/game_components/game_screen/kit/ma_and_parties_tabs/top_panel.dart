@@ -45,8 +45,8 @@ class _TopPanelState extends State<TopPanel> with TickerProviderStateMixin {
               selectedTab.value.toString(),
         ));
     final width = widget.turmoilInfo != null
-        ? widget.turmoilInfo!.turmoilModel.parties.length * 120.0 * 1.15
-        : widget.awardsInfo.ma.length * 120.0;
+        ? widget.turmoilInfo!.turmoilModel.parties.length * 122.0 * 1.15
+        : widget.awardsInfo.ma.length * 122.0;
     final controller = TabController(
       length: tabCount,
       vsync: this,

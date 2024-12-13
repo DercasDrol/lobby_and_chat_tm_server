@@ -10,12 +10,9 @@ import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups
 import 'package:mars_flutter/presentation/game_components/game_screen/kit/popups/tabs/container_with_tabs.dart';
 import 'package:mars_flutter/domain/model/game_models/models_for_presentation/presentation_tabs_info.dart';
 
-void showPopupWithTabs({
-  required final BuildContext context,
-  required final PresentationTabsInfo tabsInfo,
-  required double topPadding,
-  required double bottomPadding,
-}) {
+void showPopupWithTabs(
+    {required final BuildContext context,
+    required final PresentationTabsInfo tabsInfo}) {
   final SelectedCards rightTabSelectedCards =
       SelectedCards.fromList(tabsInfo.rightTabInfo?.cards ?? []);
   final SelectedCards leftTabSelectedCards =
@@ -95,9 +92,7 @@ void showPopupWithTabs({
 
   Widget _getContainerWithTabs(BoxConstraints constraints) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: topPadding < bottomPadding ? bottomPadding - topPadding : 0,
-      ),
+      padding: EdgeInsets.only(bottom: constraints.maxHeight * 0.1),
       child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +116,7 @@ void showPopupWithTabs({
                   ? 70
                   : tabsInfo.onlyOneTabWithOptions
                       ? (tabsInfo.rightTabInfo?.options?.length ?? 1) * 50 + 70
-                      : constraints.maxHeight - topPadding - bottomPadding,
+                      : constraints.maxHeight * 0.8,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color.fromARGB(96, 255, 255, 255),

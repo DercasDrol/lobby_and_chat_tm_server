@@ -126,7 +126,7 @@ func getLobbyGameFromRow(row pgx.Row) (*LobbyGame, error) {
 
 func getSimpleGameModel(host string, lobbyGame *LobbyGame) (*SimpleGameModel, error) {
 	protocol := "https://"
-	if strings.HasPrefix(host, "localhost:") {
+	if strings.HasPrefix(host, "localhost:") || strings.HasPrefix(host, "192.168.0.27") {
 		protocol = "http://"
 	}
 	requestURL := fmt.Sprintf("%vgame", protocol+host+"/")
@@ -170,7 +170,7 @@ func getSimpleGameModel(host string, lobbyGame *LobbyGame) (*SimpleGameModel, er
 
 func updateGameStatus(host string, lobbyGame *LobbyGame) (bool, error) {
 	protocol := "https://"
-	if strings.HasPrefix(host, "localhost:") {
+	if strings.HasPrefix(host, "localhost:") || strings.HasPrefix(host, "192.168.0.27") {
 		protocol = "http://"
 	}
 	requestURL := fmt.Sprintf("%v%v/api/spectator?id=%v", protocol, host, *lobbyGame.SpectatorId)

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
+import 'package:mars_flutter/presentation/game_components/game_options_screen/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
 
 class GameMenuButtonsBlock extends StatelessWidget {
   final LobbyCubit lobbyCubit;

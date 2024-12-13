@@ -18,6 +18,9 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_secure_storage: ^9.2.2
   webview_flutter_web: ^0.2.3+2
+  
+  pointer_interceptor: ^0.10.1+2
+  
   just_the_tooltip: ^0.0.12
   hexagon: ^0.2.0
   http: ^1.2.2
@@ -29,9 +32,9 @@ dependencies:
 
   bloc: ^8.1.4
   localstorage: ^5.0.0
-  web: ^0.5.1
+  web: ^1.1.0
 dependency_overrides:
-  flutter_secure_storage_web: ^2.0.0-beta.1
+  flutter_secure_storage_web:
 dev_dependencies:
   statsfl: ^2.3.0
   flutter_test:

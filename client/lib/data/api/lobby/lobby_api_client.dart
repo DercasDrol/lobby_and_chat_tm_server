@@ -54,7 +54,7 @@ class LobbyAPIClient {
     });
 
     _socket.onDisconnect((_) {
-      logger.d('disconnected  from chat server');
+      logger.d('disconnected  from lobby server');
       isLobbyConnectionOk.value = false;
     });
 
@@ -126,7 +126,9 @@ class LobbyAPIClient {
         _onPlayerSubscriber!(Player.fromJson(playerMap));
       }
     });
-
+    if (jwt.value != null) {
+      initConnectionToLobbyServer(jwt.value);
+    }
     jwt.addListener(() => initConnectionToLobbyServer(jwt.value));
   }
 

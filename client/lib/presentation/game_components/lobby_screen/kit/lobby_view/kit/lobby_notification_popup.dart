@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mars_flutter/presentation/core/disposer.dart';
 import 'package:mars_flutter/presentation/game_components/common/popups_register.dart';
-import 'package:mars_flutter/presentation/game_components/lobby_screen/kit/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
+import 'package:mars_flutter/presentation/game_components/game_options_screen/game_options_view/kit/bottom_buttons_view/kit/bottom_button.dart';
 
 showLobbyPopup(BuildContext context, String message, Function onOk) {
   final lobbyPopupName = 'lobbyPopup';

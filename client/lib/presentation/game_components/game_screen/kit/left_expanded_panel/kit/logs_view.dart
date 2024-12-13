@@ -122,18 +122,16 @@ class LogsView extends StatelessWidget {
     final addOnClickIfPopupNeeded = (Widget child) => popupCards.length > 0
         ? InkWell(
             onTap: () => showPopupWithTabs(
-              context: context,
-              tabsInfo: PresentationTabsInfo(
-                playerColor: PlayerColor.NEUTRAL,
-                rightTabInfo: PresentationTabInfo(
-                  tabTitle: "Discarded cards",
-                  cards:
-                      popupCards.map((name) => CardModel(name: name)).toList(),
-                ),
-              ),
-              topPadding: 100.0,
-              bottomPadding: 100.0,
-            ),
+                context: context,
+                tabsInfo: PresentationTabsInfo(
+                  playerColor: PlayerColor.NEUTRAL,
+                  rightTabInfo: PresentationTabInfo(
+                    tabTitle: "Discarded cards",
+                    cards: popupCards
+                        .map((name) => CardModel(name: name))
+                        .toList(),
+                  ),
+                )),
             child: child,
           )
         : child;

@@ -1,19 +1,17 @@
+import 'dart:math';
+import 'dart:html' as html;
+import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mars_flutter/domain/chat_cubit.dart';
-import 'package:mars_flutter/domain/chat_state.dart';
 import 'package:mars_flutter/domain/lobby_cubit.dart';
 import 'package:mars_flutter/domain/model/constants.dart';
 import 'package:mars_flutter/domain/repositories.dart';
 import 'package:mars_flutter/presentation/core/common_future_widget.dart';
-import 'package:mars_flutter/presentation/core/disposer.dart';
-import 'package:mars_flutter/presentation/game_components/common/chat_view/chat_view.dart';
-import 'package:mars_flutter/presentation/game_components/common/game_menu_buttons_block.dart';
-import 'package:mars_flutter/presentation/game_components/common/lobby_elements_tabs.dart';
-import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/connection_indicator.dart';
-import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/left_expanded_panel_view.dart';
-import 'package:mars_flutter/presentation/game_components/iframe_game_screen/kit/iframe_game_view.dart';
+import 'dart:js' as js;
+import 'package:mars_flutter/presentation/game_components/common/expanded_chat_panel/expanded_chat_panel.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class IframeGameScreen extends StatelessWidget {
   final LobbyCubit lobbyCubit;
@@ -35,130 +33,117 @@ class IframeGameScreen extends StatelessWidget {
       context.go(LOBBY_ROUTE);
       return const SizedBox.shrink();
     }
-    ValueNotifier<bool> expandedVN = ValueNotifier(false);
-    ValueNotifier<int> newMessagesCountVN = ValueNotifier(0);
-
-    String? chatRoomKey = lobbyCubit.state.gameIdToAction?.toString();
-    if (chatRoomKey != null) {
-      gameChatCubit.chatRepository.subscribeOnEvents((eventsMap) {
-        newMessagesCountVN.value =
-            newMessagesCountVN.value + eventsMap.values.length;
-      }, chatRoomKey, "IframeGameScreen");
-    }
-    const chatWidth = 300.0;
-    const buttonWidth = 20.0;
-    const goToLobbyButtonHeight = 30.0;
-    const delay = Duration(milliseconds: 100);
-
+    final chatPanelExpandedVN = ValueNotifier(false);
     return Scaffold(
-      body: Disposer(
-        dispose: () {
-          if (chatRoomKey != null)
-            gameChatCubit.chatRepository
-                .unsubscribeOnEvents(chatRoomKey, "IframeGameScreen");
-          expandedVN.dispose();
-        },
-        child: LayoutBuilder(builder: (context, constraints) {
-          final chatTabsView = BlocBuilder<ChatCubit, ChatState>(
-            bloc: gameChatCubit,
-            buildWhen: (previous, current) =>
-                previous.chatKey != current.chatKey &&
-                [previous.chatKey, current.chatKey].contains(null),
-            builder: (context, gameChatState) {
-              return LobbyElementsTabs(
-                width: chatWidth,
-                height: constraints.maxHeight - goToLobbyButtonHeight,
-                borderRadius: BorderRadius.zero,
-                children: [
-                  if (gameChatState.chatKey != null)
-                    ChatView(
-                      cubit: gameChatCubit,
-                    ),
-                  ChatView(
-                    cubit: generalChatCubit,
-                  ),
-                ],
-                tabsNames: [
-                  if (gameChatState.chatKey != null) "Game Chat",
-                  "General Chat",
-                ],
-              );
-            },
-          );
-          return ValueListenableBuilder(
-              valueListenable: expandedVN,
-              builder: (context, expanded, child) {
-                if (expanded) {
-                  newMessagesCountVN.value = 0;
-                }
-                return Stack(children: [
-                  AnimatedSlide(
-                    offset: Offset(
-                        expanded
-                            ? 0.0
-                            : -(chatWidth - buttonWidth + 1) / chatWidth,
-                        0),
-                    duration: delay,
-                    child: ValueListenableBuilder(
-                      valueListenable: newMessagesCountVN,
-                      builder: (context, newMessagesCount, child) {
-                        return LeftExpandedPanelForIframeGameClient(
-                          width: chatWidth,
-                          child: chatTabsView,
-                          height: constraints.maxHeight,
-                          goToLobbyButtonHeight: goToLobbyButtonHeight,
-                          onExpandClick: () =>
-                              expandedVN.value = !expandedVN.value,
-                          buttonWidth: buttonWidth,
-                          expanded: expanded,
-                          counter: newMessagesCount,
-                          connectionIndicator: ConnectionIndicator(
-                            lobbyRepository: lobbyCubit.lobbyRepository,
-                            chatRepository: gameChatCubit.chatRepository,
-                          ),
-                          menuButtonsBlock: GameMenuButtonsBlock(
-                            width: chatWidth,
-                            height: goToLobbyButtonHeight,
-                            lobbyCubit: lobbyCubit,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Row(children: [
-                    AnimatedSize(
-                      duration: delay,
-                      child: Container(
-                        width: expanded ? chatWidth + buttonWidth : buttonWidth,
-                        height: constraints.maxHeight,
-                      ),
-                    ),
-                    AnimatedSize(
-                      duration: delay,
-                      child: Container(
-                        child: child,
-                        width: expanded
-                            ? constraints.maxWidth - chatWidth - buttonWidth
-                            : constraints.maxWidth - buttonWidth,
-                        height: constraints.maxHeight,
-                      ),
-                    ),
-                  ])
-                ]);
-              },
-              child: CommonFutureWidget<String>(
-                future: Repositories.game.host,
-                getContentView: (gameServer) {
-                  final protocol = gameServer.startsWith("localhost")
-                      ? "http://"
-                      : "https://";
-                  return IframeGameView(
-                      participantId: participantId,
-                      targetServerUrl: protocol + gameServer);
-                },
-              ));
-        }),
+      body: ExpandedChatPanel(
+        lobbyCubit: lobbyCubit,
+        gameChatCubit: gameChatCubit,
+        generalChatCubit: generalChatCubit,
+        expandedController: chatPanelExpandedVN,
+        child: CommonFutureWidget<String>(
+          future: Repositories.game.host,
+          getContentView: (gameServer) {
+            final protocol = gameServer.startsWith("localhost") || kDebugMode
+                ? "http://"
+                : "https://";
+            final serverHandler =
+                participantId.isPlayer ? 'player' : 'spectator';
+            final targetServerUrl = protocol + gameServer;
+            final url =
+                '$targetServerUrl/$serverHandler?id=${participantId.toString()}';
+            return IframeGameView(url: url);
+          },
+        ),
       ),
     );
+  }
+}
+
+class IframeGameView extends StatefulWidget {
+  final String url;
+  const IframeGameView({super.key, required this.url});
+
+  @override
+  State<IframeGameView> createState() => _IframeGameViewState();
+}
+
+class _IframeGameViewState extends State<IframeGameView> {
+  double scale = 1.0;
+  double lastUpdatedScaleWidth = 0.0;
+  bool scaleChangedByUser = false;
+  static const _viewId = 'my-view-id';
+  @override
+  void initState() {
+    final html.IFrameElement _iFrame;
+    _iFrame = html.IFrameElement()..src = widget.url;
+
+    _iFrame.style
+      ..marginBottom = '-10px'
+      ..border = 'none'
+      ..height = '100%'
+      ..width = '100%'
+      ..minWidth = '1260px'
+      ..zoom = scale.toString();
+    final div = html.DivElement();
+    div.children.add(_iFrame);
+    div.style
+      ..height = '100%'
+      ..width = '100%'
+      ..overflow = 'auto'
+      ..border = 'none';
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(
+      _viewId,
+      (int viewId) => div,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final minimumWidthToChangeScale = 100;
+    final minGameWidth = 320.0;
+    return Stack(alignment: Alignment.topRight, children: [
+      LayoutBuilder(builder: (context, constraints) {
+        if ((lastUpdatedScaleWidth - constraints.maxWidth >
+                    minimumWidthToChangeScale ||
+                constraints.maxWidth - lastUpdatedScaleWidth >
+                    minimumWidthToChangeScale) &&
+            constraints.maxWidth > minGameWidth &&
+            !scaleChangedByUser) {
+          scale = min(1.0, max(0.3, constraints.maxWidth / 1260));
+          lastUpdatedScaleWidth = constraints.maxWidth;
+          js.context.callMethod('zoomIframe', [scale]);
+        }
+        return HtmlElementView(viewType: _viewId);
+      }),
+      Column(
+        children: [
+          PointerInterceptor(
+              child: IconButton(
+            iconSize: 40,
+            color: Colors.white,
+            icon: const Icon(Icons.zoom_in),
+            onPressed: () {
+              scale = min(1.0, scale + 0.1);
+              js.context.callMethod('zoomIframe', [scale]);
+              scaleChangedByUser = true;
+            },
+          )),
+          PointerInterceptor(
+              child: IconButton(
+            iconSize: 40,
+            icon: const Icon(Icons.zoom_out),
+            color: Colors.white,
+            onPressed: () {
+              scale = max(0.3, scale - 0.1);
+              js.context.callMethod('zoomIframe', [scale]);
+              scaleChangedByUser = true;
+            },
+          )),
+        ],
+      ),
+    ]);
   }
 }
